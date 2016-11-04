@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-container container">
+    <div class="row">
+        <div class="col-md-3" id="categorias">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Categorias</h3>
+                </div>
+            </div>
+
+            {% for categoria in categorias %}
+            <div class="row">
+                <div class="col-md-12">
+                        <button class="btn btn-grey btn-ctnr-data" id="cat{{ categoria.id }}"
+                                value="{{ categoria.id }}">
+                            {{ categoria.name }}
+                        </button>
+                        <button type="button" id="see-all-data-of-cat-{{ categoria.id }}" name="see-all{{ categoria.id }}"
+                                data-toggle="modal" data-target="#delete-element-modal"
+                                class="btn btn-info" value="{{ categoria.name }}">
+                            <i class="fa fa-search-plus fa-lg"></i>
+                        </button>
+                        <button type="button" id="add-data-to-{{ categoria.id }}" name="add-data-to-{{ categoria.id }}"
+                                data-toggle="modal" data-target="#add-data-modal"
+                                class="btn btn-success" value="{{ categoria.name }}">
+                            <i class="fa fa-plus-circle fa-lg"></i>
+                        </button>
+                </div>
+            </div>
+            {% endfor %}
+            <button type="button" class="btn btn-success btn-ctnr" id="add-cat"
+                    href="#" data-toggle="modal" data-target="#add-category-modal">Añadir categoría
+            </button>
+
+        </div>
+        <div class="list-group col-md-3" id="subcategorias"></div>
+        <div class="list-group col-md-8" id="detalle"></div>
+    </div>
+
+</div>
+<!-- Modals -->
+<div id="add-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="add-data-message">Añadir dato a</h3>
+            </div>
+            <div class="modal-body row">
+
+                <form action="/api/delete_element" method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                <fieldset id="add-data-body">
+
+                </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Scripts -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="/static/js/data.js"></script>
+{% endblock %}
