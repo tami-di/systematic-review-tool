@@ -8,6 +8,7 @@ def subcategories(id):
     subcats = [{'name': 'subcategoria 1',
                 'id': 1,
                 'properties': ['name','description','patitos'],
+                'properties_type':{'name':'varchar','description':'text','patitos':'number'},
                 'type':'subcat',
                 'is_subcat':True},
                {'name': 'propiedad 2',
@@ -68,3 +69,24 @@ def add_delete_element():
     # Here you do what you want with the info received
     print delete_element_btn, deleted_element
     return redirect(request.referrer)
+
+
+@app.route('/api/add_data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
+def add_data_to_subcat(cat_id,subcat_id):
+    el_name = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"name")
+    el_description = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"description")
+    el_patitos = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"patitos")
+    print "Categoria "+cat_id+"."+subcat_id," : "+el_name, el_description, el_patitos
+    return redirect(request.referrer)
+
+
+@app.route('/api/add_data/category/<cat_id>', methods=['POST'])
+def add_data_to_cat(cat_id):
+    el_1 = request.form.get('sub-' + str(1) + '-cat-' + cat_id)
+    el_2 = request.form.get('sub-' + str(2) + '-cat-' + cat_id)
+    el_3 = request.form.get('sub-' + str(3) + '-cat-' + cat_id)
+    el_4 = request.form.get('sub-' + str(4) + '-cat-' + cat_id)
+    print "Categoria "+cat_id, " : "+ el_1, el_2, el_3, el_4
+    return redirect(request.referrer)
+
+
