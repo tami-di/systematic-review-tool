@@ -124,9 +124,6 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
             .attr("name","cancel-new-data")
             .attr("class", "btn btn-danger")
             .text("cancelar")
-
-
-
             })
 })
 // what to do if the category button is pressed
@@ -201,6 +198,44 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             }
 
         }
+        // what to do if the see-all-data-of-category button is pressed
+        d3.selectAll("#subcategorias").selectAll(".btn-info").on("click", function(){
+            parent = this.parentNode
+            id = (d3.select(parent).select(".btn-grey").attr("value")).split(".")
+            cat_id = id[0]
+            subcat_id = id[1]
+            d3.select("#table-placer").selectAll("table").remove()
+            the_table = d3.select("#table-placer")
+            .append("table")
+            .attr("class","table table-bordered table-striped table-hover table-responsive")
+            d3.json("/api/request_data/category/"+ cat_id +"/subcategory/"+subcat_id,
+                function(error, data){
+                    if (error){
+                        console.log(error);
+                        return
+                    }
+                column_headers = data.column_headers
+                column_headers_length = column_headers.length
+                header_row = the_table.append("thead").append("tr")
+
+                for(var i = 0; i < column_headers_length; i++){
+                    header_row.append("td")
+                    .text(column_headers[i]+" "+cat_id)
+                }
+                column_data = data.column_data
+                column_data_length = column_data.length
+                table_body = the_table.append("tbody")
+                for(var j = 0; j < column_data_length; j++){
+                    body_row = table_body.append("tr")
+                    for(var k = 0; k < column_headers_length; k++){
+                        body_row.append("td")
+                        .text(column_data[j][column_headers[k]])
+                    }
+                }
+        })
+
+        })
+
         // what to do if the add-data-to-subcategory button is pressed
         d3.selectAll("#subcategorias").selectAll(".btn-success").on("click", function(){
             // get category id
@@ -317,7 +352,46 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
 
 })
 
+// what to do if the see-all-data-of-category button is pressed
+d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
+        parent = this.parentNode
+        cat_id = d3.select(parent).select(".btn-grey").attr("value")
+        d3.select("#table-placer").selectAll("table").remove()
+        the_table = d3.select("#table-placer")
+        .append("table")
+        .attr("class","table table-bordered table-striped table-hover table-responsive")
 
+        d3.json("/api/request_data/category/"+ cat_id ,
+            function(error, data){
+                if (error){
+                    console.log(error);
+                    return
+                }
+            column_headers = data.column_headers
+            column_headers_length = column_headers.length
+            header_row = the_table.append("thead").append("tr")
+
+            for(var i = 0; i < column_headers_length; i++){
+                header_row.append("td")
+                .text(column_headers[i]+" "+cat_id)
+            }
+            column_data = data.column_data
+            column_data_length = column_data.length
+            table_body = the_table.append("tbody")
+            for(var j = 0; j < column_data_length; j++){
+                body_row = table_body.append("tr")
+                for(var k = 0; k < column_headers_length; k++){
+                    body_row.append("td")
+                    .text(column_data[j][column_headers[k]])
+                }
+
+            }
+
+        })
+
+
+
+})
 var set_active = function(id, object){
                     d3.selectAll(id).selectAll("button").
                     classed("active", false)

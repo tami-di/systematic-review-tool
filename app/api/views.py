@@ -89,4 +89,32 @@ def add_data_to_cat(cat_id):
     print "Categoria "+cat_id, " : "+ el_1, el_2, el_3, el_4
     return redirect(request.referrer)
 
+@app.route('/api/request_data/category/<cat_id>')
+def request_data_from_cat(cat_id):
+    headers = ['subcategoria 1','propiedad 2','propiedad 3','propiedad 4']
+    data_row_1 = {'subcategoria 1':'Fluff',
+                  'propiedad 2':'patiters',
+                  'propiedad 3':'3',
+                  'propiedad 4':'Los patitos son extra fluferinos'}
+    data_row_2 = {'subcategoria 1':'Spoofi',
+                  'propiedad 2':'Cuack',
+                  'propiedad 3':'8',
+                  'propiedad 4':'Gatinis que hacen pancitos'}
+    data = [data_row_1,data_row_2]
+    return jsonify(column_headers=headers, column_data=data)
+
+@app.route('/api/request_data/category/<cat_id>/subcategory/<subcat_id>')
+def request_data_from_subcat(cat_id,subcat_id):
+    headers = ['name','description','patitos']
+    data_row_1 = {'name':'Kiwi',
+                  'description':'Es un pajarito redondito',
+                  'patitos':'10'}
+    data_row_2 = {'name':'Hamster',
+                  'description':'Es un ratoncito redondito y feroz',
+                  'patitos':'3'}
+    data_row_3 = {'name':'Round Robin',
+                  'description':'Es un Robin (pajarito) redondito',
+                  'patitos':'1'}
+    data = [data_row_1,data_row_2,data_row_3]
+    return jsonify(column_headers=headers, column_data=data)
 
