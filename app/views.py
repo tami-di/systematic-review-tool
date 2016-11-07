@@ -30,3 +30,7 @@ def data():
     cats = [{'name': 'categoria 1', 'id':1},{'name': 'categoria 2', 'id':2},{'name': 'categoria 3', 'id':3}]
     return render_template('data.html', categorias=cats)
 
+@app.route('/search')
+def search():
+    return render_template('search.html')
+

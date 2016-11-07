@@ -109,8 +109,8 @@ def add_data_to_cat(cat_id):
     print "Categoria "+cat_id, " : "+ el_1, el_2, el_3, el_4
     return redirect(request.referrer)
 
-@app.route('/api/request_data/category/<cat_id>')
-def request_data_from_cat(cat_id):
+
+def request_headers_from_cat_aux(cat_id):
     headers = [{'name': 'subcategoria 1',
                 'id': 1,
                 'properties': ['name','description','patitos'],
@@ -132,6 +132,16 @@ def request_data_from_cat(cat_id):
                 'type':'text',
                 'properties': [],
                 'is_subcat':False}]
+    return headers
+
+
+@app.route('/api/request_headers/category/<cat_id>')
+def request_headers_from_cat(cat_id):
+    return jsonify(headers=request_headers_from_cat_aux(cat_id))
+
+@app.route('/api/request_data/category/<cat_id>')
+def request_data_from_cat(cat_id):
+    headers = request_headers_from_cat_aux(cat_id)
     data_row_1 = {'subcategoria 1':'Fluff',
                   'propiedad 2':'patiters',
                   'propiedad 3':'3',
@@ -169,7 +179,7 @@ def get_paper_info(paper_id):
                         {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
                         {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
                         {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
-                        {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data}]
+                        {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
 
     return jsonify(properties=paper_properties)
 

@@ -16,7 +16,7 @@ d3.selectAll(".btn-success").on("click", function(){
             .attr("method","post")
             .append("fieldset")
             // set form legend
-            fieldset.append("legend").text("Modificar datos de "+paper_title)
+            fieldset.append("legend").text("Add paper to database")
             // set form body
             for(i = 0; i < paper_properties_length; i++){
                 form_group = fieldset.append("div").attr("class","form-group")
@@ -25,7 +25,7 @@ d3.selectAll(".btn-success").on("click", function(){
                 element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).replace(" ","-")
                 value = ""
                 text_label = paper_properties[i].name
-                placeholder = "Insterte "+text_label
+                placeholder = "Instert "+text_label
                 if(type == 'varchar'){
                     set_varchar_input (form_group,element_id,text_label,value,placeholder)
                 }
@@ -52,7 +52,7 @@ d3.selectAll(".btn-success").on("click", function(){
             put_dismiss_button(div_for_buttons)
         })
 
-    })
+})
 
 // what to do if the search-paper button is pressed (any search really)
 var set_form_with_paper = function(paper_id){
