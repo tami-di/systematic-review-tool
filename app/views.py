@@ -1,13 +1,22 @@
 from app import app
 from flask import render_template
+from flask import request
 
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'nickname': 'Miguel'}  # fake user
+    set_hidden = False
+    search_input = request.args.get("searchinput")
+    if search_input is not None:
+        set_hidden = True
+    if search_input == "":
+        paper_id = ""
+    else:
+        paper_id = 1
+
     return render_template('index.html',
-                           title='Home',
-                           user=user)
+                           paper=paper_id,
+                           set_form=set_hidden)
 
 
 @app.route('/categorias')
