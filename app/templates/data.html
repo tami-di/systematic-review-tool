@@ -17,7 +17,6 @@
                             {{ categoria.name }}
                         </button>
                         <button type="button" id="see-all-data-of-cat-{{ categoria.id }}" name="see-all{{ categoria.id }}"
-                                data-toggle="modal" data-target="#delete-element-modal"
                                 class="btn btn-info" value="{{ categoria.name }}">
                             <i class="fa fa-search-plus fa-lg"></i>
                         </button>
@@ -40,6 +39,7 @@
 
 </div>
 <!-- Modals -->
+<!-- Add data modal -->
 <div id="add-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add-data-modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -59,6 +59,55 @@
         </div>
     </div>
 </div>
+<!-- modify data modal -->
+<div id="modify-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modify-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="modify-data-message">Modificar datos</h3>
+            </div>
+            <div class="modal-body row">
+                <form method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                    <fieldset id="modify-data-body">
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<div id="delete-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="delete-element-message">Estás seguro de que quieres borrar estos datos?</h3>
+            </div>
+            <div class="modal-body row">
+
+                <form action="" method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                    <fieldset>
+                        <!-- Button -->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="delete-element-btn"></label>
+                          <div class="col-md-4">
+                            <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger">
+                                Eliminar
+                            </button>
+                          </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Scripts -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/static/js/data.js"></script>
