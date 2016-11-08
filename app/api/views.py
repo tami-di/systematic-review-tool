@@ -2,6 +2,7 @@ from app import app
 from flask import jsonify
 from flask import request
 from flask import redirect
+from flask import render_template
 
 @app.route('/api/category/<id>/subcategories')
 def subcategories(id):
@@ -110,6 +111,7 @@ def add_data_to_cat(cat_id):
     return redirect(request.referrer)
 
 
+
 def request_headers_from_cat_aux(cat_id):
     headers = [{'name': 'subcategoria 1',
                 'id': 1,
@@ -170,6 +172,8 @@ def request_data_from_subcat(cat_id,subcat_id):
                   'patitos':'1'}
     data = [data_row_1,data_row_2,data_row_3]
     return jsonify(column_headers=headers, column_data=data)
+
+
 
 
 @app.route('/api/request_data/paper/<paper_id>/')

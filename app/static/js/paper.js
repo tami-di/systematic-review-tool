@@ -219,3 +219,8 @@ var set_category_select = function(form_group,id,text_label,value,data){
     }
 }
 
+var test = function(dict){
+
+    console.log(dict.name)
+
+}

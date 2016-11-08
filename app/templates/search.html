@@ -3,7 +3,7 @@
 <div class="content-container container">
     <div class="row">
         <div class="col-md-12">
-             <form class="form-horizontal" method="post" action="">
+             <form class="form-horizontal" method="post" action="/search">
                 <fieldset id="form-body">
                     <!-- Form Name -->
                     <legend>Paper search</legend>
@@ -11,9 +11,18 @@
              </form>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12" id="results-body">
+
+        </div>
+    </div>
 </div>
 
 <!-- Scripts -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="/static/js/search.js"></script>
+<script>
+    set_form({{ dict|tojson }})
+    show_results({{ results|tojson }})
+</script>
 {% endblock %}
