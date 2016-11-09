@@ -1,8 +1,10 @@
+import db_api
 from app import app
+from app import db
 from flask import jsonify
 from flask import request
 from flask import redirect
-from flask import render_template
+
 
 @app.route('/api/category/<id>/subcategories')
 def subcategories(id):
@@ -66,7 +68,7 @@ def add_category():
     cat_name = request.form.get('cat-name')
     cat_description = request.form.get('cat-description')
     # Here you do what you want with the info received
-    print cat_name, cat_description
+    db_api.create_category(db,cat_name,cat_description)
     return redirect(request.referrer)
 
 
