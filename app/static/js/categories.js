@@ -66,36 +66,39 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         .attr("class","row container")
                         .text(properties[j]+" : "+properties_type[properties[j]])
                     }
-                    // append delete button on subcategory or column of category
-                    d3.select("#collapse-body"+i)
-                    .append("div")
-                    .attr("class","row container")
-                    .append("button")
-                    .attr("class","btn btn-danger btn-ctnr-collapsable")
-                    .text("  Delete  ")
-                    .attr("href","#")
-                    .attr("data-toggle","modal")
-                    .attr("value",i+"")
-                    .attr("data-target","#delete-element-modal")
-                    .on("click", function(){
-                        // do stuff (show a warning message first)
-                        var index = parseInt(d3.select(this).attr("value"))
-                        d3.select("#delete-element-message")
-                        .text("Do you really want to delete \"" + subcategories[index].name + "\"?")
-                        if(subcategories[index].is_subcat){
-                            // in case of deleting a subcategory
-                            subcat_id = subcategories[index].id
-                            d3.select("#delete-form")
-                            .attr("action","/api/delete_subcategory/"+subcat_id+"/category/"+cat_id)
-                        }else{
-                            // in case of deleting a column of a category
-                            column_name = subcategories[index].name
-                            d3.select("#delete-form")
-                            .attr("action",'/api/delete_column/'+column_name+'/category/'+cat_id)
-                        }
-                        d3.select("#deleted-element")
-                        .attr("value",cat_id + "." +subcategories[index].name)
-                    })
+                    if( (subcategories[i].name != "description") && (subcategories[i].name != "name") ){
+                        // append delete button on subcategory or column of category
+                        d3.select("#collapse-body"+i)
+                        .append("div")
+                        .attr("class","row container")
+                        .append("button")
+                        .attr("class","btn btn-danger btn-ctnr-collapsable")
+                        .text("  Delete  ")
+                        .attr("href","#")
+                        .attr("data-toggle","modal")
+                        .attr("value",i+"")
+                        .attr("data-target","#delete-element-modal")
+                        .on("click", function(){
+                            // do stuff (show a warning message first)
+                            var index = parseInt(d3.select(this).attr("value"))
+                            d3.select("#delete-element-message")
+                            .text("Do you really want to delete \"" + subcategories[index].name + "\"?")
+                            if(subcategories[index].is_subcat){
+                                // in case of deleting a subcategory
+                                subcat_id = subcategories[index].id
+                                d3.select("#delete-form")
+                                .attr("action","/api/delete_subcategory/"+subcat_id+"/category/"+cat_id)
+                            }else{
+                                // in case of deleting a column of a category
+                                column_name = subcategories[index].name
+                                d3.select("#delete-form")
+                                .attr("action",'/api/delete_column/'+column_name+'/category/'+cat_id)
+                            }
+                            d3.select("#deleted-element")
+                            .attr("value",cat_id + "." +subcategories[index].name)
+                        })
+                    }
+
                     // append add column button on subcategory or column of category
                     if(subcategories[i].is_subcat){
                         d3.select("#collapse-body"+i)

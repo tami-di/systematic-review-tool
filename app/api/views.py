@@ -200,14 +200,26 @@ def request_data_from_subcat(cat_id,subcat_id):
 
 
 @app.route('/api/request_data/paper/<paper_id>/')
-def get_paper_info(paper_id):
-    cat_data = category_data_aux(1)
-    paper_properties = [{'name':'title','type':'varchar','value':'El paper 1'},
-                        {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
-                        {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
-                        {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
-                        {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
+def get_paper_info_and_values(paper_id):
+    # cat_data = category_data_aux(1)
+    # paper_properties = [{'name':'title','type':'varchar','value':'El paper 1'},
+    #                     {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
+    #                     {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
+    #                     {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
+    #                     {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
+    paper_properties = db_api.get_paper_properties_and_values(db, paper_id)
+    return jsonify(properties=paper_properties)
 
+
+@app.route('/api/request_data/paper/')
+def get_paper_info():
+    # cat_data = category_data_aux(1)
+    # paper_properties = [{'name':'title','type':'varchar','value':'El paper 1'},
+    #                     {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
+    #                     {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
+    #                     {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
+    #                     {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
+    paper_properties = db_api.get_paper_properties(db)
     return jsonify(properties=paper_properties)
 
 
@@ -234,10 +246,21 @@ def edit_data_from_paper(paper_id):
     print cat_name
     return redirect(request.referrer)
 
-@app.route('/api/add_paper/<dummy_id>/', methods=['POST'])
-def add_paper(dummy_id):
-    # request.form is a dictionary with the form stuff
-    cat_name = request.form.get("paper-"+dummy_id+"-authors")
-    print cat_name
+@app.route('/api/add_paper/', methods=['POST'])
+def add_paper():
+    paper_properties = db_api.get_paper_properties(db)
+    dict_array = []
+    for prop in paper_properties:
+        prop_name = prop['name'].replace(" ","-")
+        form_field = "paper-"+prop_name
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'category':
+            dict_array.append({'name':prop_name,
+                               prop_name: request.form.getlist(form_field)})
+        else:
+            dict_array.append({'name':prop_name,
+                               prop_name: request.form.get(form_field)})
+    db_api.add_paper_using_dict_array(db, dict_array)
+
     return redirect(request.referrer)
 

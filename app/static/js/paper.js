@@ -1,8 +1,7 @@
 // what to do if the search-paper button is pressed
 d3.selectAll(".btn-success").on("click", function(){
     d3.select("#put-form-here").selectAll("form").remove()
-    paper_id = "dumi"
-    d3.json("/api/request_data/paper/"+paper_id+"/",
+    d3.json("/api/request_data/paper/",
             function(error, data){
             // get data
             paper_properties = data.properties
@@ -12,7 +11,7 @@ d3.selectAll(".btn-success").on("click", function(){
             fieldset = d3.select("#put-form-here")
             .append("form")
             .attr("class","form-horizontal")
-            .attr("action","/api/add_paper/"+paper_id+"/")
+            .attr("action","/api/add_paper/")
             .attr("method","post")
             .append("fieldset")
             // set form legend
@@ -22,7 +21,7 @@ d3.selectAll(".btn-success").on("click", function(){
                 form_group = fieldset.append("div").attr("class","form-group")
                 type = paper_properties[i].type
 
-                element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).replace(" ","-")
+                element_id = "paper-"+(paper_properties[i].name).replace(" ","-")
                 value = ""
                 text_label = paper_properties[i].name
                 placeholder = "Instert "+text_label
@@ -203,24 +202,37 @@ var set_category_select = function(form_group,id,text_label,value,data){
     .attr("id",id)
     .attr("name",id)
     .attr("class","form-control")
+    .attr("multiple","multiple")
     put_options_here = d3.select("#"+id)
     // get length of subcategories
     data_length = data.length
-
     // put options on dropdown
     for(var j = 0; j < data_length; j++){
         option = put_options_here
         .append("option")
         .attr("value",data[j].id)
         .text(data[j].name)
-        if(data[j].name == value){
-            option.attr("selected","selected")
-        }
+        option
+        .property("selected",function(d,i){
+            for (var i=0; i< value.length; i++){
+                if (d3.select(this).text() == value[i]){
+                    return true
+                }
+            }
+        })
+        //if(data[j].name in value){
+        //    option.property("selected")
+        //}
     }
-}
+    /*sel = ["a", "c"]
+    d3.selectAll("option")
+    .property("selected", function(d,i){
+        for (var i=0; i< sel.length; i++){
+            if (d3.select(this).attr("id") == value[i]){
+                return true
+            }
+        }
+    })*/
 
-var test = function(dict){
-
-    console.log(dict.name)
 
 }

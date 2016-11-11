@@ -12,16 +12,13 @@ def index():
     set_hidden = False
     search_input = request.args.get("searchinput")
     if search_input is not None:
+        paper_id = db_api.get_paper_id_where_title_exactly(db, search_input)
         set_hidden = True
-    if search_input == "":
-        paper_id = ""
     else:
-        paper_id = 1
-    dic = {'name': 'categorias 1', 'id':1}
+        paper_id = ""
     return render_template('index.html',
                            paper=paper_id,
-                           set_form=set_hidden,
-                           test=dic)
+                           set_form=set_hidden)
 
 
 @app.route('/categorias')
