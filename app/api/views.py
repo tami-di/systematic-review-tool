@@ -1,34 +1,13 @@
-import db_api
-from app import app
-from app import db
+from app import app, db
 from flask import jsonify
 from flask import request
 from flask import redirect
+import db_api
 
 
-@app.route('/api/category/<id>/subcategories')
-def subcategories(id):
-    subcats = [{'name': 'subcategoria 1',
-                'id': 1,
-                'properties': ['name','description','patitos'],
-                'properties_type':{'name':'varchar','description':'text','patitos':'number'},
-                'type':'subcat',
-                'is_subcat':True},
-               {'name': 'propiedad 2',
-                'id': 2,
-                'properties': [],
-                'type':'varchar',
-                'is_subcat':False},
-               {'name': 'propiedad 3',
-                'id': 3,
-                'properties': [],
-                'type':'number',
-                'is_subcat':False},
-               {'name': 'propiedad 4',
-                'id': 4,
-                'type':'text',
-                'properties': [],
-                'is_subcat':False}]
+@app.route('/api/category/<cat_id>/subcategories')
+def subcategories(cat_id):
+    subcats = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     return jsonify(subcategories=subcats)
 
 
@@ -39,6 +18,7 @@ def subcategory_data(id_cat,id):
                {'name': 'dato 5','id': 5}]
 
     return jsonify(subcategory_data=subcats_data)
+
 
 def category_data_aux(cat_id):
     cats_data = [{'name': 'cucurilo','id': 1},{'name': 'Snuffles','id': 2},
@@ -54,9 +34,10 @@ def category_data(cat_id):
 def add_subcategory():
     # request.form is a dictionary with the form stuff
     subcat_name = request.form.get('subcat-name')
-    category_of_subcategory = request.form.get('category-of-subcategory')
-    cat_interaction_with_subcat = request.form.get('cat-interaction-with-subcat')
+    category_of_subcategory = int(request.form.get('category-of-subcategory'))
+    cat_interaction_with_subcat = (str(request.form.get('cat-interaction-with-subcat'))).replace(" ","_")
     # Here you do what you want with the info received
+    db_api.create_subcategory(db,subcat_name,category_of_subcategory,cat_interaction_with_subcat)
     print subcat_name, category_of_subcategory, cat_interaction_with_subcat
     return redirect(request.referrer)
 
@@ -68,7 +49,25 @@ def add_category():
     cat_name = request.form.get('cat-name')
     cat_description = request.form.get('cat-description')
     # Here you do what you want with the info received
-    db_api.create_category(db,cat_name,cat_description)
+    db_api.create_category(db, cat_name, cat_description)
+    return redirect(request.referrer)
+
+@app.route('/api/add_column/<cat_id>/category', methods=['POST'])
+def add_column_to_category(cat_id):
+    # request.form is a dictionary with the form stuff
+    col_name = request.form.get('col-name')
+    col_data = request.form.get('select-data-type')
+    # Here you do what you want with the info received
+    db_api.add_column_to_category(db, cat_id, col_name, col_data)
+    return redirect(request.referrer)
+
+@app.route('/api/add_column/<subcat_id>/subcategory', methods=['POST'])
+def add_column_to_subcategory(subcat_id):
+    # request.form is a dictionary with the form stuff
+    col_name = request.form.get('col-name')
+    col_data = request.form.get('select-data-type')
+    # Here you do what you want with the info received
+    db_api.add_column_to_subcategory(db, subcat_id, col_name, col_data)
     return redirect(request.referrer)
 
 
@@ -80,6 +79,28 @@ def delete_element():
     # Here you do what you want with the info received
     print delete_element_btn, deleted_element
     return redirect(request.referrer)
+
+
+@app.route('/api/delete_category/<cat_id>', methods=['POST'])
+def delete_category(cat_id):
+    # Here you do what you want with the info received
+    db_api.delete_category_by_id(db,cat_id)
+    return redirect(request.referrer)
+
+
+@app.route('/api/delete_subcategory/<subcat_id>/category/<cat_id>', methods=['POST'])
+def delete_subcategory(subcat_id,cat_id):
+    # Here you do what you want with the info received
+    db_api.delete_subcategory_by_id(db, subcat_id,cat_id=cat_id)
+    return redirect(request.referrer)
+
+
+@app.route('/api/delete_column/<column_name>/category/<cat_id>', methods=['POST'])
+def delete_category_column(cat_id,column_name):
+    # Here you do what you want with the info received
+    db_api.delete_category_column(db, cat_id,column_name)
+    return redirect(request.referrer)
+
 
 @app.route('/api/delete_data/category/<cat_id>/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
 def delete_subcategory_data(cat_id,subcat_id,row_id):

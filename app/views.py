@@ -1,7 +1,10 @@
-from app import app
+from app import app, db
 from flask import render_template
 from flask import request
 from api.views import request_headers_from_cat_aux
+import api.db_api as db_api
+
+
 
 @app.route('/')
 @app.route('/index')
@@ -23,13 +26,15 @@ def index():
 
 @app.route('/categorias')
 def categorias():
-    cats = [{'name': 'categorias 1', 'id':1},{'name': 'categoria 2', 'id':2},{'name': 'categoria 3', 'id':3}]
+    cats = db_api.get_all_categories_as_dict_array(db)
+    data_types = db_api.get_columns_data_types()
     return render_template('categories.html',
-                           categorias=cats)
+                           categorias=cats,
+                           data_types=data_types)
 
 @app.route('/data')
 def data():
-    cats = [{'name': 'categoria 1', 'id':1},{'name': 'categoria 2', 'id':2},{'name': 'categoria 3', 'id':3}]
+    cats = db_api.get_all_categories_as_dict_array(db)
     return render_template('data.html', categorias=cats)
 
 @app.route('/search',  methods=['POST','GET'])

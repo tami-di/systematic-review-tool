@@ -7,7 +7,7 @@
         <div class="col-md-2" id="categorias">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Categorias</h3>
+                    <h3>Categories</h3>
                 </div>
             </div>
 
@@ -23,9 +23,9 @@
             </div>
             {% endfor %}
             <div class="row">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-success btn-ctnr" id="add-cat"
-                            href="#" data-toggle="modal" data-target="#add-category-modal">Añadir categoría
+                <div class="col-md-12 content-container">
+                    <button type="button" class="btn btn-success btn-ctnr-cat" id="add-cat"
+                            href="#" data-toggle="modal" data-target="#add-category-modal">Add category
                     </button>
                 </div>
             </div>
@@ -38,14 +38,12 @@
 </div>
 <!-- Modals -->
 <!-- Add Category modal -->
-<div id="add-category-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="add-category-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-add-category-modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 class="text-center">Insertar nueva categoría</h3>
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h2 class="text-center"><img src="//placehold.it/110" class="img-circle"><br>Login</h2>-->
             </div>
             <div class="modal-body row">
 
@@ -55,7 +53,7 @@
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="cat-name">Nombre</label>
+                  <label class="col-md-4 control-label" for="cat-name">Name</label>
                   <div class="col-md-8">
                   <input id="cat-name" name="cat-name" type="text" placeholder="Nombre de la categoría"
                          class="form-control input-md" required="">
@@ -66,10 +64,10 @@
                 <!-- Textarea -->
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="cat-description">
-                      Descripción
+                      Description
                   </label>
                   <div class="col-md-8">
-                    <textarea class="form-control" id="cat-description" name="cat-description">Descripción de la categoría...</textarea>
+                    <textarea class="form-control" id="cat-description" name="cat-description">Category description...</textarea>
                   </div>
                 </div>
 
@@ -77,148 +75,134 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="accept-new-category"></label>
                   <div class="col-md-8">
-                    <button id="accept-new-category" type="submit" name="accept-new-category" class="btn btn-success">Aceptar</button>
-                    <button id="cancel-new-category" name="cancel-new-category" data-dismiss="modal" class="btn btn-danger">Cancelar</button>
+                    <button id="accept-new-category" type="submit" name="accept-new-category" class="btn btn-success">Accept</button>
+                    <button id="cancel-new-category" name="cancel-new-category" data-dismiss="modal" class="btn btn-danger">Cancel</button>
                   </div>
                 </div>
 
                 </fieldset>
                 </form>
-                <!--<form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control input-lg" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-danger btn-lg btn-block">Sign In</button>
-                        <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
-                    </div>
-                </form>-->
             </div>
-            <!--<div class="modal-footer">
-                <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
-            </div>-->
         </div>
     </div>
 </div>
 <!-- Add Subcategory modal -->
-<div id="add-subcategory-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="add-subcategory-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-add-subcategory-modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="text-center">Insertar nueva subcategoría</h3>
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h2 class="text-center"><img src="//placehold.it/110" class="img-circle"><br>Login</h2>-->
+                <h3 class="text-center">Add new subcategory</h3>
             </div>
             <div class="modal-body row">
-
                 <form action="/api/add_subcategory" method="post" class="col-md-10 col-md-offset-0 col-xs-12
                 col-xs-offset-0 form-horizontal">
-                <fieldset>
-
-                <!-- Form Name -->
-
-
-                <!-- Text input-->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="subcat-name">Nombre</label>
-                  <div class="col-md-8">
-                  <input id="subcat-name" name="subcat-name" type="text" placeholder="Nombre de la categoría" class="form-control input-md" required="">
-
-                  </div>
-                </div>
-
-                <!-- Text input-->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="cat-interaction-with-subcat">Interacción con categoría</label>
-                  <div class="col-md-8">
-                  <input id="cat-interaction-with-subcat" name="cat-interaction-with-subcat" type="text" placeholder="Nombre de interacción" class="form-control input-md" required="">
-                  <span class="help-block">Categoría "nombre interacción" subcategoría</span>
-                  </div>
-                </div>
-
-                <!-- Button (Double) -->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="accept-new-category"></label>
-                  <div class="col-md-8">
-                    <button id="accept-new-subcategory" type="submit" name="accept-new-subcategory" class="btn btn-success">Aceptar</button>
-                    <button id="cancel-new-subcategory" name="cancel-new-subcategory" data-dismiss="modal" class="btn btn-danger">Cancelar</button>
-                  </div>
-                </div>
-                <input type="hidden" name="category-of-subcategory" id="category-of-subcategory" value="cat_id" >
-
-
-                </fieldset>
+                    <fieldset>
+                        <!-- Form Name -->
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="subcat-name">Name</label>
+                            <div class="col-md-8">
+                                <input id="subcat-name" name="subcat-name" type="text" placeholder="Category name" class="form-control input-md" required="">
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="cat-interaction-with-subcat">Interaction with category</label>
+                            <div class="col-md-8">
+                                <input id="cat-interaction-with-subcat" name="cat-interaction-with-subcat" type="text" placeholder="Interaction name" class="form-control input-md" required="">
+                                <span class="help-block">Category "interaction name" subcategory</span>
+                            </div>
+                        </div>
+                        <!-- Button (Double) -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="accept-new-category"></label>
+                            <div class="col-md-8">
+                                <button id="accept-new-subcategory" type="submit" name="accept-new-subcategory" class="btn btn-success">Accept</button>
+                                <button id="cancel-new-subcategory" name="cancel-new-subcategory" data-dismiss="modal" class="btn btn-danger">Cancel</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="category-of-subcategory" id="category-of-subcategory" value="cat_id" >
+                    </fieldset>
                 </form>
-                <!--<form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control input-lg" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-danger btn-lg btn-block">Sign In</button>
-                        <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
-                    </div>
-                </form>-->
             </div>
-            <!--<div class="modal-footer">
-                <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
-            </div>-->
         </div>
     </div>
 </div>
 <!-- Delete modal -->
-<div id="delete-element-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="delete-element-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-delete-element-modal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="text-center" id="delete-element-message">Estás seguro?</h3>
+                <h3 class="text-center" id="delete-element-message">Are you sure?</h3>
             </div>
             <div class="modal-body row">
-
                 <form action="/api/delete_element" method="post" class="col-md-10 col-md-offset-0 col-xs-12
-                col-xs-offset-0 form-horizontal">
-                <fieldset>
-
-                <!-- Button -->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="delete-element-btn"></label>
-                  <div class="col-md-4">
-                    <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger"
+                col-xs-offset-0 form-horizontal" id="delete-form">
+                    <fieldset>
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="delete-element-btn"></label>
+                            <div class="col-md-4">
+                                <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger"
                             value="delete">Eliminar</button>
-                  </div>
-                </div>
-                <input type="hidden" name="deleted-element" id="deleted-element" value="deleted-element-id" >
-
-
-                </fieldset>
+                            </div>
+                        </div>
+                        <input type="hidden" name="deleted-element" id="deleted-element" value="deleted-element-id" >
+                    </fieldset>
                 </form>
-                <!--<form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control input-lg" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-danger btn-lg btn-block">Sign In</button>
-                        <span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>
-                    </div>
-                </form>-->
             </div>
-            <!--<div class="modal-footer">
-                <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
-            </div>-->
         </div>
     </div>
 </div>
+<!-- Add column modal -->
+<div id="add-column-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-add-column-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="add-column-message">Insert new column</h3>
+            </div>
+            <div class="modal-body row">
+                <form class="col-md-10 col-md-offset-0 col-xs-12 col-xs-offset-0 form-horizontal"
+                      action="/api/add_category" method="post" id="add-column-form">
+                    <fieldset>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="col-name">Name</label>
+                            <div class="col-md-8">
+                                <input id="col-name" name="col-name" type="text" placeholder="Column name"
+                                 class="form-control input-md" required="">
+                            </div>
+                        </div>
+                        <!-- Select Input -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="select-data-type">Data type</label>
+                            <div class="col-md-8">
+                                <select id="select-data-type" name="select-data-type" class="form-control">
+                                    {% for type in data_types %}
+                                    <option value="{{type}}">{{type}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Button (Double) -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="accept-new-category"></label>
+                            <div class="col-md-8">
+                                <button id="accept-new-column" type="submit" name="accept-new-column" class="btn btn-success">Accept</button>
+                                <button id="cancel-new-column" name="cancel-new-column" data-dismiss="modal" class="btn btn-danger">Cancel</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Scripts -->
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="/static/js/d3.v4.min.js"></script>
 <script src="/static/js/categories.js"></script>
 {% endblock %}
