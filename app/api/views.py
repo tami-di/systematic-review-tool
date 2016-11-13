@@ -194,7 +194,9 @@ def request_headers_from_cat_aux(cat_id):
 
 @app.route('/api/request_headers/category/<cat_id>')
 def request_headers_from_cat(cat_id):
-    return jsonify(headers=request_headers_from_cat_aux(cat_id))
+    full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
+    headers = full_data['headers']
+    return jsonify(headers=headers)
 
 @app.route('/api/request_data/category/<cat_id>')
 def request_data_from_cat(cat_id):
@@ -337,3 +339,9 @@ def add_paper():
 
     return redirect(request.referrer)
 
+@app.route('/api/add_data/author/', methods=['POST'])
+def add_author():
+    author_name = request.form.get("author-name")
+    author_affiliation = request.form.get("author-affiliation")
+    db_api.add_author(db, author_name, author_affiliation)
+    return redirect(request.referrer)

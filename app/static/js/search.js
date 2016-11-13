@@ -31,7 +31,7 @@ var show_results =  function(results){
 // Initialize search form
 var set_form = function(dict){
     paper_id = "dumi"
-    d3.json("/api/request_data/paper/"+paper_id+"/",
+    d3.json("/api/request_data/paper/",
         function(error, data){
             if(error){
                         console.log(error)
@@ -54,7 +54,7 @@ var set_form = function(dict){
             name = paper_properties[k].name
             if(name != 'title'){
                 checkbox_label = checkbox_container.append("label")
-                .attr("class","checkbox")
+                .attr("class","checkbox-inline")
                 .attr("id","checkbox-id-"+k)
                 .attr("for","checkboxes-"+k)
                 checkbox_label.append("input")
@@ -96,12 +96,15 @@ var set_form = function(dict){
                     category_properties = data.headers
                     category_properties_length = category_properties.length
                     for(j = 0; j < category_properties_length; j++){
+                        if(category_properties[j].name == 'id'){
+                            continue
+                        }
                         form_group = fieldset.append("div").attr("class","form-group")
                         prop_type = category_properties[j].type
                         prop_value = get_value(dict,text_label+category_properties[j].name)
                         prop_text_label = text_label +" "+ category_properties[j].name
                         prop_placeholder = get_placeholder(dict,text_label+category_properties[j].name, prop_text_label)
-                        prop_element_id = element_id +"-"+ (category_properties[j].name).replace(" ","-")
+                        prop_element_id = element_id +"-"+ (category_properties[j].name).split(" ").join("-")
                         if(prop_type == 'varchar'){
                             set_varchar_input (form_group,prop_element_id,prop_text_label,prop_value,prop_placeholder)
                         }
@@ -126,9 +129,6 @@ var set_form = function(dict){
                     // buttons
                     div_for_buttons = form_group.append("div").attr("class","col-md-7")
                     put_submit_button(div_for_buttons)
-
-
-
                 })
             }
         }
@@ -171,6 +171,7 @@ var put_submit_button = function(div_for_buttons){
                     .text("Aceptar")
 
 }
+
 var set_number_input = function(form_group,id,text_label,value,placeholder){
     form_group.append("label")
         .attr("class","col-md-2 control-label")

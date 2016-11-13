@@ -1,5 +1,5 @@
 __author__ = 'ivana'
-
+from sets import Set
 
 def create_category_name(category_id):
     return "cat"+str(category_id)
@@ -262,6 +262,20 @@ def get_paper_properties_and_values(db, paper_id):
     return dict_array
 
 
+def get_paper_properties_and_values_on_table_format(db, paper_id):
+    dict_array = get_paper_properties_and_values(db, paper_id)
+    dict_result = {}
+    for dictionary in dict_array:
+        if dictionary['type'] == 'category':
+            str_value = ""
+            for value in dictionary['value']:
+                str_value = str_value + str(value) +";"
+            dict_result[dictionary['name']] = str_value
+        else:
+            dict_result[dictionary['name']] = dictionary['value']
+    return dict_result
+
+
 def get_authors_from_paper_id_as_str(db, paper_id):
     cursor = db.cursor()
     authors_str = ""
@@ -291,7 +305,7 @@ def get_value_from_category_where_paper_id(db,paper_id,cat_id):
     cat_name = create_category_name(cat_id)
     paper_has_cat_name = create_paper_has_category_name(cat_id)
     cursor.execute("select name from "+cat_name+" where id in (select "+cat_name+"_id from "+paper_has_cat_name+" "
-            " where paper_id = "+ paper_id +")")
+            " where paper_id = "+ str(paper_id) +")")
     for row in cursor.fetchall():
         value.append(row[0])
     return value
@@ -510,7 +524,6 @@ def edit_data_row_to_subcategory(db,subcat_id,row_id,dict_array):
     db.commit()
 
 
-
 def add_authors_to_paper(db, paper_id, authors):
     cursor = db.cursor()
     for author in authors:
@@ -591,7 +604,7 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
     for row in cursor.fetchall():
         name = (row[0]+row[1]).replace("_"," ")
         subcat_id = row[2]
-        headers.append({'name':name,'type':'subcat','id':subcat_id})
+        headers.append({'name':name,'type':'subcat','id':subcat_id,'rel_with_cat':row[0]})
     # --------------------------------------------------------------------------------
 
     # rows is a dict array
@@ -642,7 +655,7 @@ def set_as_list(string):
 def get_values_from_paper_as_dict(db, paper_id):
     cursor = db.cursor()
     dict = {}
-    cursor.execute("select title, library, code_name, year, abstract, summary  from paper where id=%s",paper_id)
+    cursor.execute("select title, library, code_name, year, abstract, summary  from paper where id=%s",[paper_id])
     for row in cursor.fetchall():
         dict['title'] = row[0]
         dict['library'] = row[1]
@@ -708,6 +721,97 @@ def delete_row_from_category(db, cat_id, row_id):
     # Commit changes in the database
     db.commit()
 
+
+def search_papers_id(db, paper_values, authors_value, categories_values):
+    cursor = db.cursor()
+    # Search paper ids with paper_values
+    where_clause = ""
+    values_tuple = ()
+    # - using the values in paper values create a search string for the 'where' clause
+    for value in paper_values:
+        where_clause = where_clause+value['id_name']+" like %s AND "
+        values_tuple += ("%"+value['value']+"%",)
+    where_clause = where_clause[0:len(where_clause)-5]
+    cursor.execute("SELECT DISTINCT id FROM paper WHERE "+where_clause, values_tuple)
+    # - get all ids and save them as a 'set'
+    paper_conditions_id_list = []
+    for row in cursor.fetchall():
+        paper_conditions_id_list.append(row[0])
+    paper_conditions_id_set = Set(paper_conditions_id_list)
+
+    # Search for all the papers with all authors in authors_value
+    # - create a list using authors_value string
+    authors_list = set_as_list(authors_value)
+    # - for each author get a set of paper ids (create a list of sets)
+    id_dict_by_author = {}
+    for author in authors_list:
+        cursor.execute('''SELECT DISTINCT paper_id FROM paper_has_authors WHERE author_id in (SELECT id FROM
+        author WHERE name LIKE %s)''', ["%"+author+"%"])
+        id_list_by_author = []
+        for row in cursor.fetchall():
+            id_list_by_author.append(row[0])
+        id_dict_by_author[author] = Set(id_list_by_author)
+
+    # Search for all the paper that meet the 'category' specifications
+    paper_id_sets_by_category_list = []
+    # - for each category in categories_values:
+    for category in categories_values:
+        cat_id = category['cat_id']
+        cat_table_name = create_category_name(cat_id)
+        category_where_clause = ""
+        category_values_tuple = ()
+        # - - get the category_ids that meet the non-subcat specifications as a set
+        for element in category['values']:
+            if not element['is_subcat']:
+                category_where_clause = category_where_clause+element['id_name']+" like %s AND "
+                category_values_tuple += ("%"+element['value']+"%",)
+        category_where_clause = category_where_clause[0:len(category_where_clause)-5]
+        category_id_by_column_conditions_list = []
+        cursor.execute('''SELECT DISTINCT id FROM '''+cat_table_name+''' WHERE '''+category_where_clause,
+                       category_values_tuple)
+        for row in cursor.fetchall():
+            category_id_by_column_conditions_list.append(row[0])
+        category_id_by_column_conditions_set = Set(category_id_by_column_conditions_list)
+
+        # - - for each subcat get the category_ids that meet the subcat spec. as a set (create a set list)
+        category_ids_sets_by_subcategory_condition_list = [] # note that here each element is a set of ids
+        for element in category['values']:
+            if element['is_subcat']:
+                subcat_id = element['subcat_id']
+                subcat_name = create_subcategory_name(subcat_id)
+                interaction = element['rel_with_cat']
+                cat_interact_subcat_table_name = create_cat_has_subcat_name(cat_id, subcat_id, interaction)
+                cursor.execute('''SELECT DISTINCT '''+cat_table_name+'''_id FROM '''+cat_interact_subcat_table_name+
+                               ''' WHERE '''+subcat_name+'''_id IN (SELECT id FROM '''+subcat_name
+                               +''' WHERE name LIKE %s)''',
+                               ["%"+element['name_value']+"%"])
+                category_id_list_by_this_subcategory_conditions = []
+                for row in cursor.fetchall():
+                    category_id_list_by_this_subcategory_conditions.append(row[0])
+                category_ids_sets_by_subcategory_condition_list.append(Set(category_id_list_by_this_subcategory_conditions))
+        # - - get the intersection of the previous sets as a new set
+        for id_set in category_ids_sets_by_subcategory_condition_list:
+            category_id_by_column_conditions_set.intersection_update(id_set)
+        # - - with the new set search for the papers ids that are relates to this category_ids
+        in_string = "("
+        for v in category_id_by_column_conditions_set:
+            in_string = in_string+str(v)+","
+        in_string = in_string[0:len(in_string)-1]+")"
+        paper_has_table_name = create_paper_has_category_name(cat_id)
+        if len(in_string) > 1:
+            cursor.execute("SELECT DISTINCT paper_id FROM "+paper_has_table_name+" WHERE "+
+                           cat_table_name+"_id in "+in_string)
+        paper_id_list_for_this_category_conditions = []
+        for row in cursor.fetchall():
+            paper_id_list_for_this_category_conditions.append(row[0])
+        # - - create a set of paper_ids with those (append to a list of paper_ids by category)
+        paper_id_sets_by_category_list.append(Set(paper_id_list_for_this_category_conditions))
+    # Return the intersection of all the paper_id sets and set lists previously created
+    for cat_set in paper_id_sets_by_category_list:
+        paper_conditions_id_set.intersection_update(cat_set)
+    for author in authors_list:
+        paper_conditions_id_set.intersection_update(id_dict_by_author[author])
+    return list(paper_conditions_id_set)
 
 def parse_type(type_name):
     if 'int' in type_name:

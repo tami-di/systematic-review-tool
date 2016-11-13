@@ -37,40 +37,60 @@ def data():
 @app.route('/search',  methods=['POST','GET'])
 def search():
     if request.method == 'POST':
+        # obtain data
         checkbox_values = request.form.getlist('checkboxes')
-        paper_properties = [{'name':'title','type':'varchar'},
-                            {'name':'authors','type':'varchar'},
-                            {'name':'abstract','type':'text'},
-                            {'name':'summary','type':'text'},
-                            {'name':'categoria 1','type':'category',"id":1}]
+        paper_properties = db_api.get_paper_properties(db)
+        # values maintains the previous field values on the search form
         values = {}
-        categories_properties = {}
+        paper_values = []
+        authors_value = ""
+        categories_values = []
         for prop in paper_properties:
             if not prop['type'] == 'category':
-                values[prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-"))
-                print prop['name'],":",values[prop['name']]
+                if prop['name'] == 'authors':
+                    field_name = "search-"+(prop['name']).replace(" ","-")
+                    authors_value = request.form.get(field_name)
+                    values[prop['name']] = request.form.get(field_name)
+                else:
+                    field_name = "search-"+(prop['name']).replace(" ","-")
+                    paper_values.append({'id_name':(prop['name']).replace(" ","_"),
+                                         'value':request.form.get(field_name)})
+                    values[prop['name']] = request.form.get(field_name)
             else:
-                cat_prop = request_headers_from_cat_aux(prop['id'])
-                categories_properties[prop['id']] = cat_prop
+                category_values = []
+                full_data = db_api.get_data_from_category_as_headers_and_column_data(db, prop['id'])
+                cat_prop = full_data['headers']
                 for c_prop in cat_prop:
-                    values[prop['name']+c_prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-")
-                                                                           +"-"+ (c_prop['name']).replace(" ","-"))
-                    print prop['name'],c_prop['name'],":",values[prop['name']+c_prop['name']]
+                    if c_prop['name'] == 'id':
+                        continue
+                    if c_prop['type'] == 'subcat':
+                        field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                        value = request.form.get(field_name)
+                        category_values.append({'subcat_id':c_prop['id'],
+                                                'rel_with_cat':c_prop['rel_with_cat'],
+                                                'name_value':value,
+                                                'is_subcat':True})
+                        values[prop['name']+c_prop['name']] = request.form.get(field_name)
+                    else:
+                        field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                        value = request.form.get(field_name)
+                        category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
+                                                'value':value,
+                                                'is_subcat':False})
+                        values[prop['name']+c_prop['name']] = request.form.get(field_name)
+                categories_values.append({'cat_id':prop['id'],'values':category_values})
         print "Checkbox values:",checkbox_values
+
         # here the search is made and then we render the template again
-        headers = ['title','abstract','summary','categoria 1']
-        data = [{'title':'El paper 1',
-                    'authors':'autor 1; autor 2; autor 3',
-                    'abstract':'El paper dice cositas muy choris.',
-                    'summary':'El paper dice cositas como cuackers y miau.',
-                    'categoria 1':'cucurilo'},
-                   {'title':'El paper 2',
-                    'authors':'autor 5',
-                    'abstract':'El paper dice cositas. Hace cuack.',
-                    'summary':'Cuack cuack cuack',
-                    'categoria 1':'cucurilo'}]
+        paper_ids = db_api.search_papers_id(db, paper_values, authors_value, categories_values)
+
+        headers = ['title']+[str(a) for a in checkbox_values]
+        data = []
+        for paper_id in paper_ids:
+            paper_properties = db_api.get_paper_properties_and_values_on_table_format(db, paper_id)
+            data.append(paper_properties)
+
         results = {'headers':headers,'data':data}
-        print values
     else:
         values = {}
         results = {}
