@@ -195,8 +195,11 @@ def get_all_properties_from_category_as_dict_array(db, cat_id):
         type = 'subcat'
         # - set 'is_subcat' to true
         is_subcat = 'True'
-        dict_array.append({'name':subcat_name,'id':subcat_id,'properties':properties, 'properties_type':properties_type,
-                           'type':type,'is_subcat':is_subcat})
+        cursor.execute("SELECT interaction FROM cat_subcat_interactions WHERE subcat_id=%s",[subcat_id])
+        for row in cursor.fetchall():
+            interaction = row[0]
+            dict_array.append({'name':subcat_name,'id':subcat_id,'properties':properties, 'properties_type':properties_type,
+                           'type':type,'is_subcat':is_subcat,'interaction':interaction})
     return dict_array
 
 
@@ -294,6 +297,64 @@ def get_value_from_category_where_paper_id(db,paper_id,cat_id):
     return value
 
 
+def edit_paper_using_dict_array(db, paper_id,dict_array):
+    cursor = db.cursor()
+    title = ""
+    library = ""
+    code_name = ""
+    year = ""
+    abstract = ""
+    summary = ""
+    categories = []
+    authors = ""
+    for dictionary in dict_array:
+        if dictionary['name'] == 'title':
+            title = dictionary['title']
+        elif dictionary['name'] == 'library':
+            library = dictionary['library']
+        elif dictionary['name'] == 'code-name':
+            code_name = dictionary['code-name']
+        elif dictionary['name'] == 'year':
+            year = dictionary['year']
+        elif dictionary['name'] == 'abstract':
+            abstract = dictionary['abstract']
+        elif dictionary['name'] == 'summary':
+            summary = dictionary['summary']
+        elif dictionary['name'] == 'authors':
+            authors = set_as_list(dictionary['authors'])
+        else:
+            cat_id = get_category_id_from_name(db,dictionary['name'])
+            cat_name = create_category_name(cat_id)
+            table_name = create_paper_has_category_name(cat_id)
+            categories.append({'table_name': table_name,'values': dictionary[dictionary['name']],'cat_name': cat_name})
+    # update paper data
+    cursor.execute('''UPDATE paper SET title=%s,library=%s,code_name=%s,year=%s,abstract=%s,summary=%s
+    where id=%s''', (title,library,code_name,year,abstract,summary,paper_id))
+    # update authors
+    update_authors_to_paper(db, paper_id, authors)
+    # update categories
+    update_categories_data_from_dict_array(db, categories, paper_id)
+    # Commit changes in the database
+    db.commit()
+
+
+def update_categories_data_from_dict_array(db, categories, paper_id):
+    cursor = db.cursor()
+    for category in categories:
+        cursor.execute("DELETE FROM "+category['table_name']+" WHERE paper_id=%s",[paper_id])
+    add_data_to_categories_from_dict_array(db, categories, paper_id)
+
+
+def update_authors_to_paper(db, paper_id, authors):
+    cursor = db.cursor()
+    # remove authors from paper
+    cursor.execute("DELETE FROM paper_has_authors WHERE paper_id=%s",[paper_id])
+    # add authors again
+    add_authors_to_paper(db, paper_id, authors)
+    # Commit changes in the database
+    db.commit()
+
+
 def add_paper_using_dict_array(db, dict_array):
     cursor = db.cursor()
     title = ""
@@ -302,7 +363,6 @@ def add_paper_using_dict_array(db, dict_array):
     year = ""
     abstract = ""
     summary = ""
-    authors_list = []
     categories = []
     for dictionary in dict_array:
         if dictionary['name'] == 'title':
@@ -332,12 +392,123 @@ def add_paper_using_dict_array(db, dict_array):
     # add authors data
     add_authors_to_paper(db, paper_id, authors)
     # add category data
-    for category in categories:
-        for value in category['values']:
-            cursor.execute("insert into "+category['table_name']+" (paper_id,"+category['cat_name']+
-                           "_id) values (%s,%s)",(paper_id,value))
+    add_data_to_categories_from_dict_array(db, categories, paper_id)
     # Commit changes in the database
     db.commit()
+
+
+def get_row_id_from_category_by_name(db, cat_id, name):
+    cursor = db.cursor()
+    cat_table_name = create_category_name(cat_id)
+    cursor.execute("SELECT id FROM "+cat_table_name+" WHERE name=%s",[name])
+    for row in cursor.fetchall():
+        return row[0]
+
+
+def edit_data_row_to_category(db, cat_id, row_id, dict_array):
+    cursor = db.cursor()
+    cat_table_name = create_category_name(cat_id)
+    set_str = ""
+    values = ()
+    for element in dict_array:
+        if not element['is_subcat']:
+            set_str = set_str + element['id_name'] + "=%s,"
+            values += (element[element['id_name']],)
+        else:
+            # delete previous relations in cat_interaction_subcat
+            subcat_id = element['id']
+            subcat_table_name = create_subcategory_name(subcat_id)
+            relation = element['rel_with_cat']
+            rel_table = create_cat_has_subcat_name(cat_id,subcat_id,relation)
+            cursor.execute("DELETE FROM "+rel_table+" WHERE "+cat_table_name+"_id=%s",[row_id])
+            # append new relations
+            for value in element[element['id_name']]:
+                # note that the subcat value already exists in that table so the relation it's the only thing to be added
+                cursor.execute("INSERT INTO "+rel_table+" ("+cat_table_name+"_id,"+subcat_table_name+"_id) values (%s,%s)",
+                               (row_id,value))
+    # finish string
+    set_str = set_str[0:len(set_str)-1]
+    # finish tuple
+    values += (row_id,)
+    # update columns of table
+    cursor.execute("UPDATE "+cat_table_name+" SET "+set_str+" WHERE id=%s",values)
+    # Commit changes in the database
+    db.commit()
+
+
+def add_data_row_to_category(db,cat_id,dict_array):
+    cursor = db.cursor()
+    cat_table_name = create_category_name(cat_id)
+    new_cat_element_id = ""
+    prop_str = "("
+    values_str = "("
+    values = ()
+    name_of_new_element = ""
+    for element in dict_array:
+        if not element['is_subcat']:
+            prop_str = prop_str + element['id_name'] + ","
+            values_str = values_str + "%s,"
+            values += (element[element['id_name']],)
+            if element['id_name'] == 'name':
+                name_of_new_element = element['name']
+    # finish strings
+    prop_str = prop_str[0:len(prop_str)-1]+")"
+    values_str = values_str[0:len(values_str)-1]+")"
+    # add new row to category table
+    cursor.execute("INSERT INTO "+cat_table_name+" "+prop_str+" values "+values_str,values)
+    # get new row id
+    new_cat_element_id = get_row_id_from_category_by_name(db, cat_id, name_of_new_element)
+    for element in dict_array:
+        if element['is_subcat']:
+            # in this case we have that the value is from a subcategory of this category
+            subcat_id = element['id']
+            subcat_table_name = create_subcategory_name(subcat_id)
+            rel_table_name = create_cat_has_subcat_name(cat_id,subcat_id,element['rel_with_cat'])
+            for value in element[element['id_name']]:
+                # note that the subcat value already exists in that table so the relation it's the only thing to be added
+                cursor.execute("INSERT INTO "+rel_table_name+" ("+cat_table_name+"_id,"+subcat_table_name+"_id) values (%s,%s)",
+                               (new_cat_element_id,value))
+    # Commit changes in the database
+    db.commit()
+
+
+def add_data_row_to_subcategory(db,subcat_id,dict_array):
+    cursor = db.cursor()
+    subcat_table_name = create_subcategory_name(subcat_id)
+    prop_str = "("
+    values_str = "("
+    values = ()
+    for element in dict_array:
+        prop_str = prop_str + element['id_name'] + ","
+        values_str += "%s,"
+        values += (element[element['id_name']],)
+    # finish strings
+    prop_str = prop_str[0:len(prop_str)-1]+")"
+    values_str = values_str[0:len(values_str)-1]+")"
+    print "INSERT INTO "+subcat_table_name+" "+prop_str+" values "+values_str
+    # add new row to category table
+    cursor.execute("INSERT INTO "+subcat_table_name+" "+prop_str+" values "+values_str,values)
+    # Commit changes in the database
+    db.commit()
+
+
+def edit_data_row_to_subcategory(db,subcat_id,row_id,dict_array):
+    cursor = db.cursor()
+    subcat_table_name = create_subcategory_name(subcat_id)
+    set_str = ""
+    values = ()
+    for element in dict_array:
+        set_str = set_str + element['id_name'] + "=%s,"
+        values += (element[element['id_name']],)
+    # finish string
+    set_str = set_str[0:len(set_str)-1]
+    # finish tuple
+    values += (row_id,)
+    # update columns of table
+    cursor.execute("UPDATE "+subcat_table_name+" SET "+set_str+" WHERE id=%s",values)
+    # Commit changes in the database
+    db.commit()
+
 
 
 def add_authors_to_paper(db, paper_id, authors):
@@ -349,8 +520,123 @@ def add_authors_to_paper(db, paper_id, authors):
     db.commit()
 
 
+def add_data_to_categories_from_dict_array(db, categories, paper_id):
+    cursor = db.cursor()
+    for category in categories:
+        for value in category['values']:
+            cursor.execute("insert into "+category['table_name']+" (paper_id,"+category['cat_name']+
+                           "_id) values (%s,%s)",(paper_id,value))
+
+
+def get_data_from_subategory_as_headers_and_column_data(db, subcat_id):
+    cursor = db.cursor()
+    subcat_name = create_subcategory_name(subcat_id)
+    # headers is a dict array
+    headers = []
+    category_columns = []
+    cursor.execute("SHOW COLUMNS FROM "+subcat_name)
+    for row in cursor.fetchall():
+        #if row[0] == 'id':
+        #    continue
+        col_type = parse_type(row[1])
+        name = (row[0]).replace("_"," ")
+        headers.append({'name': name,'type': col_type})
+        category_columns.append({'name': name,'type': col_type})
+
+    rows = []
+    # get all data/rows from category
+    cursor.execute("SELECT * FROM "+subcat_name)
+    for row in cursor.fetchall():
+        # - save column data from category table
+        dict_row = {}
+        i = 0
+        for column in category_columns:
+            dict_row[column['name']] = row[i]
+            i += 1
+        rows.append(dict_row)
+    return {'headers':headers,'rows':rows}
+
+
+def get_subcategory_data(db, subcat_id):
+    cursor = db.cursor()
+    subcat_name = create_subcategory_name(subcat_id)
+    dict_array = []
+    cursor.execute("SELECT id, name from "+subcat_name)
+    for row in cursor.fetchall():
+        dict_array.append({'name': row[1],'id': row[0]})
+    return dict_array
+
+
+def get_data_from_category_as_headers_and_column_data(db, cat_id):
+    cursor = db.cursor()
+    # headers is a dict array
+    headers = []
+    category_columns = []
+
+    # --------------------------------------------------------------------------------
+    # get category columns
+    cat_name = create_category_name(cat_id)
+    cursor.execute("SHOW COLUMNS FROM "+cat_name)
+    for row in cursor.fetchall():
+        #if row[0] == 'id':
+        #    continue
+        col_type = parse_type(row[1])
+        name = (row[0]).replace("_"," ")
+        headers.append({'name': name,'type': col_type})
+        category_columns.append({'name': name,'type': col_type})
+    # get subcategories (without value) from category with cat_id
+    cursor.execute('''SELECT cat_subcat_interactions.interaction, subcategories.name, subcategories.id
+    FROM cat_subcat_interactions INNER JOIN subcategories ON cat_subcat_interactions.subcat_id=subcategories.id
+     WHERE cat_subcat_interactions.cat_id=%s''',[cat_id])
+    for row in cursor.fetchall():
+        name = (row[0]+row[1]).replace("_"," ")
+        subcat_id = row[2]
+        headers.append({'name':name,'type':'subcat','id':subcat_id})
+    # --------------------------------------------------------------------------------
+
+    # rows is a dict array
+    # --------------------------------------------------------------------------------
+    cursor_2 = db.cursor()
+    rows = []
+    # get all data/rows from category
+    cursor.execute("SELECT * FROM "+cat_name)
+    for row in cursor.fetchall():
+        id = row[0]
+        # - save column data from category table
+        dict_row = {}
+        i = 0
+        for column in category_columns:
+            dict_row[column['name']] = row[i]
+            i += 1
+        # - with the id search for cat_interaction_subcat tables
+        cat_interaction_subcat_table_names = []
+        cursor_2.execute("SELECT interaction, subcat_id FROM cat_subcat_interactions WHERE cat_id=%s",[cat_id])
+        for row_2 in cursor_2.fetchall():
+            cat_interaction_subcat_table_names.append(
+                {'table_name':create_cat_has_subcat_name(cat_id,row_2[1],row_2[0]),
+                 'subcat_id':row_2[1],
+                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_"," ")})
+        # - in those tables search for the subcat_id that matches the current id (from previous step)
+        # - with those subcat_id go to the subcategory table and get their names
+        for dictionary in cat_interaction_subcat_table_names:
+            subcat_table_name = create_subcategory_name(dictionary['subcat_id'])
+            get_names = "SELECT "+subcat_table_name+".name FROM "+dictionary['table_name']+" INNER JOIN "\
+                        +subcat_table_name+" ON "+dictionary['table_name']+"."+subcat_table_name+"_id="+\
+                        subcat_table_name+".id WHERE "+cat_name+"_id=%s"
+            cursor_2.execute(get_names, [id])
+            subcat_names_as_str = ""
+            for row_2 in cursor_2.fetchall():
+                subcat_names_as_str += row_2[0] + ";"
+            dict_row[dictionary['subcat_name']] = subcat_names_as_str
+        # - append subcategory name with value
+        rows.append(dict_row)
+
+    return {'headers':headers,'rows':rows}
+
+
 def set_as_list(string):
-    return string.split(";")
+    lst = string.split(";")
+    return [ r for r in lst if r != '']
 
 
 def get_values_from_paper_as_dict(db, paper_id):
@@ -367,6 +653,7 @@ def get_values_from_paper_as_dict(db, paper_id):
         break
     return dict
 
+
 def get_data_from_category_by_cat_id(db, cat_id):
     cursor = db.cursor()
     cursor.execute("select id, name from "+create_category_name(cat_id))
@@ -381,6 +668,45 @@ def get_paper_id_where_title_exactly(db, title):
     cursor.execute("select id from paper where title=%s",[title])
     for row in cursor.fetchall():
         return row[0]
+
+
+def delete_row_from_subcategory(db, subcat_id, row_id):
+    cursor = db.cursor()
+    subcat_table = create_subcategory_name(subcat_id)
+    rel_table_list = []
+    # delete all relations possible with row_id
+    # - get all rel_table names
+    cursor.execute("SELECT cat_id, interaction FROM cat_subcat_interactions WHERE subcat_id=%s",[subcat_id])
+    for row in cursor.fetchall():
+        cat_id = row[0]
+        interaction = row[1]
+        rel_table_list.append(create_cat_has_subcat_name(cat_id,subcat_id,interaction))
+    # - for each rel_table delete relations that contain row_id
+    for table in rel_table_list:
+        cursor.execute("DELETE FROM "+table+" WHERE "+subcat_table+"_id=%s",[row_id])
+    # delete row_id from subcat_table
+    cursor.execute("DELETE FROM "+subcat_table+" WHERE id=%s",[row_id])
+    # Commit changes in the database
+    db.commit()
+
+def delete_row_from_category(db, cat_id, row_id):
+    cursor = db.cursor()
+    cat_table = create_category_name(cat_id)
+    rel_table_list = []
+    # delete all relations possible with row_id
+    # - get all rel_table names
+    cursor.execute("SELECT subcat_id, interaction FROM cat_subcat_interactions WHERE cat_id=%s",[cat_id])
+    for row in cursor.fetchall():
+        subcat_id = row[0]
+        interaction = row[1]
+        rel_table_list.append(create_cat_has_subcat_name(cat_id,subcat_id,interaction))
+    # - for each rel_table delete relations that contain row_id
+    for table in rel_table_list:
+        cursor.execute("DELETE FROM "+table+" WHERE "+cat_table+"_id=%s",[row_id])
+    # delete row_id from subcat_table
+    cursor.execute("DELETE FROM "+cat_table+" WHERE id=%s",[row_id])
+    # Commit changes in the database
+    db.commit()
 
 
 def parse_type(type_name):

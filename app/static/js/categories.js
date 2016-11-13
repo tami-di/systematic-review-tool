@@ -43,7 +43,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     .attr("data-parent","#subcategories")
                     .attr("href","#ccollapse"+i)
                     if(subcategories[i].type == 'subcat'){
-                        collapse_title.text("Subcategory "+subcategories[i].name)
+                        collapse_title.text((subcategories[i].interaction).split('_').join(' ')+subcategories[i].name)
                     }else{
                         collapse_title.text(subcategories[i].name+" : "+subcategories[i].type)
                     }

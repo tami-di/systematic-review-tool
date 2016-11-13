@@ -11,11 +11,12 @@ def subcategories(cat_id):
     return jsonify(subcategories=subcats)
 
 
-@app.route('/api/category/<id_cat>/subcategory_data/<id>')
-def subcategory_data(id_cat,id):
-    subcats_data = [{'name': 'Fluff','id': 1},{'name': 'Spoofi','id': 2},
-               {'name': 'dato 3','id': 3},{'name': 'dato 4','id': 4},
-               {'name': 'dato 5','id': 5}]
+@app.route('/api/subcategory_data/<subcat_id>')
+def subcategory_data(subcat_id):
+    subcats_data = db_api.get_subcategory_data(db, subcat_id)
+    # subcats_data = [{'name': 'Fluff','id': 1},{'name': 'Spoofi','id': 2},
+    #            {'name': 'dato 3','id': 3},{'name': 'dato 4','id': 4},
+    #            {'name': 'dato 5','id': 5}]
 
     return jsonify(subcategory_data=subcats_data)
 
@@ -102,35 +103,66 @@ def delete_category_column(cat_id,column_name):
     return redirect(request.referrer)
 
 
-@app.route('/api/delete_data/category/<cat_id>/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
-def delete_subcategory_data(cat_id,subcat_id,row_id):
+@app.route('/api/delete_data/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
+def delete_subcategory_data(subcat_id, row_id):
     # Here you do what you want with the info received
-    print cat_id,subcat_id,row_id
+    db_api.delete_row_from_subcategory(db, subcat_id, row_id)
     return redirect(request.referrer)
 
 @app.route('/api/delete_data/category/<cat_id>/row/<row_id>', methods=['POST'])
 def delete_category_data(cat_id,row_id):
     # Here you do what you want with the info received
-    print cat_id,row_id
+    db_api.delete_row_from_category(db, cat_id, row_id)
     return redirect(request.referrer)
 
 
 @app.route('/api/add_data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
 def add_data_to_subcat(cat_id,subcat_id):
-    el_name = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"name")
-    el_description = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"description")
-    el_patitos = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"patitos")
-    print "Categoria "+cat_id+"."+subcat_id," : "+el_name, el_description, el_patitos
+    category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    dict_array = []
+    for prop in category_properties:
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'subcat':
+            if str(prop['id']) == str(subcat_id):
+                for element in prop['properties']:
+                    form_field = "sub-"+subcat_id+"-cat-"+cat_id+"-"+element
+                    value = request.form.get(form_field)
+                    dict_array.append({'id_name':element,
+                                       element:value})
+    db_api.add_data_row_to_subcategory(db,subcat_id,dict_array)
+            # prop_name = prop['name'].replace(" ","-")
+            # form_field = "sub-"+prop['interaction']+prop['name']+"-cat-"+cat_id
+            # dict_array.append({'id_name':prop_name,
+            #                    prop_name: request.form.getlist(form_field),
+            #                    'rel_with_cat':prop['interaction'],
+            #                    'is_subcat':True,
+            #                    'id':prop['id']})
+    # el_description = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"description")
+    # el_patitos = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"patitos")
+    # print "Categoria "+cat_id+"."+subcat_id," : "+el_name, el_description, el_patitos
     return redirect(request.referrer)
 
 
 @app.route('/api/add_data/category/<cat_id>', methods=['POST'])
 def add_data_to_cat(cat_id):
-    el_1 = request.form.get('sub-' + str(1) + '-cat-' + cat_id)
-    el_2 = request.form.get('sub-' + str(2) + '-cat-' + cat_id)
-    el_3 = request.form.get('sub-' + str(3) + '-cat-' + cat_id)
-    el_4 = request.form.get('sub-' + str(4) + '-cat-' + cat_id)
-    print "Categoria "+cat_id, " : "+ el_1, el_2, el_3, el_4
+    category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    dict_array = []
+    for prop in category_properties:
+        prop_name = prop['name'].replace(" ","-")
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'subcat':
+            form_field = "sub-"+prop['interaction']+prop['name']+"-cat-"+cat_id
+            dict_array.append({'id_name':prop_name,
+                               prop_name: request.form.getlist(form_field),
+                               'rel_with_cat':prop['interaction'],
+                               'is_subcat':True,
+                               'id':prop['id']})
+        else:
+            form_field = "sub-"+prop['name']+"-cat-"+cat_id
+            dict_array.append({'id_name':prop_name,
+                               prop_name: request.form.get(form_field),
+                               'is_subcat':False})
+    db_api.add_data_row_to_category(db,cat_id,dict_array)
     return redirect(request.referrer)
 
 
@@ -166,34 +198,40 @@ def request_headers_from_cat(cat_id):
 
 @app.route('/api/request_data/category/<cat_id>')
 def request_data_from_cat(cat_id):
-    headers = request_headers_from_cat_aux(cat_id)
-    data_row_1 = {'subcategoria 1':'Fluff',
-                  'propiedad 2':'patiters',
-                  'propiedad 3':'3',
-                  'propiedad 4':'Los patitos son extra fluferinos'}
-    data_row_2 = {'subcategoria 1':'Spoofi',
-                  'propiedad 2':'Cuack',
-                  'propiedad 3':'8',
-                  'propiedad 4':'Gatinis que hacen pancitos'}
-    data = [data_row_1,data_row_2]
+    full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
+    headers = full_data['headers']
+    data = full_data['rows']
+    # headers = request_headers_from_cat_aux(cat_id)
+    # data_row_1 = {'subcategoria 1':'Fluff',
+    #               'propiedad 2':'patiters',
+    #               'propiedad 3':'3',
+    #               'propiedad 4':'Los patitos son extra fluferinos'}
+    # data_row_2 = {'subcategoria 1':'Spoofi',
+    #               'propiedad 2':'Cuack',
+    #               'propiedad 3':'8',
+    #               'propiedad 4':'Gatinis que hacen pancitos'}
+    # data = [data_row_1,data_row_2]
     return jsonify(column_headers=headers, column_data=data)
 
-@app.route('/api/request_data/category/<cat_id>/subcategory/<subcat_id>')
-def request_data_from_subcat(cat_id,subcat_id):
-    headers = [{'name':'name','type':'varchar'},
-               {'name':'description','type':'text'},
-               {'name':'patitos','type':'number'}]
-
-    data_row_1 = {'name':'Kiwi',
-                  'description':'Es un pajarito redondito',
-                  'patitos':'10'}
-    data_row_2 = {'name':'Hamster',
-                  'description':'Es un ratoncito redondito y feroz',
-                  'patitos':'3'}
-    data_row_3 = {'name':'Round Robin',
-                  'description':'Es un Robin (pajarito) redondito',
-                  'patitos':'1'}
-    data = [data_row_1,data_row_2,data_row_3]
+@app.route('/api/request_data/subcategory/<subcat_id>')
+def request_data_from_subcat(subcat_id):
+    full_data = db_api.get_data_from_subategory_as_headers_and_column_data(db, subcat_id)
+    headers = full_data['headers']
+    data = full_data['rows']
+    # headers = [{'name':'name','type':'varchar'},
+    #            {'name':'description','type':'text'},
+    #            {'name':'patitos','type':'number'}]
+    #
+    # data_row_1 = {'name':'Kiwi',
+    #               'description':'Es un pajarito redondito',
+    #               'patitos':'10'}
+    # data_row_2 = {'name':'Hamster',
+    #               'description':'Es un ratoncito redondito y feroz',
+    #               'patitos':'3'}
+    # data_row_3 = {'name':'Round Robin',
+    #               'description':'Es un Robin (pajarito) redondito',
+    #               'patitos':'1'}
+    # data = [data_row_1,data_row_2,data_row_3]
     return jsonify(column_headers=headers, column_data=data)
 
 
@@ -225,26 +263,61 @@ def get_paper_info():
 
 @app.route('/api/edit_data/<cat_id>/category/<row_id>/row', methods=['POST'])
 def edit_data_from_category(cat_id,row_id):
-    # request.form is a dictionary with the form stuff
-    print cat_id, row_id
-    cat_name = request.form.get('sub-2-cat-'+cat_id)
-    print cat_name
+    category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    dict_array = []
+    for prop in category_properties:
+        prop_name = prop['name'].replace(" ","-")
+        if prop_name == 'id':
+            continue
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'subcat':
+            form_field = "sub-"+(prop['interaction']).replace("_","-")+prop['name']+"-cat-"+cat_id
+            dict_array.append({'id_name':prop_name,
+                               prop_name: request.form.getlist(form_field),
+                               'rel_with_cat':prop['interaction'],
+                               'is_subcat':True,
+                               'id':prop['id']})
+        else:
+            form_field = "sub-"+prop['name']+"-cat-"+cat_id
+            dict_array.append({'id_name':prop_name,
+                               prop_name: request.form.get(form_field),
+                               'is_subcat':False})
+    db_api.edit_data_row_to_category(db, cat_id, row_id, dict_array)
     return redirect(request.referrer)
 
 @app.route('/api/edit_data/<cat_id>/category/<subcat_id>/subcategory/<row_id>/row', methods=['POST'])
 def edit_data_from_subcategory(cat_id,subcat_id,row_id):
-    # request.form is a dictionary with the form stuff
-    print "Category: "+cat_id,"Subcategory: "+subcat_id,"Row: "+ row_id
-    cat_name = request.form.get('sub-'+subcat_id+'-cat-'+cat_id+'-name')
-    print cat_name
+    category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    dict_array = []
+    for prop in category_properties:
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'subcat':
+            if str(prop['id']) == str(subcat_id):
+                for element in prop['properties']:
+                    form_field = "sub-"+subcat_id+"-cat-"+cat_id+"-"+element
+                    value = request.form.get(form_field)
+                    dict_array.append({'id_name':element,
+                                       element:value})
+    db_api.edit_data_row_to_subcategory(db,subcat_id,row_id,dict_array)
     return redirect(request.referrer)
 
 @app.route('/api/edit_paper/<paper_id>/', methods=['POST'])
 def edit_data_from_paper(paper_id):
-    # request.form is a dictionary with the form stuff
-    cat_name = request.form.get("paper-"+paper_id+"-authors")
-    print cat_name
+    paper_properties = db_api.get_paper_properties(db)
+    dict_array = []
+    for prop in paper_properties:
+        prop_name = prop['name'].replace(" ","-")
+        form_field = "paper-"+paper_id+"-"+prop_name
+        # request.form is a dictionary with the form stuff
+        if prop['type'] == 'category':
+            dict_array.append({'name':prop_name,
+                               prop_name: request.form.getlist(form_field)})
+        else:
+            dict_array.append({'name':prop_name,
+                               prop_name: request.form.get(form_field)})
+    db_api.edit_paper_using_dict_array(db, paper_id,dict_array)
     return redirect(request.referrer)
+
 
 @app.route('/api/add_paper/', methods=['POST'])
 def add_paper():

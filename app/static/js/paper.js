@@ -21,7 +21,7 @@ d3.selectAll(".btn-success").on("click", function(){
                 form_group = fieldset.append("div").attr("class","form-group")
                 type = paper_properties[i].type
 
-                element_id = "paper-"+(paper_properties[i].name).replace(" ","-")
+                element_id = "paper-"+(paper_properties[i].name).split(' ').join('-')
                 value = ""
                 text_label = paper_properties[i].name
                 placeholder = "Instert "+text_label
@@ -80,7 +80,7 @@ var set_form_with_paper = function(paper_id){
                     form_group = fieldset.append("div").attr("class","form-group")
                     type = paper_properties[i].type
 
-                    element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).replace(" ","-")
+                    element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).split(' ').join('-')
                     value = paper_properties[i].value
                     placeholder = ""
                     text_label = paper_properties[i].name
@@ -220,19 +220,7 @@ var set_category_select = function(form_group,id,text_label,value,data){
                 }
             }
         })
-        //if(data[j].name in value){
-        //    option.property("selected")
-        //}
     }
-    /*sel = ["a", "c"]
-    d3.selectAll("option")
-    .property("selected", function(d,i){
-        for (var i=0; i< sel.length; i++){
-            if (d3.select(this).attr("id") == value[i]){
-                return true
-            }
-        }
-    })*/
 
 
 }
