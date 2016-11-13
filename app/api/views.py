@@ -203,6 +203,8 @@ def request_data_from_cat(cat_id):
     full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
     headers = full_data['headers']
     data = full_data['rows']
+    print headers
+    print data[0]
     # headers = request_headers_from_cat_aux(cat_id)
     # data_row_1 = {'subcategoria 1':'Fluff',
     #               'propiedad 2':'patiters',
@@ -339,9 +341,31 @@ def add_paper():
 
     return redirect(request.referrer)
 
+
 @app.route('/api/add_data/author/', methods=['POST'])
 def add_author():
     author_name = request.form.get("author-name")
     author_affiliation = request.form.get("author-affiliation")
     db_api.add_author(db, author_name, author_affiliation)
+    return redirect(request.referrer)
+
+
+@app.route('/api/modify_data/author/<author_id>', methods=['POST'])
+def modify_author(author_id):
+    author_name = request.form.get("author-name")
+    author_affiliation = request.form.get("author-affiliation")
+    db_api.modify_author(db, author_id, author_name, author_affiliation)
+    return redirect(request.referrer)
+
+
+@app.route('/api/request_data/author/')
+def get_authors():
+    full_data = db_api.get_data_from_authors_as_headers_and_column_data(db)
+    headers = full_data['headers']
+    data = full_data['rows']
+    return jsonify(column_headers=headers, column_data=data)
+
+@app.route('/api/delete_data/author/<author_id>', methods=['POST'])
+def delete_author(author_id):
+    db_api.delete_row_from_author(db, author_id)
     return redirect(request.referrer)

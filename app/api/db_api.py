@@ -570,6 +570,31 @@ def get_data_from_subategory_as_headers_and_column_data(db, subcat_id):
     return {'headers':headers,'rows':rows}
 
 
+def get_data_from_authors_as_headers_and_column_data(db):
+    cursor = db.cursor()
+    # headers is a dict array
+    headers = []
+    category_columns = []
+    cursor.execute("SHOW COLUMNS FROM author")
+    for row in cursor.fetchall():
+        col_type = parse_type(row[1])
+        name = (row[0]).replace("_"," ")
+        headers.append({'name': name,'type': col_type})
+        category_columns.append({'name': name,'type': col_type})
+    rows = []
+    # get all data/rows from category
+    cursor.execute("SELECT * FROM author")
+    for row in cursor.fetchall():
+        # - save column data from category table
+        dict_row = {}
+        i = 0
+        for column in category_columns:
+            dict_row[column['name']] = row[i]
+            i += 1
+        rows.append(dict_row)
+    return {'headers':headers,'rows':rows}
+
+
 def get_subcategory_data(db, subcat_id):
     cursor = db.cursor()
     subcat_name = create_subcategory_name(subcat_id)
@@ -812,6 +837,29 @@ def search_papers_id(db, paper_values, authors_value, categories_values):
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
     return list(paper_conditions_id_set)
+
+
+def add_author(db, author_name, author_affiliation):
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO author (name, affiliation) values (%s,%s)",(author_name,author_affiliation))
+    # Commit changes in the database
+    db.commit()
+
+
+def modify_author(db, author_id, author_name, author_affiliation):
+    cursor = db.cursor()
+    cursor.execute("UPDATE author SET name=%s, affiliation=%s WHERE id=%s",(author_name, author_affiliation, author_id))
+    # Commit changes in the database
+    db.commit()
+
+
+def delete_row_from_author(db, author_id):
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s",[author_id])
+    cursor.execute("DELETE FROM author WHERE id=%s",[author_id])
+    # Commit changes in the database
+    db.commit()
+
 
 def parse_type(type_name):
     if 'int' in type_name:

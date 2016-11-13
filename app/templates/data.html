@@ -5,10 +5,25 @@
         <div class="col-md-3" id="categorias">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Categorias</h3>
+                    <h3>Categories and authors</h3>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                        <button class="btn btn-grey btn-ctnr-data" id="authors-grey-btn" value="authors">
+                            authors
+                        </button>
+                        <button type="button" id="see-all-data-of-authors" name="see-all-data-of-authors"
+                                class="btn btn-info" value="authors">
+                            <i class="fa fa-search-plus fa-lg"></i>
+                        </button>
+                        <button type="button" id="add-data-to-authors" name="add-data-to-authors"
+                                data-toggle="modal" data-target="#add-data-modal"
+                                class="btn btn-success" value="authors">
+                            <i class="fa fa-plus-circle fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
             {% for categoria in categorias %}
             <div class="row">
                 <div class="col-md-12">
@@ -28,6 +43,7 @@
                 </div>
             </div>
             {% endfor %}
+
 
         </div>
         <div class="list-group col-md-3" id="subcategorias"></div>
