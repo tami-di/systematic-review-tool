@@ -99,13 +99,24 @@
                 col-xs-offset-0 form-horizontal">
                     <fieldset>
                         <!-- Form Name -->
+                        <!-- Select Basic -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="select-existig-subcat">Select existing subcategory</label>
+                            <div class="col-md-8">
+                                <select id="select-existig-subcat" name="select-existig-subcat" class="form-control">
+                                    <option value="0">crate new subcategory</option>
+                                </select>
+                            </div>
+                        </div>
                         <!-- Text input-->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="subcat-name">Name</label>
                             <div class="col-md-8">
-                                <input id="subcat-name" name="subcat-name" type="text" placeholder="Category name" class="form-control input-md" required="">
+                                <input id="subcat-name" name="subcat-name" type="text" placeholder="New subcategory name" class="form-control input-md">
+                                <span class="help-block">Fill only if you want to add a new subcategory</span>
                             </div>
                         </div>
+
                         <!-- Text input-->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="cat-interaction-with-subcat">Interaction with category</label>

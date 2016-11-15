@@ -43,7 +43,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     .attr("data-parent","#subcategories")
                     .attr("href","#ccollapse"+i)
                     if(subcategories[i].type == 'subcat'){
-                        collapse_title.text((subcategories[i].interaction).split('_').join(' ')+subcategories[i].name)
+                        collapse_title.text((subcategories[i].interaction).split('_').join(' ')+" "+subcategories[i].name)
                     }else{
                         collapse_title.text(subcategories[i].name+" : "+subcategories[i].type)
                     }
@@ -132,10 +132,31 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .attr("id","subcat-btn-container")
                 // set_success_button(parent-of-button, button-id, button-text)
                 set_success_button("#subcat-btn-container", "add-subcat", "Add subcategory")
-                d3.select("#add-subcat").
-                attr("href","#").
-                attr("data-toggle","modal").
-                attr("data-target","#add-subcategory-modal")
+                d3.select("#add-subcat")
+                .attr("href","#")
+                .attr("data-toggle","modal")
+                .attr("data-target","#add-subcategory-modal")
+                .on("click",function(){
+                    d3.json("/api/request_data/subcategories/category/"+cat_id,
+                        function(error, data){
+                            if (error){
+                                console.log(error);
+                                return
+                            }
+                        subcategories = data.subcategories_info
+                        select = d3.select("#select-existig-subcat")
+                        select.selectAll("option").remove()
+                        select.append("option")
+                        .attr("value",0)
+                        .text("crate new subcategory")
+
+                        for(i = 0; i < subcategories.length ; i++){
+                            select.append("option")
+                            .attr("value",subcategories[i].subcat_id)
+                            .text(subcategories[i].subcat_name)
+                        }
+                    })
+                })
                 // set value of hidden input
                 d3.select("#category-of-subcategory")
                 .attr("value",""+cat_id)

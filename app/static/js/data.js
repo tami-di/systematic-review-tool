@@ -98,14 +98,14 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
 d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
     // get category id
     cat_id = d3.select(this).attr("value")
+    // get category name
+    parent = this.parentNode
+    cat_name = d3.select(parent).select(".btn-success").attr("value")
     // if authors do sth different
     if(cat_name == 'authors'){
         console.log("do stuff")
         return
     }
-    // get category name
-    parent = this.parentNode
-    cat_name = d3.select(parent).select(".btn-success").attr("value")
     // set clicked item active, set rest unactive
     set_active("#categorias",this)
     // remove last subcategories shown
@@ -532,9 +532,10 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                     if(column_headers[k].name == 'id'){
                         continue
                     }
+                    name_from_header_row = (column_headers[k].name).split(" ").join("")
                     body_row.append("td")
                     .attr("id","cell-"+j+"-"+k)
-                    .text(column_data[j][column_headers[k].name])
+                    .text(column_data[j][name_from_header_row])
                 }
                 last_column = body_row.append("td")
                 // add edit-row-button

@@ -34,14 +34,28 @@ def category_data(cat_id):
 @app.route('/api/add_subcategory', methods=['POST'])
 def add_subcategory():
     # request.form is a dictionary with the form stuff
+    select_existig_subcat_id = request.form.get('select-existig-subcat')
     subcat_name = request.form.get('subcat-name')
-    category_of_subcategory = int(request.form.get('category-of-subcategory'))
+    category_of_subcategory_id = int(request.form.get('category-of-subcategory'))
     cat_interaction_with_subcat = (str(request.form.get('cat-interaction-with-subcat'))).replace(" ","_")
     # Here you do what you want with the info received
-    db_api.create_subcategory(db,subcat_name,category_of_subcategory,cat_interaction_with_subcat)
-    print subcat_name, category_of_subcategory, cat_interaction_with_subcat
+    if select_existig_subcat_id == str(0):
+        db_api.create_subcategory(db,subcat_name,category_of_subcategory_id,cat_interaction_with_subcat)
+    else:
+        db_api.create_interaction_for_existing_subcategory(db,category_of_subcategory_id,cat_interaction_with_subcat,
+                                                           select_existig_subcat_id)
     return redirect(request.referrer)
 
+
+@app.route('/api/request_data/subcategories/category/<cat_id>')
+def get_subcategories_name_and_if_from_category(cat_id):
+    subcats_ids = db_api.get_all_subcategories_id_of_category_as_array(db, cat_id)
+    dict_array = []
+    for subcat_id in subcats_ids:
+        subcat_name = db_api.get_subcategory_name_from_id(db,subcat_id)
+        dict_array.append({'subcat_id':subcat_id,'subcat_name':subcat_name})
+    # request.form is a dictionary with the form stuff
+    return jsonify(subcategories_info=dict_array )
 
 
 @app.route('/api/add_category', methods=['POST'])
@@ -196,15 +210,14 @@ def request_headers_from_cat_aux(cat_id):
 def request_headers_from_cat(cat_id):
     full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
     headers = full_data['headers']
-    return jsonify(headers=headers)
+    cat_name = db_api.get_category_name_from_id(db, cat_id)
+    return jsonify(headers=headers, name=cat_name)
 
 @app.route('/api/request_data/category/<cat_id>')
 def request_data_from_cat(cat_id):
     full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
     headers = full_data['headers']
     data = full_data['rows']
-    print headers
-    print data[0]
     # headers = request_headers_from_cat_aux(cat_id)
     # data_row_1 = {'subcategoria 1':'Fluff',
     #               'propiedad 2':'patiters',

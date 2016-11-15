@@ -29,10 +29,12 @@ def categorias():
                            categorias=cats,
                            data_types=data_types)
 
+
 @app.route('/data')
 def data():
     cats = db_api.get_all_categories_as_dict_array(db)
     return render_template('data.html', categorias=cats)
+
 
 @app.route('/search',  methods=['POST','GET'])
 def search():
@@ -40,6 +42,7 @@ def search():
         # obtain data
         checkbox_values = request.form.getlist('checkboxes')
         paper_properties = db_api.get_paper_properties(db)
+
         # values maintains the previous field values on the search form
         values = {}
         paper_values = []
@@ -66,21 +69,25 @@ def search():
                     if c_prop['type'] == 'subcat':
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
                         value = request.form.get(field_name)
+                        # if value is None:
+                        #      value = ''
                         category_values.append({'subcat_id':c_prop['id'],
                                                 'rel_with_cat':c_prop['rel_with_cat'],
                                                 'name_value':value,
                                                 'is_subcat':True})
-                        values[prop['name']+c_prop['name']] = request.form.get(field_name)
+
+                        values[prop['name']+c_prop['name']] = value
                     else:
+                        print field_name
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
                         value = request.form.get(field_name)
+                        # if value is None:
+                        #      value = ''
                         category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
                                                 'value':value,
                                                 'is_subcat':False})
-                        values[prop['name']+c_prop['name']] = request.form.get(field_name)
+                        values[prop['name']+c_prop['name']] = value
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
-        print "Checkbox values:",checkbox_values
-
         # here the search is made and then we render the template again
         paper_ids = db_api.search_papers_id(db, paper_values, authors_value, categories_values)
 
@@ -95,6 +102,7 @@ def search():
         values = {}
         results = {}
     return render_template('search.html', dict=values, results=results)
+
 
 @app.route('/api/add_data/search/paper/', methods=['POST'])
 def search_paper():

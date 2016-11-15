@@ -50,7 +50,7 @@ def create_category(db,name, description):
     name VARCHAR(100), description text)'''
     cursor.execute(create_category_table)
     # command to create relacional table between the category table and the paper
-    create_relation_table = '''CREATE TABLE '''+paper_has_cat_name+'''(paper_id MEDIUMINT,'''+cat_name+'''_id MEDIUMINT,
+    create_relation_table = '''CREATE TABLE '''+paper_has_cat_name+'''(paper_id INT,'''+cat_name+'''_id MEDIUMINT,
     FOREIGN KEY (paper_id) REFERENCES paper(id), FOREIGN KEY ('''+cat_name+'''_id) REFERENCES '''+cat_name+'''(id))'''
     cursor.execute(create_relation_table)
     # Commit changes in the database
@@ -627,7 +627,7 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
     FROM cat_subcat_interactions INNER JOIN subcategories ON cat_subcat_interactions.subcat_id=subcategories.id
      WHERE cat_subcat_interactions.cat_id=%s''',[cat_id])
     for row in cursor.fetchall():
-        name = (row[0]+row[1]).replace("_"," ")
+        name = (row[0]+" "+row[1]).replace("_"," ")
         subcat_id = row[2]
         headers.append({'name':name,'type':'subcat','id':subcat_id,'rel_with_cat':row[0]})
     # --------------------------------------------------------------------------------
@@ -653,7 +653,7 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
             cat_interaction_subcat_table_names.append(
                 {'table_name':create_cat_has_subcat_name(cat_id,row_2[1],row_2[0]),
                  'subcat_id':row_2[1],
-                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_"," ")})
+                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_","")})
         # - in those tables search for the subcat_id that matches the current id (from previous step)
         # - with those subcat_id go to the subcategory table and get their names
         for dictionary in cat_interaction_subcat_table_names:
@@ -680,7 +680,7 @@ def set_as_list(string):
 def get_values_from_paper_as_dict(db, paper_id):
     cursor = db.cursor()
     dict = {}
-    cursor.execute("select title, library, code_name, year, abstract, summary  from paper where id=%s",[paper_id])
+    cursor.execute("select title, library, code_name, year, abstract, summary, source  from paper where id=%s",[paper_id])
     for row in cursor.fetchall():
         dict['title'] = row[0]
         dict['library'] = row[1]
@@ -688,6 +688,7 @@ def get_values_from_paper_as_dict(db, paper_id):
         dict['year'] = row[3]
         dict['abstract'] = row[4]
         dict['summary'] = row[5]
+        dict['source'] = row[6]
         break
     return dict
 
@@ -747,11 +748,13 @@ def delete_row_from_category(db, cat_id, row_id):
     db.commit()
 
 
-def search_papers_id(db, paper_values, authors_value, categories_values):
+def search_papers_id(db, paper_values, authors_value, categories_values,show_not_in_selection=False):
     cursor = db.cursor()
     # Search paper ids with paper_values
     where_clause = ""
     values_tuple = ()
+    if not show_not_in_selection:
+        where_clause = "NOT code_name='not-in-selection' AND "
     # - using the values in paper values create a search string for the 'where' clause
     for value in paper_values:
         where_clause = where_clause+value['id_name']+" like %s AND "
@@ -836,7 +839,18 @@ def search_papers_id(db, paper_values, authors_value, categories_values):
         paper_conditions_id_set.intersection_update(cat_set)
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
-    return list(paper_conditions_id_set)
+    str_in = "("
+    for el in list(paper_conditions_id_set):
+        str_in = str_in + str(el) + ","
+    str_in = str_in[0:len(str_in)-1]+")"
+    if len(str_in) > 1:
+        cursor.execute("SELECT id FROM paper WHERE id IN "+str_in+" ORDER BY year")
+        result_id_list = []
+        for row in cursor.fetchall():
+            result_id_list.append(row[0])
+        return result_id_list
+    else:
+        return list(paper_conditions_id_set)
 
 
 def add_author(db, author_name, author_affiliation):
@@ -857,6 +871,24 @@ def delete_row_from_author(db, author_id):
     cursor = db.cursor()
     cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s",[author_id])
     cursor.execute("DELETE FROM author WHERE id=%s",[author_id])
+    # Commit changes in the database
+    db.commit()
+
+
+def create_interaction_for_existing_subcategory(db,cat_id,interaction, subcat_id):
+    cursor = db.cursor()
+    subcategory_name = create_subcategory_name(subcat_id)
+    # insert interaction on cat_subcat_interactions
+    cursor.execute("INSERT INTO cat_subcat_interactions (cat_id,interaction,subcat_id) VALUES (%s,%s,%s)",
+                   (cat_id,interaction,subcat_id))
+    # create cat_interaction_subcat table
+    interaction_table_name = create_cat_has_subcat_name(cat_id,subcat_id,interaction)
+    category_name = create_category_name(cat_id)
+    create_relation_table = '''CREATE TABLE '''+interaction_table_name+'''('''+category_name+'''_id MEDIUMINT,'''+\
+                            subcategory_name+'''_id MEDIUMINT,
+    FOREIGN KEY ('''+category_name+'''_id) REFERENCES '''+category_name+'''(id), FOREIGN KEY ('''+\
+                            subcategory_name+'''_id) REFERENCES '''+subcategory_name+'''(id))'''
+    cursor.execute(create_relation_table)
     # Commit changes in the database
     db.commit()
 
@@ -883,4 +915,11 @@ def unparse_type(type_name):
 
 def get_columns_data_types():
     return ['varchar', 'number', 'text']
+
+
+def get_category_name_from_id(db, cat_id):
+    cursor = db.cursor()
+    cursor.execute("SELECT name FROM categories WHERE id=%s",[cat_id])
+    for row in cursor.fetchall():
+        return row[0]
 

@@ -1,4 +1,4 @@
-
+var is_submit_button = false
 var show_results =  function(results){
 
     if(! ('data' in results)){
@@ -30,7 +30,6 @@ var show_results =  function(results){
 
 // Initialize search form
 var set_form = function(dict){
-    paper_id = "dumi"
     d3.json("/api/request_data/paper/",
         function(error, data){
             if(error){
@@ -93,12 +92,15 @@ var set_form = function(dict){
                     if(error){
                         console.log(error)
                     }
+                    text_label = data.name
+                    element_id = "search-"+(text_label).replace(" ","-")
                     category_properties = data.headers
                     category_properties_length = category_properties.length
                     for(j = 0; j < category_properties_length; j++){
                         if(category_properties[j].name == 'id'){
                             continue
                         }
+
                         form_group = fieldset.append("div").attr("class","form-group")
                         prop_type = category_properties[j].type
                         prop_value = get_value(dict,text_label+category_properties[j].name)
@@ -120,8 +122,11 @@ var set_form = function(dict){
                             set_text_input(form_group,prop_element_id,prop_text_label,prop_value,prop_placeholder)
                         }
                     }
+                    fieldset.select("#submit-form-group").remove()
                     // add buttons
-                    form_group = fieldset.append("div").attr("class","form-group")
+                    form_group = fieldset.append("div")
+                                    .attr("class","form-group")
+                                    .attr("id","submit-form-group")
                     // label?
                     form_group.append("label")
                     .attr("class","col-md-5 control-label")
@@ -132,7 +137,17 @@ var set_form = function(dict){
                 })
             }
         }
-
+        // add buttons
+                    form_group = fieldset.append("div")
+                                    .attr("class","form-group")
+                                    .attr("id","submit-form-group")
+                    // label?
+                    form_group.append("label")
+                    .attr("class","col-md-5 control-label")
+                    .attr("for","accept-modified-data")
+                    // buttons
+                    div_for_buttons = form_group.append("div").attr("class","col-md-7")
+                    put_submit_button(div_for_buttons)
     })
 
 }
