@@ -243,7 +243,7 @@ def get_paper_properties(db):
         # - append name
         # - append type
         # - append data to category
-        dict_array.append({'name':str(row[1]).replace("_"," "),'type':'category','data':data,'id':row[0]})
+        dict_array.append({'name':row[1],'type':'category','data':data,'id':row[0]})
     return dict_array
 
 
@@ -499,7 +499,6 @@ def add_data_row_to_subcategory(db,subcat_id,dict_array):
     # finish strings
     prop_str = prop_str[0:len(prop_str)-1]+")"
     values_str = values_str[0:len(values_str)-1]+")"
-    print "INSERT INTO "+subcat_table_name+" "+prop_str+" values "+values_str
     # add new row to category table
     cursor.execute("INSERT INTO "+subcat_table_name+" "+prop_str+" values "+values_str,values)
     # Commit changes in the database
@@ -610,7 +609,6 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
     # headers is a dict array
     headers = []
     category_columns = []
-
     # --------------------------------------------------------------------------------
     # get category columns
     cat_name = create_category_name(cat_id)
@@ -653,7 +651,7 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
             cat_interaction_subcat_table_names.append(
                 {'table_name':create_cat_has_subcat_name(cat_id,row_2[1],row_2[0]),
                  'subcat_id':row_2[1],
-                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_","")})
+                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_","").replace(" ","")})
         # - in those tables search for the subcat_id that matches the current id (from previous step)
         # - with those subcat_id go to the subcategory table and get their names
         for dictionary in cat_interaction_subcat_table_names:
@@ -698,7 +696,7 @@ def get_data_from_category_by_cat_id(db, cat_id):
     cursor.execute("select id, name from "+create_category_name(cat_id))
     dict_array = []
     for row in cursor.fetchall():
-        dict_array.append({'name':str(row[1]).replace("_"," "),'id':row[0]})
+        dict_array.append({'name':row[1],'id':row[0]})
     return dict_array
 
 
@@ -728,9 +726,12 @@ def delete_row_from_subcategory(db, subcat_id, row_id):
     # Commit changes in the database
     db.commit()
 
+
 def delete_row_from_category(db, cat_id, row_id):
     cursor = db.cursor()
     cat_table = create_category_name(cat_id)
+    paper_has_cat = create_paper_has_category_name(cat_id)
+    # delete all relations possible with row_id
     rel_table_list = []
     # delete all relations possible with row_id
     # - get all rel_table names
@@ -742,7 +743,10 @@ def delete_row_from_category(db, cat_id, row_id):
     # - for each rel_table delete relations that contain row_id
     for table in rel_table_list:
         cursor.execute("DELETE FROM "+table+" WHERE "+cat_table+"_id=%s",[row_id])
-    # delete row_id from subcat_table
+    print("DELETE FROM "+paper_has_cat+" WHERE "+cat_table+"_id=%s",[row_id])
+    cursor.execute("DELETE FROM "+paper_has_cat+" WHERE "+cat_table+"_id=%s",[row_id])
+    # delete row_id from cat_table
+    print("DELETE FROM "+cat_table+" WHERE id=%s",[row_id])
     cursor.execute("DELETE FROM "+cat_table+" WHERE id=%s",[row_id])
     # Commit changes in the database
     db.commit()
@@ -788,6 +792,14 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         cat_table_name = create_category_name(cat_id)
         category_where_clause = ""
         category_values_tuple = ()
+        # If the table is empty it should not be taken into account in the search
+        cursor.execute("SELECT COUNT(id) FROM "+cat_table_name)
+        is_this_table_empty = False
+        for row in cursor.fetchall():
+            if int(row[0]) == 0:
+                is_this_table_empty = True
+        if is_this_table_empty:
+            continue
         # - - get the category_ids that meet the non-subcat specifications as a set
         for element in category['values']:
             if not element['is_subcat']:
@@ -809,6 +821,15 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                 subcat_name = create_subcategory_name(subcat_id)
                 interaction = element['rel_with_cat']
                 cat_interact_subcat_table_name = create_cat_has_subcat_name(cat_id, subcat_id, interaction)
+                # If the table is empty it should not be taken into account in the search
+                cursor.execute("SELECT COUNT("+cat_table_name+"_id) FROM "+cat_interact_subcat_table_name)
+                is_this_table_empty = False
+                for row in cursor.fetchall():
+                    if int(row[0]) == 0:
+                        is_this_table_empty = True
+                if is_this_table_empty:
+                    continue
+                # If the table is not empty, proceed
                 cursor.execute('''SELECT DISTINCT '''+cat_table_name+'''_id FROM '''+cat_interact_subcat_table_name+
                                ''' WHERE '''+subcat_name+'''_id IN (SELECT id FROM '''+subcat_name
                                +''' WHERE name LIKE %s)''',
@@ -839,6 +860,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         paper_conditions_id_set.intersection_update(cat_set)
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
+
     str_in = "("
     for el in list(paper_conditions_id_set):
         str_in = str_in + str(el) + ","
