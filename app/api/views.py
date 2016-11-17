@@ -11,6 +11,24 @@ def subcategories(cat_id):
     return jsonify(subcategories=subcats)
 
 
+def remove_subcategories_duplicated(dict_array_subcategories):
+    dict_array = []
+    subcat_ids_added = []
+    for element in dict_array_subcategories:
+        if element['is_subcat']:
+            if element['id'] not in subcat_ids_added:
+                subcat_ids_added.append(element['id'])
+                dict_array.append(element)
+        else:
+            dict_array.append(element)
+    return dict_array
+
+@app.route('/api/category/<cat_id>/subcategories/without_inter/')
+def subcategories_without_interaction(cat_id):
+    subcats = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    dict_array = remove_subcategories_duplicated(subcats)
+    return jsonify(subcategories=dict_array)
+
 @app.route('/api/subcategory_data/<subcat_id>')
 def subcategory_data(subcat_id):
     subcats_data = db_api.get_subcategory_data(db, subcat_id)
@@ -92,7 +110,6 @@ def delete_element():
     delete_element_btn = request.form.get('delete-element-btn')
     deleted_element = request.form.get('deleted-element')
     # Here you do what you want with the info received
-    print delete_element_btn, deleted_element
     return redirect(request.referrer)
 
 
@@ -133,6 +150,7 @@ def delete_category_data(cat_id,row_id):
 @app.route('/api/add_data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
 def add_data_to_subcat(cat_id,subcat_id):
     category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
+    category_properties = remove_subcategories_duplicated(category_properties)
     dict_array = []
     for prop in category_properties:
         # request.form is a dictionary with the form stuff
@@ -144,16 +162,6 @@ def add_data_to_subcat(cat_id,subcat_id):
                     dict_array.append({'id_name':element,
                                        element:value})
     db_api.add_data_row_to_subcategory(db,subcat_id,dict_array)
-            # prop_name = prop['name'].replace(" ","-")
-            # form_field = "sub-"+prop['interaction']+prop['name']+"-cat-"+cat_id
-            # dict_array.append({'id_name':prop_name,
-            #                    prop_name: request.form.getlist(form_field),
-            #                    'rel_with_cat':prop['interaction'],
-            #                    'is_subcat':True,
-            #                    'id':prop['id']})
-    # el_description = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"description")
-    # el_patitos = request.form.get("sub-"+subcat_id+"-cat-"+cat_id+"-"+"patitos")
-    # print "Categoria "+cat_id+"."+subcat_id," : "+el_name, el_description, el_patitos
     return redirect(request.referrer)
 
 
@@ -288,12 +296,14 @@ def edit_data_from_category(cat_id,row_id):
             continue
         # request.form is a dictionary with the form stuff
         if prop['type'] == 'subcat':
-            form_field = "sub-"+(prop['interaction']).replace("_","-")+prop['name']+"-cat-"+cat_id
+            print prop
+            form_field = "sub-"+(prop['interaction']).replace("_","-")+"-"+prop['name']+"-cat-"+cat_id
             dict_array.append({'id_name':prop_name,
                                prop_name: request.form.getlist(form_field),
                                'rel_with_cat':prop['interaction'],
                                'is_subcat':True,
                                'id':prop['id']})
+            print form_field,":",request.form.getlist(form_field)
         else:
             form_field = "sub-"+prop['name']+"-cat-"+cat_id
             dict_array.append({'id_name':prop_name,
