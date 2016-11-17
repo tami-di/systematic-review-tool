@@ -743,10 +743,8 @@ def delete_row_from_category(db, cat_id, row_id):
     # - for each rel_table delete relations that contain row_id
     for table in rel_table_list:
         cursor.execute("DELETE FROM "+table+" WHERE "+cat_table+"_id=%s",[row_id])
-    print("DELETE FROM "+paper_has_cat+" WHERE "+cat_table+"_id=%s",[row_id])
     cursor.execute("DELETE FROM "+paper_has_cat+" WHERE "+cat_table+"_id=%s",[row_id])
     # delete row_id from cat_table
-    print("DELETE FROM "+cat_table+" WHERE id=%s",[row_id])
     cursor.execute("DELETE FROM "+cat_table+" WHERE id=%s",[row_id])
     # Commit changes in the database
     db.commit()

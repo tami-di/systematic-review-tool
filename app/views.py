@@ -78,7 +78,6 @@ def search():
 
                         values[prop['name']+c_prop['name']] = value
                     else:
-                        print field_name
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
                         value = request.form.get(field_name)
                         # if value is None:
@@ -117,15 +116,12 @@ def search_paper():
     for prop in paper_properties:
         if not prop['type'] == 'category':
             values[prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-"))
-            print prop['name'],":",values[prop['name']]
         else:
             cat_prop = request_headers_from_cat_aux(prop['id'])
             categories_properties[prop['id']] = cat_prop
             for c_prop in cat_prop:
                 values[prop['name']+c_prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-")
                                                                        +"-"+ (c_prop['name']).replace(" ","-"))
-                print prop['name'],c_prop['name'],":",values[prop['name']+c_prop['name']]
-    print "Checkbox values:",checkbox_values
     #here the search is made and then we render the template again
     results = []
     return render_template('search.html', dict=values, results=results)

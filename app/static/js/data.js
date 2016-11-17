@@ -103,7 +103,6 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
     cat_name = d3.select(parent).select(".btn-success").attr("value")
     // if authors do sth different
     if(cat_name == 'authors'){
-        console.log("do stuff")
         return
     }
     // set clicked item active, set rest unactive
@@ -123,7 +122,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .text("Subcategorias de la Categoria " + cat_id)
 
     // get subcategories of current category
-    d3.json("/api/category/"+ cat_id + "/subcategories",
+    d3.json("/api/category/"+ cat_id + "/subcategories/without_inter/",
     function(error, data){
         if (error){
             console.log(error);
@@ -180,7 +179,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             id = (d3.select(parent).select(".btn-grey").attr("value")).split(".")
             cat_id = id[0]
             subcat_id = id[1]
-            d3.json("/api/category/"+ cat_id + "/subcategories",
+            d3.json("/api/category/"+ cat_id + "/subcategories/without_inter/",
                     function(error, data){
                         if (error){
                             console.log(error);
@@ -197,35 +196,41 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     form = d3.select(form_body.node().parentNode)
                     form.attr("action","/api/add_data/category/" + cat_id + "/subcategory/" + subcat_id)
                     // remove last elements of the form
+                    form.selectAll(".form-group").remove()
                     d3.select("#add-data-body").selectAll(".form-group").remove()
                     for(var i = 0; i < length; i++){
 
                         type = subcategories[i].type
                         if(type == 'subcat'){
-                            properties_of_subcategory = subcategories[i].properties
-                            properties_types = subcategories[i].properties_type
-                            properties_of_subcategory_length = properties_of_subcategory.length
-                            for(var j = 0; j < properties_of_subcategory_length; j++){
-                                form_group = form_body.append("div").attr("class","form-group")
-                                name = properties_of_subcategory[j]
-                                property_type = properties_types[name]
-                                element_id = "sub-"+subcategories[i].id+"-cat-"+cat_id+"-"+name
-                                text_label = name
-                                value = ""
-                                if(property_type == 'varchar'){
-                                    placeholder = "Inserte "+name
-                                    set_varchar_input(form_group,element_id,text_label,value,placeholder)
-                                }
-                                if(property_type == 'text'){
-                                    placeholder = "Inserte "+name
-                                    set_text_input(form_group,element_id,text_label,value,placeholder)
-                                }
-                                if(property_type == 'number'){
-                                    placeholder = "-"
-                                    set_number_input(form_group,element_id,text_label,value,placeholder)
+                            if(subcategories[i].id == subcat_id){
+                                properties_of_subcategory = subcategories[i].properties
+                                properties_types = subcategories[i].properties_type
+                                properties_of_subcategory_length = properties_of_subcategory.length
+                                for(var j = 0; j < properties_of_subcategory_length; j++){
+
+                                    form_group = form_body.append("div").attr("class","form-group")
+                                    name = properties_of_subcategory[j]
+                                    property_type = properties_types[name]
+                                    element_id = "sub-"+subcategories[i].id+"-cat-"+cat_id+"-"+name
+                                    text_label = name
+                                    value = ""
+                                    if(property_type == 'varchar'){
+                                        placeholder = "Inserte "+name
+                                        set_varchar_input(form_group,element_id,text_label,value,placeholder)
+                                    }
+                                    if(property_type == 'text'){
+                                        placeholder = "Inserte "+name
+                                        set_text_input(form_group,element_id,text_label,value,placeholder)
+                                    }
+                                    if(property_type == 'number'){
+                                        placeholder = "-"
+                                        set_number_input(form_group,element_id,text_label,value,placeholder)
+                                    }
+
                                 }
 
                             }
+
                         }
 
                     }
@@ -566,7 +571,8 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         type = subcategories[i].type
                         subcat_id = subcategories[i].id
                         // set parameters for each type of input
-                        value = set_str_as_array(column_data[row][column_headers[i].name])
+                        name = (column_headers[i].name).split(" ").join("")
+                        value = set_str_as_array(column_data[row][name])
                         placeholder = ""
                         element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id
                         text_label = subcategories[i].name
@@ -724,7 +730,6 @@ var set_subcategory_select = function(form_group,id,text_label,value,cat_id,subc
     .attr("name",id)
     .attr("class","form-control")
     .attr("multiple","multiple")
-    put_options_here = d3.select("#"+id)
     d3.json("/api/subcategory_data/"+subcat_id,
     function(error, data){
         if (error){
@@ -739,7 +744,7 @@ var set_subcategory_select = function(form_group,id,text_label,value,cat_id,subc
 
         // put options on dropdown
         for(var j = 0; j < length_subcategory_data; j++){
-            option = put_options_here
+            option = d3.select("#"+id)
             .append("option")
             .attr("value",subcategory_data[j].id)
             .text(subcategory_data[j].name)
