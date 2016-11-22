@@ -321,6 +321,9 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
     summary = ""
     categories = []
     authors = ""
+    source = ""
+    for d in dict_array:
+        print d['name']
     for dictionary in dict_array:
         if dictionary['name'] == 'title':
             title = dictionary['title']
@@ -334,16 +337,18 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
             abstract = dictionary['abstract']
         elif dictionary['name'] == 'summary':
             summary = dictionary['summary']
+        elif dictionary['name'] == 'source':
+            source = dictionary['source']
         elif dictionary['name'] == 'authors':
             authors = set_as_list(dictionary['authors'])
         else:
-            cat_id = get_category_id_from_name(db,dictionary['name'])
+            cat_id = get_category_id_from_name(db,dictionary['name'].replace("-"," "))
             cat_name = create_category_name(cat_id)
             table_name = create_paper_has_category_name(cat_id)
             categories.append({'table_name': table_name,'values': dictionary[dictionary['name']],'cat_name': cat_name})
     # update paper data
-    cursor.execute('''UPDATE paper SET title=%s,library=%s,code_name=%s,year=%s,abstract=%s,summary=%s
-    where id=%s''', (title,library,code_name,year,abstract,summary,paper_id))
+    cursor.execute('''UPDATE paper SET title=%s,library=%s,code_name=%s,year=%s,abstract=%s,summary=%s, source=%s
+    where id=%s''', (title,library,code_name,year,abstract,summary,source,paper_id))
     # update authors
     update_authors_to_paper(db, paper_id, authors)
     # update categories
@@ -354,6 +359,7 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
 
 def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.cursor()
+    print categories
     for category in categories:
         cursor.execute("DELETE FROM "+category['table_name']+" WHERE paper_id=%s",[paper_id])
     add_data_to_categories_from_dict_array(db, categories, paper_id)
@@ -805,6 +811,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                 category_values_tuple += ("%"+element['value']+"%",)
         category_where_clause = category_where_clause[0:len(category_where_clause)-5]
         category_id_by_column_conditions_list = []
+
         cursor.execute('''SELECT DISTINCT id FROM '''+cat_table_name+''' WHERE '''+category_where_clause,
                        category_values_tuple)
         for row in cursor.fetchall():

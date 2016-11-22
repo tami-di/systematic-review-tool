@@ -296,14 +296,12 @@ def edit_data_from_category(cat_id,row_id):
             continue
         # request.form is a dictionary with the form stuff
         if prop['type'] == 'subcat':
-            print prop
-            form_field = "sub-"+(prop['interaction']).replace("_","-")+"-"+prop['name']+"-cat-"+cat_id
+            form_field = "sub-"+(prop['interaction']).replace("_","-")+"-"+(prop['name']).replace(" ","-")+"-cat-"+cat_id
             dict_array.append({'id_name':prop_name,
                                prop_name: request.form.getlist(form_field),
                                'rel_with_cat':prop['interaction'],
                                'is_subcat':True,
                                'id':prop['id']})
-            print form_field,":",request.form.getlist(form_field)
         else:
             form_field = "sub-"+prop['name']+"-cat-"+cat_id
             dict_array.append({'id_name':prop_name,
