@@ -1,6 +1,6 @@
 // what to do if the add-data-to-category button is pressed
 d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
-    // get category id
+   // get category id
     cat_name = d3.select(this).attr("value")
     // if authors do sth different
     if(cat_name == 'authors'){
@@ -76,7 +76,8 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                 }
                 if(type == 'subcat'){
                     value = ""
-                    element_id = "sub-"+subcategories[i].interaction+subcategories[i].name+"-cat-"+cat_id
+                    name = (subcategories[i].interaction+subcategories[i].name).split(" ").join("_")
+                    element_id = "sub-"+name+"-cat-"+cat_id
                     text_label = (subcategories[i].interaction).split("_").join(" ") + text_label
                     set_subcategory_select(form_group,element_id,text_label,value,cat_id,subcat_id)
                 }
@@ -368,7 +369,6 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     .on("click",function(){
                         // set modal form parameter to delete row
                         row = d3.select(this).attr("value")
-                        console.log(column_data[row]['id'])
                         d3.select("#delete-data-modal")
                         .select("form")
                         .attr("action",'/api/delete_data/subcategory/'+subcat_id+'/row/'+column_data[row]['id'])

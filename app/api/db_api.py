@@ -383,6 +383,7 @@ def add_paper_using_dict_array(db, dict_array):
     year = ""
     abstract = ""
     summary = ""
+    source = ""
     categories = []
     for dictionary in dict_array:
         if dictionary['name'] == 'title':
@@ -391,6 +392,8 @@ def add_paper_using_dict_array(db, dict_array):
             library = dictionary['library']
         elif dictionary['name'] == 'code-name':
             code_name = dictionary['code-name']
+        elif dictionary['name'] == 'source':
+            source = dictionary['source']
         elif dictionary['name'] == 'year':
             year = dictionary['year']
         elif dictionary['name'] == 'abstract':
@@ -405,8 +408,8 @@ def add_paper_using_dict_array(db, dict_array):
             table_name = create_paper_has_category_name(cat_id)
             categories.append({'table_name':table_name,'values':dictionary[dictionary['name']],'cat_name':cat_name})
     # add paper data
-    cursor.execute('''insert into paper (title, library, code_name, year, abstract, summary) values
-    (%s,%s,%s,%s,%s,%s)''', (title, library, code_name, year, abstract, summary))
+    cursor.execute('''insert into paper (title, library, code_name, year, abstract, summary, source) values
+    (%s,%s,%s,%s,%s,%s,%s)''', (title, library, code_name, year, abstract, summary, source))
     # get paper_id
     paper_id = get_paper_id_where_title_exactly(db, title)
     # add authors data

@@ -173,7 +173,8 @@ def add_data_to_cat(cat_id):
         prop_name = prop['name'].replace(" ","-")
         # request.form is a dictionary with the form stuff
         if prop['type'] == 'subcat':
-            form_field = "sub-"+prop['interaction']+prop['name']+"-cat-"+cat_id
+            name = (prop['interaction']+prop['name']).replace(" ","_")
+            form_field = "sub-"+name+"-cat-"+cat_id
             dict_array.append({'id_name':prop_name,
                                prop_name: request.form.getlist(form_field),
                                'rel_with_cat':prop['interaction'],
