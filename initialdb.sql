@@ -40,6 +40,33 @@ LOCK TABLES `author` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `cat_subcat_interactions`
+--
+
+DROP TABLE IF EXISTS `cat_subcat_interactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cat_subcat_interactions` (
+  `cat_id` mediumint(9) DEFAULT NULL,
+  `interaction` varchar(100) DEFAULT NULL,
+  `subcat_id` mediumint(9) DEFAULT NULL,
+  KEY `cat_id` (`cat_id`),
+  KEY `subcat_id` (`subcat_id`),
+  CONSTRAINT `cat_subcat_interactions_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `categories` (`id`),
+  CONSTRAINT `cat_subcat_interactions_ibfk_2` FOREIGN KEY (`subcat_id`) REFERENCES `subcategories` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cat_subcat_interactions`
+--
+
+LOCK TABLES `cat_subcat_interactions` WRITE;
+/*!40000 ALTER TABLE `cat_subcat_interactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cat_subcat_interactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `categories`
 --
 
@@ -151,4 +178,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-06 12:44:18
+-- Dump completed on 2017-01-06 12:50:59
