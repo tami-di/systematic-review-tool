@@ -94,6 +94,32 @@ LOCK TABLES `paper` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `paper_has_authors`
+--
+
+DROP TABLE IF EXISTS `paper_has_authors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paper_has_authors` (
+  `author_id` mediumint(9) DEFAULT NULL,
+  `paper_id` int(11) DEFAULT NULL,
+  KEY `author_id` (`author_id`),
+  KEY `paper_n_id` (`paper_id`),
+  CONSTRAINT `paper_has_authors_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`),
+  CONSTRAINT `paper_has_authors_ibfk_3` FOREIGN KEY (`paper_id`) REFERENCES `paper` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paper_has_authors`
+--
+
+LOCK TABLES `paper_has_authors` WRITE;
+/*!40000 ALTER TABLE `paper_has_authors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `paper_has_authors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `subcategories`
 --
 
@@ -125,4 +151,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-06 10:43:38
+-- Dump completed on 2017-01-06 12:44:18
