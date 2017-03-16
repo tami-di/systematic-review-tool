@@ -9,7 +9,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
         form_body = d3.select("#add-data-body")
         // set action to form
         form = d3.select(form_body.node().parentNode)
-        form.attr("action","/api/add_data/author/")
+        form.attr("action","/api/add/author/")
         // remove last elements of the form
         d3.select("#add-data-body").selectAll(".form-group").remove()
         form_group = form_body.append("div").attr("class","form-group")
@@ -37,7 +37,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
     }
     parent = this.parentNode
     cat_id = d3.select(parent).select(".btn-grey").attr("value")
-    d3.json("/api/category/"+ cat_id + "/subcategories",
+    d3.json("/api/request/headers+subcategories/"+ cat_id,
             function(error, data){
                 if (error){
                     console.log(error);
@@ -52,7 +52,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
             form_body = d3.select("#add-data-body")
             // set action to form
             form = d3.select(form_body.node().parentNode)
-            form.attr("action","/api/add_data/category/" + cat_id)
+            form.attr("action","/api/add/data/category/" + cat_id)
             // remove last elements of the form
             d3.select("#add-data-body").selectAll(".form-group").remove()
             for(var i = 0; i < length; i++){
@@ -123,7 +123,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .text("Subcategorias de la Categoria " + cat_id)
 
     // get subcategories of current category
-    d3.json("/api/category/"+ cat_id + "/subcategories/without_inter/",
+    d3.json("/api/request/headers+subcategories/norep/"+ cat_id,
     function(error, data){
         if (error){
             console.log(error);
@@ -180,7 +180,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             id = (d3.select(parent).select(".btn-grey").attr("value")).split(".")
             cat_id = id[0]
             subcat_id = id[1]
-            d3.json("/api/category/"+ cat_id + "/subcategories/without_inter/",
+            d3.json("/api/request/headers+subcategories/norep/"+ cat_id,
                     function(error, data){
                         if (error){
                             console.log(error);
@@ -195,7 +195,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     form_body = d3.select("#add-data-body")
                     // set action to form
                     form = d3.select(form_body.node().parentNode)
-                    form.attr("action","/api/add_data/category/" + cat_id + "/subcategory/" + subcat_id)
+                    form.attr("action","/api/add/data/category/" + cat_id + "/subcategory/" + subcat_id)
                     // remove last elements of the form
                     form.selectAll(".form-group").remove()
                     d3.select("#add-data-body").selectAll(".form-group").remove()
@@ -265,7 +265,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             .append("table")
             .attr("class","table table-bordered table-striped table-hover table-responsive")
 
-            d3.json('/api/request_data/subcategory/'+subcat_id,
+            d3.json('/api/request/data/subcategory/'+subcat_id,
                 function(error, data){
                     if (error){
                         console.log(error);
@@ -316,8 +316,8 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         form_body = d3.select("#modify-data-body")
                         // set action to form
                         form = d3.select(form_body.node().parentNode)
-                        form.attr("action",'/api/edit_data/'+cat_id+'/category/'+subcat_id+'/subcategory/'+
-                        column_data[row]['id']+'/row')
+                        form.attr("action",'/api/edit/category/'+cat_id+'/subcategory/'+subcat_id+'/row/'+
+                        column_data[row]['id'])
                         // remove last elements of the form
                         d3.select("#modify-data-body").selectAll(".form-group").remove()
                         for(var i = 0; i < length; i++){
@@ -371,7 +371,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         row = d3.select(this).attr("value")
                         d3.select("#delete-data-modal")
                         .select("form")
-                        .attr("action",'/api/delete_data/subcategory/'+subcat_id+'/row/'+column_data[row]['id'])
+                        .attr("action",'/api/delete/data/subcategory/'+subcat_id+'/row/'+column_data[row]['id'])
                     })
                     .append("i")
                     .attr("class","fa fa-trash fa-lg")
@@ -399,7 +399,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
             .append("table")
             .attr("class","table table-bordered table-striped table-hover table-responsive")
 
-            d3.json("/api/request_data/author/",
+            d3.json("/api/request/data/author/",
                 function(error, data){
                     if (error){
                         console.log(error);
@@ -450,7 +450,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         form_body = d3.select("#modify-data-body")
                         // set action to form
                         form = d3.select(form_body.node().parentNode)
-                        form.attr("action",'/api/modify_data/author/'+column_data[row]['id'])
+                        form.attr("action",'/api/edit/data/author/'+column_data[row]['id'])
                         // remove last elements of the form
                         d3.select("#modify-data-body").selectAll(".form-group").remove()
                         form_group = form_body.append("div").attr("class","form-group")
@@ -490,7 +490,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                             row = d3.select(this).attr("value")
                             d3.select("#delete-data-modal")
                             .select("form")
-                            .attr("action",'/api/delete_data/author/'+column_data[row]['id'])
+                            .attr("action",'/api/delete/data/author/'+column_data[row]['id'])
 
                         })
                         .append("i")
@@ -508,7 +508,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
         the_table = d3.select("#table-placer")
         .append("table")
         .attr("class","table table-bordered table-striped table-hover table-responsive")
-        d3.json("/api/request_data/category/"+ cat_id ,
+        d3.json("/api/request/data/category/"+ cat_id ,
             function(error, data){
                 if (error){
                     console.log(error);
@@ -560,7 +560,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                     form_body = d3.select("#modify-data-body")
                     // set action to form
                     form = d3.select(form_body.node().parentNode)
-                    form.attr("action",'/api/edit_data/'+cat_id+'/category/'+column_data[row]['id']+'/row')
+                    form.attr("action",'/api/edit/category/'+cat_id+'/row/'+column_data[row]['id'])
                     // remove last elements of the form
                     d3.select("#modify-data-body").selectAll(".form-group").remove()
                     for(var i = 0; i < length; i++){
@@ -615,7 +615,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         row = d3.select(this).attr("value")
                         d3.select("#delete-data-modal")
                         .select("form")
-                        .attr("action",'/api/delete_data/category/'+cat_id+'/row/'+column_data[row]['id'])
+                        .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+column_data[row]['id'])
 
                     })
                     .append("i")
@@ -730,7 +730,7 @@ var set_subcategory_select = function(form_group,id,text_label,value,cat_id,subc
     .attr("name",id)
     .attr("class","form-control")
     .attr("multiple","multiple")
-    d3.json("/api/subcategory_data/"+subcat_id,
+    d3.json("/api/request/headers/subcategory/"+subcat_id,
     function(error, data){
         if (error){
             console.log(error);

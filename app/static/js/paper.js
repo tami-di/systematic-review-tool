@@ -1,7 +1,7 @@
 // what to do if the search-paper button is pressed
 d3.selectAll(".btn-success").on("click", function(){
     d3.select("#put-form-here").selectAll("form").remove()
-    d3.json("/api/request_data/paper/",
+    d3.json("/api/request/headers/paper/",
             function(error, data){
             // get data
             paper_properties = data.properties
@@ -11,7 +11,7 @@ d3.selectAll(".btn-success").on("click", function(){
             fieldset = d3.select("#put-form-here")
             .append("form")
             .attr("class","form-horizontal")
-            .attr("action","/api/add_paper/")
+            .attr("action","/api/add/paper/")
             .attr("method","post")
             .append("fieldset")
             // set form legend
@@ -60,7 +60,7 @@ var set_form_with_paper = function(paper_id){
         return
     }
     d3.select("#put-form-here").selectAll("form").remove()
-    d3.json("/api/request_data/paper/"+paper_id+"/",
+    d3.json("/api/request/data/paper/"+paper_id+"/",
             function(error, data){
                 // get data
                 paper_properties = data.properties
@@ -70,7 +70,7 @@ var set_form_with_paper = function(paper_id){
                 fieldset = d3.select("#put-form-here")
                 .append("form")
                 .attr("class","form-horizontal")
-                .attr("action","/api/edit_paper/"+paper_id+"/")
+                .attr("action","/api/edit/paper/"+paper_id+"/")
                 .attr("method","post")
                 .append("fieldset")
                 // set form legend

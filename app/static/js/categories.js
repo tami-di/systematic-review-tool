@@ -9,7 +9,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             d3.select("#subcategorias").selectAll("div").remove()
             d3.select("#subcategorias").selectAll("button").remove()
             // get subcategories of current category
-            d3.json("/api/category/"+ cat_id + "/subcategories",
+            d3.json("/api/request/headers+subcategories/"+ cat_id,
             function(error, data){
                 if (error){
                     console.log(error);
@@ -87,12 +87,12 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                                 // in case of deleting a subcategory
                                 subcat_id = subcategories[index].id
                                 d3.select("#delete-form")
-                                .attr("action","/api/delete_subcategory/"+subcat_id+"/category/"+cat_id)
+                                .attr("action","/api/delete/subcategory/"+subcat_id+"/category/"+cat_id)
                             }else{
                                 // in case of deleting a column of a category
                                 column_name = subcategories[index].name
                                 d3.select("#delete-form")
-                                .attr("action",'/api/delete_column/'+column_name+'/category/'+cat_id)
+                                .attr("action",'/api/delete/column/'+column_name+'/category/'+cat_id)
                             }
                             d3.select("#deleted-element")
                             .attr("value",cat_id + "." +subcategories[index].name)
@@ -118,7 +118,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                             .text("Insert new column in subcategory \"" + subcategories[index].name + "\"")
                             subcat_id = subcategories[index].id
                             // put proper action in form
-                            action_url = '/api/add_column/'+subcat_id+'/subcategory'
+                            action_url = '/api/add/column/subcategory/'+subcat_id
                             d3.select("#add-column-form")
                             .attr("action",action_url)
                         })
@@ -137,7 +137,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .attr("data-toggle","modal")
                 .attr("data-target","#add-subcategory-modal")
                 .on("click",function(){
-                    d3.json("/api/request_data/subcategories/category/"+cat_id,
+                    d3.json("/api/request/data/subcategories/category/"+cat_id,
                         function(error, data){
                             if (error){
                                 console.log(error);
@@ -173,7 +173,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     d3.select("#add-column-message")
                     .text("Insert new column in category \"" + cat_name + "\"")
                     // put proper action in form
-                    action_url = '/api/add_column/'+cat_id+'/category'
+                    action_url = '/api/add/column/category/'+cat_id
                     d3.select("#add-column-form")
                     .attr("action",action_url)
                 })
@@ -187,7 +187,7 @@ d3.selectAll("#categorias").selectAll(".btn-danger").on("click", function(){
         // get category id
         var cat_id = d3.select(this.parentNode.parentNode).selectAll(".btn-grey").attr("id")
         // if the delete button is pressed on the form then the category is permanently deleted
-        d3.select("#delete-form").attr("action","/api/delete_category/"+cat_id)
+        d3.select("#delete-form").attr("action","/api/delete/category/"+cat_id)
 })
 // set clicked element as 'active'
 var set_active = function(id, object){

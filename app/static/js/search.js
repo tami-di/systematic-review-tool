@@ -30,7 +30,7 @@ var show_results =  function(results){
 
 // Initialize search form
 var set_form = function(dict){
-    d3.json("/api/request_data/paper/",
+    d3.json("/api/request/headers/paper/",
         function(error, data){
             if(error){
                         console.log(error)
@@ -87,7 +87,7 @@ var set_form = function(dict){
             if(type == 'category'){
                 category_id = paper_properties[i].id
                 // set form parameters for category
-                d3.json('/api/request_headers/category/'+category_id,
+                d3.json('/api/request/headers/category/'+category_id,
                 function(error,data){
                     if(error){
                         console.log(error)

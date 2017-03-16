@@ -5,7 +5,7 @@ from flask import redirect
 import db_api
 
 
-@app.route('/api/category/<cat_id>/subcategories')
+@app.route('/api/request/headers+subcategories/<cat_id>')
 def subcategories(cat_id):
     subcats = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     return jsonify(subcategories=subcats)
@@ -23,33 +23,19 @@ def remove_subcategories_duplicated(dict_array_subcategories):
             dict_array.append(element)
     return dict_array
 
-@app.route('/api/category/<cat_id>/subcategories/without_inter/')
+@app.route('/api/request/headers+subcategories/norep/<cat_id>')
 def subcategories_without_interaction(cat_id):
     subcats = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     dict_array = remove_subcategories_duplicated(subcats)
     return jsonify(subcategories=dict_array)
 
-@app.route('/api/subcategory_data/<subcat_id>')
+@app.route('/api/request/headers/subcategory/<subcat_id>')
 def subcategory_data(subcat_id):
     subcats_data = db_api.get_subcategory_data(db, subcat_id)
-    # subcats_data = [{'name': 'Fluff','id': 1},{'name': 'Spoofi','id': 2},
-    #            {'name': 'dato 3','id': 3},{'name': 'dato 4','id': 4},
-    #            {'name': 'dato 5','id': 5}]
-
     return jsonify(subcategory_data=subcats_data)
 
 
-def category_data_aux(cat_id):
-    cats_data = [{'name': 'cucurilo','id': 1},{'name': 'Snuffles','id': 2},
-               {'name': 'CuackCuack','id': 3}]
-    return cats_data
-
-@app.route('/api/category_data/<cat_id>')
-def category_data(cat_id):
-    return jsonify(category_data=category_data_aux(cat_id))
-
-
-@app.route('/api/add_subcategory', methods=['POST'])
+@app.route('/api/add/subcategory/', methods=['POST'])
 def add_subcategory():
     # request.form is a dictionary with the form stuff
     select_existig_subcat_id = request.form.get('select-existig-subcat')
@@ -65,7 +51,7 @@ def add_subcategory():
     return redirect(request.referrer)
 
 
-@app.route('/api/request_data/subcategories/category/<cat_id>')
+@app.route('/api/request/data/subcategories/category/<cat_id>')
 def get_subcategories_name_and_if_from_category(cat_id):
     subcats_ids = db_api.get_all_subcategories_id_of_category_as_array(db, cat_id)
     dict_array = []
@@ -76,7 +62,7 @@ def get_subcategories_name_and_if_from_category(cat_id):
     return jsonify(subcategories_info=dict_array )
 
 
-@app.route('/api/add_category', methods=['POST'])
+@app.route('/api/add/category/', methods=['POST'])
 def add_category():
     # request.form is a dictionary with the form stuff
     cat_name = request.form.get('cat-name')
@@ -85,7 +71,7 @@ def add_category():
     db_api.create_category(db, cat_name, cat_description)
     return redirect(request.referrer)
 
-@app.route('/api/add_column/<cat_id>/category', methods=['POST'])
+@app.route('/api/add/column/category/<cat_id>', methods=['POST'])
 def add_column_to_category(cat_id):
     # request.form is a dictionary with the form stuff
     col_name = request.form.get('col-name')
@@ -104,50 +90,41 @@ def add_column_to_subcategory(subcat_id):
     return redirect(request.referrer)
 
 
-@app.route('/api/delete_element', methods=['POST'])
-def delete_element():
-    # request.form is a dictionary with the form stuff
-    delete_element_btn = request.form.get('delete-element-btn')
-    deleted_element = request.form.get('deleted-element')
-    # Here you do what you want with the info received
-    return redirect(request.referrer)
-
-
-@app.route('/api/delete_category/<cat_id>', methods=['POST'])
+@app.route('/api/delete/category/<cat_id>', methods=['POST'])
 def delete_category(cat_id):
     # Here you do what you want with the info received
     db_api.delete_category_by_id(db,cat_id)
     return redirect(request.referrer)
 
 
-@app.route('/api/delete_subcategory/<subcat_id>/category/<cat_id>', methods=['POST'])
+@app.route('/api/delete/subcategory/<subcat_id>/category/<cat_id>', methods=['POST'])
 def delete_subcategory(subcat_id,cat_id):
     # Here you do what you want with the info received
     db_api.delete_subcategory_by_id(db, subcat_id,cat_id=cat_id)
     return redirect(request.referrer)
 
 
-@app.route('/api/delete_column/<column_name>/category/<cat_id>', methods=['POST'])
+@app.route('/api/delete/column/<column_name>/category/<cat_id>', methods=['POST'])
 def delete_category_column(cat_id,column_name):
     # Here you do what you want with the info received
     db_api.delete_category_column(db, cat_id,column_name)
     return redirect(request.referrer)
 
 
-@app.route('/api/delete_data/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
+@app.route('/api/delete/data/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
 def delete_subcategory_data(subcat_id, row_id):
     # Here you do what you want with the info received
     db_api.delete_row_from_subcategory(db, subcat_id, row_id)
     return redirect(request.referrer)
 
-@app.route('/api/delete_data/category/<cat_id>/row/<row_id>', methods=['POST'])
+@app.route('/api/delete/data/category/<cat_id>/row/<row_id>', methods=['POST'])
 def delete_category_data(cat_id,row_id):
     # Here you do what you want with the info received
     db_api.delete_row_from_category(db, cat_id, row_id)
     return redirect(request.referrer)
 
 
-@app.route('/api/add_data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
+@app.route('/api/add/data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
 def add_data_to_subcat(cat_id,subcat_id):
     category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     category_properties = remove_subcategories_duplicated(category_properties)
@@ -189,105 +166,41 @@ def add_data_to_cat(cat_id):
     return redirect(request.referrer)
 
 
-
-def request_headers_from_cat_aux(cat_id):
-    headers = [{'name': 'subcategoria 1',
-                'id': 1,
-                'properties': ['name','description','patitos'],
-                'properties_type':{'name':'varchar','description':'text','patitos':'number'},
-                'type':'subcat',
-                'is_subcat':True},
-               {'name': 'propiedad 2',
-                'id': 2,
-                'properties': [],
-                'type':'varchar',
-                'is_subcat':False},
-               {'name': 'propiedad 3',
-                'id': 3,
-                'properties': [],
-                'type':'number',
-                'is_subcat':False},
-               {'name': 'propiedad 4',
-                'id': 4,
-                'type':'text',
-                'properties': [],
-                'is_subcat':False}]
-    return headers
-
-
-@app.route('/api/request_headers/category/<cat_id>')
+@app.route('/api/request/headers/category/<cat_id>')
 def request_headers_from_cat(cat_id):
     full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
     headers = full_data['headers']
     cat_name = db_api.get_category_name_from_id(db, cat_id)
     return jsonify(headers=headers, name=cat_name)
 
-@app.route('/api/request_data/category/<cat_id>')
+@app.route('/api/request/data/category/<cat_id>')
 def request_data_from_cat(cat_id):
     full_data = db_api.get_data_from_category_as_headers_and_column_data(db, cat_id)
     headers = full_data['headers']
     data = full_data['rows']
-    # headers = request_headers_from_cat_aux(cat_id)
-    # data_row_1 = {'subcategoria 1':'Fluff',
-    #               'propiedad 2':'patiters',
-    #               'propiedad 3':'3',
-    #               'propiedad 4':'Los patitos son extra fluferinos'}
-    # data_row_2 = {'subcategoria 1':'Spoofi',
-    #               'propiedad 2':'Cuack',
-    #               'propiedad 3':'8',
-    #               'propiedad 4':'Gatinis que hacen pancitos'}
-    # data = [data_row_1,data_row_2]
     return jsonify(column_headers=headers, column_data=data)
 
-@app.route('/api/request_data/subcategory/<subcat_id>')
+@app.route('/api/request/data/subcategory/<subcat_id>')
 def request_data_from_subcat(subcat_id):
     full_data = db_api.get_data_from_subategory_as_headers_and_column_data(db, subcat_id)
     headers = full_data['headers']
     data = full_data['rows']
-    # headers = [{'name':'name','type':'varchar'},
-    #            {'name':'description','type':'text'},
-    #            {'name':'patitos','type':'number'}]
-    #
-    # data_row_1 = {'name':'Kiwi',
-    #               'description':'Es un pajarito redondito',
-    #               'patitos':'10'}
-    # data_row_2 = {'name':'Hamster',
-    #               'description':'Es un ratoncito redondito y feroz',
-    #               'patitos':'3'}
-    # data_row_3 = {'name':'Round Robin',
-    #               'description':'Es un Robin (pajarito) redondito',
-    #               'patitos':'1'}
-    # data = [data_row_1,data_row_2,data_row_3]
     return jsonify(column_headers=headers, column_data=data)
 
 
-
-
-@app.route('/api/request_data/paper/<paper_id>/')
+@app.route('/api/request/data/paper/<paper_id>/')
 def get_paper_info_and_values(paper_id):
-    # cat_data = category_data_aux(1)
-    # paper_properties = [{'name':'title','type':'varchar','value':'El paper 1'},
-    #                     {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
-    #                     {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
-    #                     {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
-    #                     {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
     paper_properties = db_api.get_paper_properties_and_values(db, paper_id)
     return jsonify(properties=paper_properties)
 
 
-@app.route('/api/request_data/paper/')
+@app.route('/api/request/headers/paper/')
 def get_paper_info():
-    # cat_data = category_data_aux(1)
-    # paper_properties = [{'name':'title','type':'varchar','value':'El paper 1'},
-    #                     {'name':'authors','type':'varchar','value':'autor 1; autor 2; autor 3'},
-    #                     {'name':'abstract','type':'text','value':'El paper dice cositas muy choris.'},
-    #                     {'name':'summary','type':'text','value':'El paper dice cositas como cuackers y miau.'},
-    #                     {'name':'categoria 1','type':'category','value':'Snuffles','data':cat_data,"id":1}]
     paper_properties = db_api.get_paper_properties(db)
     return jsonify(properties=paper_properties)
 
 
-@app.route('/api/edit_data/<cat_id>/category/<row_id>/row', methods=['POST'])
+@app.route('/api/edit/category/<cat_id>/row/<row_id>', methods=['POST'])
 def edit_data_from_category(cat_id,row_id):
     category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     dict_array = []
@@ -311,7 +224,7 @@ def edit_data_from_category(cat_id,row_id):
     db_api.edit_data_row_to_category(db, cat_id, row_id, dict_array)
     return redirect(request.referrer)
 
-@app.route('/api/edit_data/<cat_id>/category/<subcat_id>/subcategory/<row_id>/row', methods=['POST'])
+@app.route('/api/edit/category/<cat_id>/subcategory/<subcat_id>/row/<row_id>', methods=['POST'])
 def edit_data_from_subcategory(cat_id,subcat_id,row_id):
     category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     dict_array = []
@@ -327,7 +240,7 @@ def edit_data_from_subcategory(cat_id,subcat_id,row_id):
     db_api.edit_data_row_to_subcategory(db,subcat_id,row_id,dict_array)
     return redirect(request.referrer)
 
-@app.route('/api/edit_paper/<paper_id>/', methods=['POST'])
+@app.route('/api/edit/paper/<paper_id>/', methods=['POST'])
 def edit_data_from_paper(paper_id):
     paper_properties = db_api.get_paper_properties(db)
     dict_array = []
@@ -345,7 +258,7 @@ def edit_data_from_paper(paper_id):
     return redirect(request.referrer)
 
 
-@app.route('/api/add_paper/', methods=['POST'])
+@app.route('/api/add/paper/', methods=['POST'])
 def add_paper():
     paper_properties = db_api.get_paper_properties(db)
     dict_array = []
@@ -364,7 +277,7 @@ def add_paper():
     return redirect(request.referrer)
 
 
-@app.route('/api/add_data/author/', methods=['POST'])
+@app.route('/api/add/author/', methods=['POST'])
 def add_author():
     author_name = request.form.get("author-name")
     author_affiliation = request.form.get("author-affiliation")
@@ -372,7 +285,7 @@ def add_author():
     return redirect(request.referrer)
 
 
-@app.route('/api/modify_data/author/<author_id>', methods=['POST'])
+@app.route('/api/edit/data/author/<author_id>', methods=['POST'])
 def modify_author(author_id):
     author_name = request.form.get("author-name")
     author_affiliation = request.form.get("author-affiliation")
@@ -380,14 +293,14 @@ def modify_author(author_id):
     return redirect(request.referrer)
 
 
-@app.route('/api/request_data/author/')
+@app.route('/api/request/data/author/')
 def get_authors():
     full_data = db_api.get_data_from_authors_as_headers_and_column_data(db)
     headers = full_data['headers']
     data = full_data['rows']
     return jsonify(column_headers=headers, column_data=data)
 
-@app.route('/api/delete_data/author/<author_id>', methods=['POST'])
+@app.route('/api/delete/data/author/<author_id>', methods=['POST'])
 def delete_author(author_id):
     db_api.delete_row_from_author(db, author_id)
     return redirect(request.referrer)
