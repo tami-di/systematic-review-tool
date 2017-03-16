@@ -240,7 +240,7 @@ def edit_data_from_subcategory(cat_id,subcat_id,row_id):
     db_api.edit_data_row_to_subcategory(db,subcat_id,row_id,dict_array)
     return redirect(request.referrer)
 
-@app.route('/api/edit/paper/<paper_id>/', methods=['POST'])
+@app.route('/api/edit/data/paper/<paper_id>/', methods=['POST'])
 def edit_data_from_paper(paper_id):
     paper_properties = db_api.get_paper_properties(db)
     dict_array = []

@@ -70,7 +70,7 @@ var set_form_with_paper = function(paper_id){
                 fieldset = d3.select("#put-form-here")
                 .append("form")
                 .attr("class","form-horizontal")
-                .attr("action","/api/edit/paper/"+paper_id+"/")
+                .attr("action","/api/edit/data/paper/"+paper_id+"/")
                 .attr("method","post")
                 .append("fieldset")
                 // set form legend
