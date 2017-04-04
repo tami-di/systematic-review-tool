@@ -43,7 +43,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="text-center">Insertar nueva categoría</h3>
+                <h3 class="text-center">Insert new category</h3>
             </div>
             <div class="modal-body row">
 
@@ -55,7 +55,7 @@
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="cat-name">Name</label>
                   <div class="col-md-8">
-                  <input id="cat-name" name="cat-name" type="text" placeholder="Nombre de la categoría"
+                  <input id="cat-name" name="cat-name" type="text" placeholder="Category name"
                          class="form-control input-md" required="">
 
                   </div>
@@ -92,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="text-center">Add new subcategory</h3>
+                <h3 class="text-center">Add new metacategory</h3>
             </div>
             <div class="modal-body row">
                 <form action="/api/add/subcategory/" method="post" class="col-md-10 col-md-offset-0 col-xs-12
@@ -101,10 +101,10 @@
                         <!-- Form Name -->
                         <!-- Select Basic -->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="select-existig-subcat">Select existing subcategory</label>
+                            <label class="col-md-4 control-label" for="select-existig-subcat">Select existing metacategory</label>
                             <div class="col-md-8">
                                 <select id="select-existig-subcat" name="select-existig-subcat" class="form-control">
-                                    <option value="0">crate new subcategory</option>
+                                    <option value="0">crate new metacategory</option>
                                 </select>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                             <label class="col-md-4 control-label" for="subcat-name">Name</label>
                             <div class="col-md-8">
                                 <input id="subcat-name" name="subcat-name" type="text" placeholder="New subcategory name" class="form-control input-md">
-                                <span class="help-block">Fill only if you want to add a new subcategory</span>
+                                <span class="help-block">Fill only if you want to add a new metacategory</span>
                             </div>
                         </div>
 
@@ -122,7 +122,7 @@
                             <label class="col-md-4 control-label" for="cat-interaction-with-subcat">Interaction with category</label>
                             <div class="col-md-8">
                                 <input id="cat-interaction-with-subcat" name="cat-interaction-with-subcat" type="text" placeholder="Interaction name" class="form-control input-md" required="">
-                                <span class="help-block">Category "interaction name" subcategory</span>
+                                <span class="help-block">Category "interaction name" metacategory</span>
                             </div>
                         </div>
                         <!-- Button (Double) -->
@@ -157,7 +157,7 @@
                             <label class="col-md-4 control-label" for="delete-element-btn"></label>
                             <div class="col-md-4">
                                 <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger"
-                            value="delete">Eliminar</button>
+                            value="delete">Delete</button>
                             </div>
                         </div>
                         <input type="hidden" name="deleted-element" id="deleted-element" value="deleted-element-id" >

@@ -1,7 +1,6 @@
 from app import app, db
 from flask import render_template
 from flask import request
-from api.views import request_headers_from_cat_aux
 import api.db_api as db_api
 
 
@@ -20,6 +19,10 @@ def index():
                            paper=paper_id,
                            set_form=set_hidden)
 
+
+@app.route('/visual')
+def visual():
+    return render_template('visual.html')
 
 @app.route('/categorias')
 def categorias():
@@ -42,7 +45,6 @@ def search():
         # obtain data
         checkbox_values = request.form.getlist('checkboxes')
         paper_properties = db_api.get_paper_properties(db)
-
         # values maintains the previous field values on the search form
         values = {}
         paper_values = []
@@ -82,10 +84,11 @@ def search():
                                                 'value':value,
                                                 'is_subcat':False})
                         values[prop['name']+c_prop['name']] = value
+
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
         # here the search is made and then we render the template again
         paper_ids = db_api.search_papers_id(db, paper_values, authors_value, categories_values)
-
+        print paper_ids
         headers = ['title']+[str(a) for a in checkbox_values]
         data = []
         for paper_id in paper_ids:
@@ -99,27 +102,5 @@ def search():
     return render_template('search.html', dict=values, results=results)
 
 
-@app.route('/api/add_data/search/paper/', methods=['POST'])
-def search_paper():
-    checkbox_values = request.form.getlist('checkboxes')
-    paper_properties = [{'name':'title','type':'varchar'},
-                        {'name':'authors','type':'varchar'},
-                        {'name':'abstract','type':'text'},
-                        {'name':'summary','type':'text'},
-                        {'name':'categoria 1','type':'category',"id":1}]
-    values = {}
-    categories_properties = {}
-    for prop in paper_properties:
-        if not prop['type'] == 'category':
-            values[prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-"))
-        else:
-            cat_prop = request_headers_from_cat_aux(prop['id'])
-            categories_properties[prop['id']] = cat_prop
-            for c_prop in cat_prop:
-                values[prop['name']+c_prop['name']] = request.form.get("search-"+(prop['name']).replace(" ","-")
-                                                                       +"-"+ (c_prop['name']).replace(" ","-"))
-    #here the search is made and then we render the template again
-    results = []
-    return render_template('search.html', dict=values, results=results)
 
 

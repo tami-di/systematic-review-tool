@@ -174,7 +174,7 @@ var put_dismiss_button = function(div_for_buttons){
     div_for_buttons.append("button")
                     .attr("data-dismiss","modal")
                     .attr("class", "btn btn-danger")
-                    .text("cancelar")
+                    .text("cancel")
 }
 
 var put_submit_button = function(div_for_buttons){
@@ -183,7 +183,7 @@ var put_submit_button = function(div_for_buttons){
                     .attr("type","submit")
                     .attr("name","accept-new-data")
                     .attr("class", "btn btn-success")
-                    .text("Aceptar")
+                    .text("Accept")
 
 }
 

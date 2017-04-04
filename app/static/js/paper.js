@@ -56,7 +56,7 @@ d3.selectAll(".btn-success").on("click", function(){
 // what to do if the search-paper button is pressed (any search really)
 var set_form_with_paper = function(paper_id){
     if(paper_id == ""){
-        console.log("No hay paper")
+        console.log("No match found")
         return
     }
     d3.select("#put-form-here").selectAll("form").remove()
@@ -74,7 +74,7 @@ var set_form_with_paper = function(paper_id){
                 .attr("method","post")
                 .append("fieldset")
                 // set form legend
-                fieldset.append("legend").text("Modificar datos de "+paper_title)
+                fieldset.append("legend").text("Modify data of "+paper_title)
                 // set form body
                 for(i = 0; i < paper_properties_length; i++){
                     form_group = fieldset.append("div").attr("class","form-group")
@@ -114,7 +114,7 @@ var put_dismiss_button = function(div_for_buttons){
     div_for_buttons.append("button")
                     .attr("data-dismiss","modal")
                     .attr("class", "btn btn-danger")
-                    .text("cancelar")
+                    .text("cancel")
 }
 
 var put_submit_button = function(div_for_buttons){
@@ -123,7 +123,7 @@ var put_submit_button = function(div_for_buttons){
                     .attr("type","submit")
                     .attr("name","accept-new-data")
                     .attr("class", "btn btn-success")
-                    .text("Aceptar")
+                    .text("Accept")
 
 }
 var set_number_input = function(form_group,id,text_label,value,placeholder){

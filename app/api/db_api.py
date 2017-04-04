@@ -322,8 +322,6 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
     categories = []
     authors = ""
     source = ""
-    for d in dict_array:
-        print d['name']
     for dictionary in dict_array:
         if dictionary['name'] == 'title':
             title = dictionary['title']
@@ -359,7 +357,6 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
 
 def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.cursor()
-    print categories
     for category in categories:
         cursor.execute("DELETE FROM "+category['table_name']+" WHERE paper_id=%s",[paper_id])
     add_data_to_categories_from_dict_array(db, categories, paper_id)
@@ -774,7 +771,8 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
     cursor.execute("SELECT DISTINCT id FROM paper WHERE "+where_clause, values_tuple)
     # - get all ids and save them as a 'set'
     paper_conditions_id_list = []
-    for row in cursor.fetchall():
+    all_papers = cursor.fetchall()
+    for row in all_papers:
         paper_conditions_id_list.append(row[0])
     paper_conditions_id_set = Set(paper_conditions_id_list)
 
@@ -787,13 +785,15 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         cursor.execute('''SELECT DISTINCT paper_id FROM paper_has_authors WHERE author_id in (SELECT id FROM
         author WHERE name LIKE %s)''', ["%"+author+"%"])
         id_list_by_author = []
-        for row in cursor.fetchall():
+        all_ids_by_author = cursor.fetchall()
+        for row in all_ids_by_author:
             id_list_by_author.append(row[0])
         id_dict_by_author[author] = Set(id_list_by_author)
 
     # Search for all the paper that meet the 'category' specifications
     paper_id_sets_by_category_list = []
     # - for each category in categories_values:
+    #categories_values = [categories_values[3]]
     for category in categories_values:
         cat_id = category['cat_id']
         cat_table_name = create_category_name(cat_id)
@@ -814,7 +814,6 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                 category_values_tuple += ("%"+element['value']+"%",)
         category_where_clause = category_where_clause[0:len(category_where_clause)-5]
         category_id_by_column_conditions_list = []
-
         cursor.execute('''SELECT DISTINCT id FROM '''+cat_table_name+''' WHERE '''+category_where_clause,
                        category_values_tuple)
         for row in cursor.fetchall():
@@ -861,11 +860,14 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         paper_id_list_for_this_category_conditions = []
         for row in cursor.fetchall():
             paper_id_list_for_this_category_conditions.append(row[0])
+
         # - - create a set of paper_ids with those (append to a list of paper_ids by category)
         paper_id_sets_by_category_list.append(Set(paper_id_list_for_this_category_conditions))
     # Return the intersection of all the paper_id sets and set lists previously created
     for cat_set in paper_id_sets_by_category_list:
+
         paper_conditions_id_set.intersection_update(cat_set)
+
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
 

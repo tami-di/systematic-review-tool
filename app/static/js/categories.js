@@ -27,7 +27,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .attr("class","col-md-12")
                 .append("h4")
                 .attr("class","text-center")
-                .text("\"" + cat_name + "\" subcategories and columns")
+                .text("\"" + cat_name + "\" metacategories and columns")
                 // set a button for each subcategory
                 for(var i = 0; i < length; i++){
                     collapse_title = d3.select("#subcategorias")
@@ -115,7 +115,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                             var index = parseInt(d3.select(this).attr("value"))
                             // set personalized message on modal
                             d3.select("#add-column-message")
-                            .text("Insert new column in subcategory \"" + subcategories[index].name + "\"")
+                            .text("Insert new column in metacategory \"" + subcategories[index].name + "\"")
                             subcat_id = subcategories[index].id
                             // put proper action in form
                             action_url = '/api/add/column/subcategory/'+subcat_id
@@ -131,7 +131,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .attr("class","content-container")
                 .attr("id","subcat-btn-container")
                 // set_success_button(parent-of-button, button-id, button-text)
-                set_success_button("#subcat-btn-container", "add-subcat", "Add subcategory")
+                set_success_button("#subcat-btn-container", "add-subcat", "Add metacategory")
                 d3.select("#add-subcat")
                 .attr("href","#")
                 .attr("data-toggle","modal")
@@ -148,7 +148,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         select.selectAll("option").remove()
                         select.append("option")
                         .attr("value",0)
-                        .text("crate new subcategory")
+                        .text("crate new metacategory")
 
                         for(i = 0; i < subcategories.length ; i++){
                             select.append("option")

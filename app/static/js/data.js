@@ -63,11 +63,11 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                 text_label = subcategories[i].name
                 value = ""
                 if(type == 'varchar'){
-                    placeholder = "Inserte "+subcategories[i].name
+                    placeholder = "Insert "+subcategories[i].name
                     set_varchar_input (form_group,element_id,text_label,value,placeholder)
                 }
                 if(type == 'text'){
-                    placeholder = "Inserte "+subcategories[i].name
+                    placeholder = "Insert "+subcategories[i].name
                     set_text_input(form_group,element_id,text_label,value,placeholder)
                 }
                 if(type == 'number'){
@@ -78,7 +78,9 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                     value = ""
                     name = (subcategories[i].interaction+subcategories[i].name).split(" ").join("_")
                     element_id = "sub-"+name+"-cat-"+cat_id
-                    text_label = (subcategories[i].interaction).split("_").join(" ") + text_label
+                    text_label = (subcategories[i].interaction).substring('has_'.length).split(" ").join(" ") +" "
+                    + text_label
+                    console.log(text_label)
                     set_subcategory_select(form_group,element_id,text_label,value,cat_id,subcat_id)
                 }
             }
@@ -112,15 +114,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
     d3.select("#subcategorias").selectAll("div").remove()
     d3.select("#subcategorias").selectAll("button").remove()
 
-    d3.select("#subcategorias")
-                .attr("class","panel-group col-md-3")
-                .append("div")
-                .attr("class","row")
-                .append("div")
-                .attr("class","col-md-12")
-                .append("h4")
-                .attr("class","text-center")
-                .text("Subcategorias de la Categoria " + cat_id)
+    ///////
 
     // get subcategories of current category
     d3.json("/api/request/headers+subcategories/norep/"+ cat_id,
@@ -129,13 +123,28 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             console.log(error);
             return
         }
+
         // save subcategories into variable
         subcategories = data.subcategories
         // get length of subcategories
         length = subcategories.length
+        set_title = true
         // set a button for each subcategory
         for(var i = 0; i < length; i++){
             if(subcategories[i].type == 'subcat'){
+                if(set_title){
+                    set_title = false
+                    d3.select("#subcategorias")
+                        .attr("class","panel-group col-md-3")
+                        .append("div")
+                        .attr("class","row")
+                        .append("div")
+                        .attr("class","col-md-12")
+                        .append("h4")
+                        .attr("class","text-center")
+                        .text("Metacategories of category " + cat_name)
+                }
+
                 subcategory_buttons_container =
                 d3.select("#subcategorias")
                 .append("div")
@@ -216,11 +225,11 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                                     text_label = name
                                     value = ""
                                     if(property_type == 'varchar'){
-                                        placeholder = "Inserte "+name
+                                        placeholder = "Insert "+name
                                         set_varchar_input(form_group,element_id,text_label,value,placeholder)
                                     }
                                     if(property_type == 'text'){
-                                        placeholder = "Inserte "+name
+                                        placeholder = "Insert "+name
                                         set_text_input(form_group,element_id,text_label,value,placeholder)
                                     }
                                     if(property_type == 'number'){
