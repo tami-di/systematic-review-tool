@@ -142,7 +142,7 @@ def add_data_to_subcat(cat_id,subcat_id):
     return redirect(request.referrer)
 
 
-@app.route('/api/add_data/category/<cat_id>', methods=['POST'])
+@app.route('/api/add/data/category/<cat_id>', methods=['POST'])
 def add_data_to_cat(cat_id):
     category_properties = db_api.get_all_properties_from_category_as_dict_array(db, cat_id)
     dict_array = []
