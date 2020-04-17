@@ -1,0 +1,8 @@
+Year,Counting elements,Breaking point,Time,Probability,Rate,Path length,cost,Performance
+2010,                 1,             2,   0,          1,   0,          0,   0,  0
+2011,                 2,             2,   1,          0,   0,          0,   1,  0
+2012,                 3,             3,   1,          0,   0,          0,   0,  0
+2013,                 7,             8,   5,          0,   0,          0,   2,  0
+2014,                 12,            8,   3,          1,   2,          0,   0,  0
+2015,                 15,            9,   1,          2,   0,          1,   0,  1
+2016,                 19,            5,   3,          4,   1,          2,   0,  0

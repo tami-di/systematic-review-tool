@@ -1,0 +1,211 @@
+\pbox{0.2\textwidth}{``Localized\\attacks"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system's robustness of an attack that affects an area typically centered on a node. \vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.1cm}
+\cite{adler2014study,berezin2015localized,yuan2015breadth,gaogao2016shell,klosik2017interdependent,tyra2017robustness,fan2017robustness}\vspace{0.1cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Optimization''} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies ways to optimize the system's robustness. \vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}
+\cite{zhang2011overlay,nguyen2013detecting,qiu2013optimal,parandehgheibi2013robustness,qiu2013effect,li2015robust,alashaikh2016supporting}\vspace{0.2cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Cost''} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the costs of improving the networks robustness.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}
+\cite{zhang2011overlay,qiu2013optimal,qiu2013effect,li2015robust,alashaikh2016supporting,liu2016redundant,chattopadhyay2017designingbudget}\vspace{0.2cm}} \\ \hline
+
+%11
+\pbox{0.2\textwidth}{``Recovery"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the robustness of a recovery process on the interedepenent networks system.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}
+\cite{gong2015enhancing,ouyang2015resilience,ganin2016operational,di2016recovery,gong2017enhancing}
+\vspace{0.2cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Size of second largest\\component"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the size of the second largest connected component.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}
+\cite{lowinger2016interdependent,shu2017social,korkali2017reducing}
+\vspace{0.2cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Fraction of added\\intra-links"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of adding new links within a network, over the system's robustness\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{
+\vspace{0.2cm}\cite{ji2016improving,wang2017preferential,kazawa2017effectiveness}\vspace{0.2cm}
+} \\ \hline
+% 14
+\pbox{0.2\textwidth}{``Laplacian"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies of the system's robustness based on the laplacian matrix of the neworks.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{
+\vspace{0.2cm}\cite{ranjanglue,radicchi2013abrupt}\vspace{0.2cm}
+} \\ \hline
+% 12
+\pbox{0.2\textwidth}{``Small cluster"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the size or amount of operating clusters of interdependent networks. A small operating cluster is a subgraph that has everything to be functional (for example the necessary interlinks) but is not connected to the largest connected component in its original network.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{huang2015small,grassberger2015percolation}} \\ \hline
+% 13
+\pbox{0.2\textwidth}{``Single network contrast"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the differences between the interdependent network system and a single network version of it.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{wang2014robustness,liu2017stochastic}} \\ \hline
+
+\pbox{0.2\textwidth}{``Contagion"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the robustness of the interdependent system of different contagion behaviours.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{shu2017social,sahneh2017contact}} \\ \hline
+
+\pbox{0.2\textwidth}{``Efficient paths"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the length variations of shortest paths in a network under different conditions.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{kornbluth2014cascading,zhao2015cascading}} \\ \hline
+
+\pbox{0.2\textwidth}{``Core\\percolation"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the percolation of the system when leaves are removed (instead of removing random nodes) in the participant networks, removing dependent nodes when necessary, until it stabilizes.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{panduranga2017generalized,pan2017core}} \\ \hline
+
+
+\pbox{0.2\textwidth}{``Genetic\\algorithm"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the result of creating interdependent networks using genetic algorithms.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}\cite{adler2014study,ouyang2015resilience}\vspace{0.2cm}} \\ \hline
+
+%15
+\pbox{0.2\textwidth}{``Lifetime"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the lifetime of an interdependent network system under different conditions.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}\cite{zhang2013reliability,limiao2016reliability}\vspace{0.2cm}} \\ \hline
+% 16
+\pbox{0.2\textwidth}{``Interdependent k-core percolation"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the k-core percolation process. Here, the process is initiated by removing a fraction 1 − p0 of randomly chosen nodes from both networks. In k-core percolation, nodes in each network with fewer than k neighbors are pruned (the local threshold of each node may differ), along with all the nodes in the second network that are dependent on them. This cascade process is continued in both networks until a steady state is reached.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{panduranga2017generalized}} \\ \hline
+
+\pbox{0.2\textwidth}{``Clustering\\coefficient"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the changes of the clustering coefficient under different scenarios.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}\cite{shao2014robustness}\vspace{0.2cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Balance\\coefficient"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effects different balance coefficients over the system's robustness.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}\cite{liu2017balancing}\vspace{0.2cm}} \\ \hline
+
+% 17
+\pbox{0.2\textwidth}{``Delay"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the delay of services offered by the interdependent network system.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhang2011overlay}} \\ \hline
+
+\pbox{0.2\textwidth}{``Information to attack"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system's robustness of different parameters related to amount of information that an attacker can have to attack a system.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhu2016fuzzy}} \\ \hline
+
+\pbox{0.2\textwidth}{``Evenness"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the evenness on the robustness of the system. The evenness describes the connectivity among network layers.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{min2014diversity}} \\ \hline
+
+\pbox{0.2\textwidth}{``Antagonistic nodes"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the amount of antagonistic nodes in the robustness of the system. Antagonistic nodes are nodes with a negative effect on their interdependent nodes.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{kotnis2015percolation}} \\ \hline
+
+\pbox{0.2\textwidth}{``Intra-network topology"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system's robustness of changing the topology of the interconnected networks.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{rueda2017improving}} \\ \hline
+
+\pbox{0.2\textwidth}{``Link addition strategy"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect on the robustness of the system of adding links given a specific link addition strategy within a network.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{kazawa2017effectiveness}} \\ \hline
+
+\pbox{0.2\textwidth}{``Contagion or alerting rates"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of changing the alerting or contagion rates over the robustness of the system.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{sahneh2017contact}} \\ \hline
+
+\pbox{0.2\textwidth}{``Redundancy\\degree"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of changing the redundancy degree over the robustness of the system. The redundancy degree represents the ratio of the total support capability of all nodes to the total required capability of all nodes.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{cui2017cascading}} \\ \hline
+
+\pbox{0.2\textwidth}{``Node degree correlation"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect the degree correlation over the robustness of the system.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\vspace{0.2cm}\cite{watanabe2014cavity}\vspace{0.2cm}} \\ \hline
+
+\pbox{0.2\textwidth}{``Localized attack stability"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the stability of a system under localized attacks. Spatially embedded networks can be stable if they tolerate a radius targeted attack of any radius, meta stable if they're stable under attack of at most a $r_c$ critical radius (a bigger radius makes the system collapse), and unstable if any attack radius destroys the network.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{berezin2015localized}} \\ \hline
+
+\pbox{0.2\textwidth}{``Lattice dimension"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the lattices dimensions on the robustness of the system. Here, one or more networks of the interdependent system are lattices. \vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{lowinger2016interdependent}} \\ \hline
+
+\pbox{0.2\textwidth}{``System size"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the size of the system over the robustness.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhao2017enhancing}} \\ \hline
+
+\pbox{0.2\textwidth}{``Resources\\provided\\per node"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Given that each node provide resources that can be used by other nodes, studies the effects of changing the amount of resources provided per node over the system robustness.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhao2017enhancing}} \\ \hline
+
+\pbox{0.2\textwidth}{``Node protection strategy"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system robustness of using different node protection strategies against attacks or failures.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{gong2017enhancing}} \\ \hline
+
+\pbox{0.2\textwidth}{``Probability of stabilization"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the probability of transiting from a state with some number of failures in a "cascading failure state" to a "stable state" with the same amount of failures.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{rahnamaycascading}} \\ \hline
+
+% 18
+\pbox{0.2\textwidth}{``Markov-chains"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies networks whose behaviour is defined through markov-chains.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{rahnamaycascading}} \\ \hline
+% 19
+\pbox{0.2\textwidth}{``Layer\\configuration"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm} Studies about the effect over the system robustness of different layer configurations.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{shekhtman2014robustness}} \\ \hline
+% 20
+\pbox{0.2\textwidth}{``Probability of failure"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the probability of failure of the components.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhao2016robustness}} \\ \hline
+% 21
+\pbox{0.2\textwidth}{``Fraction of infected nodes"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the fraction of infected nodes given the initial conditions. Here, different initial conditions are tested.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{sahneh2017contact}} \\ \hline
+% 22
+\pbox{0.2\textwidth}{``Assortativity"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies if the degree distribution of a network is assortative or disassortative, and the effect of different distributions over the system's robustness.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhou2012assortativity}} \\ \hline
+% 23
+\pbox{0.2\textwidth}{``Average local threshold"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system's robustness of different average local thresholds. The average local threshold is the average amount of neighbours that a k-core needs to survive k-core percolation. \vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{panduranga2017generalized}} \\ \hline
+% 24
+\pbox{0.2\textwidth}{``Transmissibility"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the transmissibility on the robustness of the system. The transmissibility is the probability of a node of being exposed by each of its infected neighbor instances in the a layer.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{min2014diversity}} \\ \hline
+% 25
+\pbox{0.2\textwidth}{``Redundant ratio"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the `redundant ratio' on the robustness of the system. The redundant ratio is defined as the ratio of offered services versus needed services of a node.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhao2017enhancing}} \\ \hline
+% 26
+\pbox{0.2\textwidth}{``Difference index"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect of the difference index on the robustness of the network. The difference index is defined as the normalization of the reciprocal of average number of layers involved in each overlaid edge λ, where the difference describes how network layers share the same overlaid edges, λ → 1 indicates that few layers appear in an overlaid edge, whereas λ → 0 indicates that many layers have the same overlaid edges.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{min2014diversity}} \\ \hline
+% 27
+\pbox{0.2\textwidth}{``System\\intersimilarity"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the robustness of link overlapping on multiplex or one-to-one networks.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{zhou2017overload}} \\ \hline
+% 28
+\pbox{0.2\textwidth}{``Failure\\distribution"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the probability distribution of failures on edges and/or nodes.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{liu2016redundant}} \\ \hline
+
+\pbox{0.2\textwidth}{``Initially\\infected nodes"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system robustness of different fractions of initially infected nodes.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{shu2017social}} \\ \hline
+
+\pbox{0.2\textwidth}{``Amount of\\components"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the amount or number of components under different adverse scenarios.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{chai2016resilience}} \\ \hline
+
+\pbox{0.2\textwidth}{``Failure size PMF"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the probability mass function (PMF) behaviour under different adverse conditions.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{rahnamaycascading}} \\ \hline
+
+\pbox{0.2\textwidth}{``Components size"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the system's robustness of the size of the components. Here a finite component of size $h$ survives with probability $1-q(h)$.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{di2017cascading}} \\ \hline
+
+\pbox{0.2\textwidth}{``Mean degree"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the robustness of the mean degree average.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{pan2017core}} \\ \hline
+
+\pbox{0.2\textwidth}{``K-core rule"} &
+\pbox{0.5\textwidth}{\vspace{0.2cm}Studies the effect over the robustness of the amount of neighbors needed for a node i to survive. Here, a node i survives if it has at least $k_i$ active neighbors.\vspace{0.2cm}} &
+\pbox{0.2\textwidth}{\cite{di2017cascading}} \\ \hline

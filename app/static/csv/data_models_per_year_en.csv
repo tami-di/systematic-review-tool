@@ -1,0 +1,8 @@
+year,One to one like,Geometric or spatially embedded,Multiple dependence,Coupled power grid,Load transfer among networks,Mixed interactions,Mapping,directed support-dependence
+2010,1              ,0                              ,0                  ,0                 ,0                           ,0                 ,0      ,1
+2011,2              ,0                              ,0                  ,0                 ,0                           ,0                 ,1      ,0
+2012,2              ,1                              ,0                  ,0                 ,0                           ,0                 ,0      ,0
+2013,6              ,2                              ,3                  ,1                 ,0                           ,0                 ,0      ,1
+2014,5              ,3                              ,3                  ,2                 ,0                           ,0                 ,0      ,0
+2015,9              ,1                              ,2                  ,3                 ,3                           ,2                 ,0      ,0
+2016,12             ,4                              ,0                  ,1                 ,3                           ,3                 ,1      ,0

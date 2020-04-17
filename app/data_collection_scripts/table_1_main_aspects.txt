@@ -1,0 +1,18 @@
+\begin{table}[h!]
+\centering
+\caption{Main aspects of frameworks studied}
+\label{catsummary-model}
+\begin{tabular}{|l|l|}
+\hline
+\pbox{\textwidth}{\vspace{0.2cm}Interdependent network models\vspace{0.2cm}} \\ \hline \pbox{\textwidth}{
+\vspace{0.2cm}Eleven classifications:
+``One to one like'' \cite{buldyrev2010catastrophic,huang2011robustness,ranjanglue,gao2012robustness,zhou2012assortativity,zhang2013reliability,zhou2013percolation,hu2013percolation,dong2013robustness,schneider2013towards,radicchi2013abrupt,wang2014robustness,stippinger2014enhancing,zhou2014simultaneous,shao2014robustness,watanabe2014cavity,yuan2015breadth,grassberger2015percolation,cheng2015cascade,wang2015cascading,chen2015cascading,chattopadhyay2015towards,tan2015robust,radicchi2015percolation,gong2015enhancing,ganin2016operational,lee2016hybrid,ji2016improving,chai2016resilience,rueda2016reducing,gaogao2016shell,wang2016robustness,zhang2016cascade,liu2016redundant,sun2016impact,di2016recovery,liu2016cascading},
+``Geometric or spatially embedded'' \cite{li2012cascading,danziger2013interdependent,bashan2013extreme,adler2014study,kornbluth2014cascading,shekhtman2014robustness,berezin2015localized,wang2016modeling,lee2016hybrid,limiao2016reliability,lowinger2016interdependent}
+``multiple dependencies'' \cite{nguyen2013detecting,qiu2013optimal,qiu2013effect,dong2014analysis,reis2014avoiding,jiang2014effect,li2015robust,chattopadhyay2015towards},
+``coupled power grid'' \cite{parandehgheibi2013robustness,ouboter2014design,matsui2014modeling,huang2015cascading,huang2015small,ouyang2015resilience,han2016improved},
+``load transfer among networks'' \cite{zhao2015cascading,zhang2015effect,hong2015cascading,wang2016study,zhu2016fuzzy,xia2016effect},
+``mixed interactions'' \cite{dong2015robustness,kotnis2015percolation,zhao2016robustness,liu2016cascadinginner,du2016targeted},
+``mapping'' \cite{zhang2011overlay,alashaikh2016supporting},``directed support-dependencies'' \cite{parshani2010interdependent,gao2013percolation},
+``supply chain''\cite{tang2016complex}, ``contagion'' \cite{min2014diversity}, and ``defined by probabilities''\cite{rahnamaycascading}\vspace{0.2cm}.}  \\ \hline
+\end{tabular}
+\end{table}

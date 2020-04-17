@@ -1,0 +1,788 @@
+@misc{elmundo,
+  title = {¿Por qué las redes sociales fueron claves durante el terremoto de Chile?},
+  howpublished = {\url{http://www.elmundo.es/internacional/2015/09/18/55fbeee946163f81488b457f.html}},
+  note = {Accessed: 02-08-2016}
+}
+
+@misc{bgp,
+  title = {Border Gateway Protocol},
+  howpublished = {\url{https://tools.ietf.org/html/rfc4271}},
+  note = {Accessed: 02-08-2016}
+}
+
+@article{sole2001complexity,
+  title={Complexity and fragility in ecological networks},
+  author={Sole, Ricard V and Montoya, M{\textordfeminine}},
+  journal={Proceedings of the Royal Society of London B: Biological Sciences},
+  volume={268},
+  number={1480},
+  pages={2039--2045},
+  year={2001},
+  publisher={The Royal Society}
+}
+@article{albert2004structural,
+  title={Structural vulnerability of the North American power grid},
+  author={Albert, R{\'e}ka and Albert, Istv{\'a}n and Nakarado, Gary L},
+  journal={Physical review E},
+  volume={69},
+  number={2},
+  pages={025103},
+  year={2004},
+  publisher={APS}
+}
+@article{schneider2011mitigation,
+  title={Mitigation of malicious attacks on networks},
+  author={Schneider, Christian M and Moreira, Andr{\'e} A and Andrade, Jos{\'e} S and Havlin, Shlomo and Herrmann, Hans J},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={108},
+  number={10},
+  pages={3838--3841},
+  year={2011},
+  publisher={National Acad Sciences}
+}
+@inproceedings{pinnaka2015modelling,
+  title={Modelling robustness of critical infrastructure networks},
+  author={Pinnaka, Srinath and Yarlagadda, Rajgopal and Cetinkaya, Egemen K},
+  booktitle={Design of Reliable Communication Networks (DRCN), 2015 11th International Conference on the},
+  pages={95--98},
+  year={2015},
+  organization={IEEE}
+}
+@book{stauffer1994introduction,
+  title={Introduction to percolation theory},
+  author={Stauffer, Dietrich and Aharony, Ammon},
+  year={1994},
+  publisher={CRC press}
+}
+@inproceedings{zheng2005enhancing,
+  title={Enhancing Internet robustness against malicious flows using active queue management},
+  author={Zheng, Jun and Hu, Mingzeng and Zhao, Liyuan},
+  booktitle={null},
+  pages={501--506},
+  year={2005},
+  organization={IEEE}
+}
+@article{huang2015cascading,
+  title={Cascading Failures in Smart Grid: Joint Effect of Load Propagation and Interdependence},
+  author={Huang, Zhen and Wang, Cheng and Zhu, Tieying and Nayak, Amiya},
+  journal={Access, IEEE},
+  volume={3},
+  pages={2520--2530},
+  year={2015},
+  publisher={IEEE}
+}
+@inproceedings{ouboter2014design,
+  title={Design of robust dependent networks against flow-based cascading failures},
+  author={Ouboter, TM and Worm, DTH and Kooij, RE and Wang, Huijuan},
+  booktitle={Reliable Networks Design and Modeling (RNDM), 2014 6th International Workshop on},
+  pages={54--60},
+  year={2014},
+  organization={IEEE}
+}
+@article{buldyrev2010catastrophic,
+  title={Catastrophic cascade of failures in interdependent networks},
+  author={Buldyrev, Sergey V and Parshani, Roni and Paul, Gerald and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Nature},
+  volume={464},
+  number={7291},
+  pages={1025--1028},
+  year={2010},
+  publisher={Nature Publishing Group}
+}
+@article{bashan2013extreme,
+  title={The extreme vulnerability of interdependent spatially embedded networks},
+  author={Bashan, Amir and Berezin, Yehiel and Buldyrev, Sergey V and Havlin, Shlomo},
+  journal={Nature Physics},
+  volume={9},
+  number={10},
+  pages={667--672},
+  year={2013},
+  publisher={Nature Publishing Group}
+}
+@inproceedings{danziger2013interdependent,
+  title={Interdependent spatially embedded networks: dynamics at percolation threshold},
+  author={Danziger, Michael M and Bashan, Amir and Berezin, Yehiel and Havlin, Shlomo},
+  booktitle={Signal-Image Technology \& Internet-Based Systems (SITIS), 2013 International Conference on},
+  pages={619--625},
+  year={2013},
+  organization={IEEE}
+}
+@article{nguyen2013detecting,
+  title={Detecting critical nodes in interdependent power networks for vulnerability assessment},
+  author={Nguyen, Duy T and Shen, Yilin and Thai, My T},
+  journal={Smart Grid, IEEE Transactions on},
+  volume={4},
+  number={1},
+  pages={151--159},
+  year={2013},
+  publisher={IEEE}
+}
+@inproceedings{zhang2013reliability,
+  title={Reliability Analysis of Interdependent Networks Using Percolation Theory},
+  author={Zhang, Qiong and Li, Daqing and Kang, Rui and Zio, Enrico and Zhang, Peng},
+  booktitle={Signal-Image Technology \& Internet-Based Systems (SITIS), 2013 International Conference on},
+  pages={626--629},
+  year={2013},
+  organization={IEEE}
+}
+@article{schneider2013towards,
+  title={Towards designing robust coupled networks},
+  author={Schneider, Christian M and Yazdani, Nuri and Ara{\'u}jo, Nuno AM and Havlin, Shlomo and Herrmann, Hans J},
+  journal={Scientific reports},
+  volume={3},
+  year={2013},
+  publisher={Nature Publishing Group}
+}
+@article{berezin2015localized,
+  title={Localized attacks on spatially embedded networks with dependencies},
+  author={Berezin, Yehiel and Bashan, Amir and Danziger, Michael M and Li, Daqing and Havlin, Shlomo},
+  journal={Scientific reports},
+  volume={5},
+  year={2015},
+  publisher={Nature Publishing Group}
+}
+@inproceedings{parandehgheibi2013robustness,
+  title={Robustness of interdependent networks: The case of communication networks and the power grid},
+  author={Parandehgheibi, Marzieh and Modiano, Eytan},
+  booktitle={Global Communications Conference (GLOBECOM), 2013 IEEE},
+  pages={2164--2169},
+  year={2013},
+  organization={IEEE}
+}
+@article{huang2015small,
+  title={Small cluster in cyber physical systems: Network topology, interdependence and cascading failures},
+  author={Huang, Zhen and Wang, Cheng and Nayak, Amiya and Stojmenovic, Ivan},
+  journal={Parallel and Distributed Systems, IEEE Transactions on},
+  volume={26},
+  number={8},
+  pages={2340--2351},
+  year={2015},
+  publisher={IEEE}
+}
+@article{ji2016improving,
+  title={Improving interdependent networks robustness by adding connectivity links},
+  author={Ji, Xingpei and Wang, Bo and Liu, Dichen and Chen, Guo and Tang, Fei and Wei, Daqian and Tu, Lian},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={444},
+  pages={9--19},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{radicchi2015percolation,
+  title={Percolation in real interdependent networks},
+  author={Radicchi, Filippo},
+  journal={Nature Physics},
+  volume={11},
+  number={7},
+  pages={597--602},
+  year={2015},
+  publisher={Nature Publishing Group}
+}
+@article{cheng2015cascade,
+  title={Cascade of failures in interdependent networks coupled by different type networks},
+  author={Cheng, Zunshui and Cao, Jinde},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={430},
+  pages={193--200},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{wang2014robustness,
+  title={Robustness of interdependent networks with different link patterns against cascading failures},
+  author={Wang, Jianwei and Jiang, Chen and Qian, Jianfei},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={393},
+  pages={535--541},
+  year={2014},
+  publisher={Elsevier}
+}
+@article{wang2015cascading,
+  title={Cascading load model in interdependent networks with coupled strength},
+  author={Wang, Jianwei and Li, Yun and Zheng, Qiaofang},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={430},
+  pages={242--253},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{adler2014study,
+  title={Study of the Use of a Genetic Algorithm to Improve Networked System-of-Systems Resilience},
+  author={Adler, Charles O and Dagli, Cihan H},
+  journal={Procedia Computer Science},
+  volume={36},
+  pages={49--56},
+  year={2014},
+  publisher={Elsevier}
+}
+@article{radicchi2013abrupt,
+  title={Abrupt transition in the structural formation of interconnected networks},
+  author={Radicchi, Filippo and Arenas, Alex},
+  journal={Nature Physics},
+  volume={9},
+  number={11},
+  pages={717--720},
+  year={2013},
+  publisher={Nature Publishing Group}
+}
+@article{ranjanglue,
+  title={How to ‘Glue’a Robust Smart-Grid?},
+  author={Ranjan, Gyan and Zhang, Zhi-Li}
+}
+@article{gong2015enhancing,
+  title={Enhancing robustness of coupled networks under targeted recoveries},
+  author={Gong, Maoguo and Ma, Lijia and Cai, Qing and Jiao, Licheng},
+  journal={Scientific reports},
+  volume={5},
+  year={2015},
+  publisher={Nature Publishing Group}
+}
+@article{qiu2013optimal,
+  title={Optimal weighting scheme and the role of coupling strength against load failures in degree-based weighted interdependent networks},
+  author={Qiu, Yuzhuo},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={392},
+  number={8},
+  pages={1920--1924},
+  year={2013},
+  publisher={Elsevier}
+}
+@inproceedings{qiu2013effect,
+  title={The Effect of Clustering-Based and Degree-Based Weighting on Robustness in Symmetrically Coupled Heterogeneous Interdependent Networks},
+  author={Qiu, Yuzhuo},
+  booktitle={2013 IEEE International Conference on Systems, Man, and Cybernetics},
+  pages={3984--3988},
+  year={2013},
+  organization={IEEE}
+}
+@article{dong2014analysis,
+  title={Analysis of percolation behaviors of clustered networks with partial support--dependence relations},
+  author={Dong, Gaogao and Tian, Lixin and Du, Ruijin and Fu, Min and Stanley, H Eugene},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={394},
+  pages={370--378},
+  year={2014},
+  publisher={Elsevier}
+}
+@article{jiang2014effect,
+  title={The effect of interdependence on the percolation of interdependent networks},
+  author={Jiang, J and Li, W and Cai, X},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={410},
+  pages={573--581},
+  year={2014},
+  publisher={Elsevier}
+}
+@article{li2015robust,
+  title={Robust allocation of weighted dependency links in cyber--physical networks},
+  author={Li, Xin and Wu, Haotian and Scoglio, Caterina and Gruenbacher, Don},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={433},
+  pages={316--327},
+  year={2015},
+  publisher={Elsevier}
+}
+@inproceedings{matsui2014modeling,
+  title={Modeling the Interaction of Power Line and SCADA Networks},
+  author={Matsui, Yuki and Kojima, Hideharu and Tsuchiya, Tatsuhiro},
+  booktitle={2014 IEEE 15th International Symposium on High-Assurance Systems Engineering},
+  pages={261--262},
+  year={2014},
+  organization={IEEE}
+}
+@inproceedings{prinz2005dual,
+  title={Dual failure protection in multilayer networks based on overlay or augmented model},
+  author={Prinz, RO and Autenrieth, Achim and Schupke, Dominic A},
+  booktitle={DRCN 2005). Proceedings. 5th International Workshop on Design of Reliable Communication Networks, 2005.},
+  pages={8--pp},
+  year={2005},
+  organization={IEEE}
+}
+@inproceedings{zhang2011overlay,
+  title={An overlay mapping model for achieving enhanced QoS and resilience performance},
+  author={Zhang, Xian and Phillips, Chris and Chen, Xiuzhong},
+  booktitle={Ultra Modern Telecommunications and Control Systems and Workshops (ICUMT), 2011 3rd International Congress on},
+  pages={1--7},
+  year={2011},
+  organization={IEEE}
+}
+@article{mayoral2015minimizing,
+  title={Minimizing Resource Protection in IP Over WDM Networks: Multi-layer Shared Backup Router [Invited]},
+  author={Mayoral, Arturo and L{\'o}pez, V{\'\i}ctor and Gerstel, Ori and Palkopoulou, Eleni and de Dios, {\'O}scar Gonz{\'a}lez and Fern{\'a}ndez-Palacios, Juan Pedro},
+  journal={Journal of Optical Communications and Networking},
+  volume={7},
+  number={3},
+  pages={A440--A446},
+  year={2015},
+  publisher={Optical Society of America}
+}
+@article{zhao2015cascading,
+  title={Cascading failures in interconnected networks with dynamical redistribution of loads},
+  author={Zhao, Zhuang and Zhang, Peng and Yang, Hujiang},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={433},
+  pages={204--210},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{zhang2015effect,
+  title={Effect of network size on robustness of interconnected networks under targeted attack},
+  author={Zhang, Wenping and Xia, Yongxiang and Ouyang, Bo and Jiang, Lurong},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={435},
+  pages={80--88},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{vida2015vulnerability,
+  title={Vulnerability of state-interdependent networks under malware spreading},
+  author={Vida, Rafael and Galeano, Javier and Cuenda, Sara},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={421},
+  pages={134--140},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{dong2015robustness,
+  title={Robustness of network of networks with interdependent and interconnected links},
+  author={Dong, Gaogao and Du, Ruijin and Tian, Lixin and Liu, Runran},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={424},
+  pages={11--18},
+  year={2015},
+  publisher={Elsevier}
+}
+@article{tang2016complex,
+  title={Complex interdependent supply chain networks: Cascading failure and robustness},
+  author={Tang, Liang and Jing, Ke and He, Jie and Stanley, H Eugene},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={443},
+  pages={58--69},
+  year={2016},
+  publisher={Elsevier}
+}
+@book{stauffer1994introduction,
+  title={Introduction to percolation theory},
+  author={Stauffer, Dietrich and Aharony, Ammon},
+  year={1994},
+  publisher={CRC press}
+}
+@article{limiao2016reliability,
+  title={Reliability analysis of interdependent lattices},
+  author={Limiao, Zhang and Daqing, Li and Pengju, Qin and Bowen, Fu and Yinan, Jiang and Zio, Enrico and Rui, Kang},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={452},
+  pages={120--125},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{ganin2016operational,
+  title={Operational resilience: concepts, design and analysis},
+  author={Ganin, Alexander A and Massaro, Emanuele and Gutfraind, Alexander and Steen, Nicolas and Keisler, Jeffrey M and Kott, Alexander and Mangoubi, Rami and Linkov, Igor},
+  journal={Scientific reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@article{sun2016impact,
+  title={Impact of Degree Heterogeneity on Attack Vulnerability of Interdependent Networks},
+  author={Sun, Shiwen and Wu, Yafang and Ma, Yilin and Wang, Li and Gao, Zhongke and Xia, Chengyi},
+  journal={Scientific Reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@article{zhang2016cascade,
+  title={Cascade-robustness optimization of coupling preference in interconnected networks},
+  author={Zhang, Xue-Jun and Xu, Guo-Qiang and Zhu, Yan-Bo and Xia, Yong-Xiang},
+  journal={Chaos, Solitons \& Fractals},
+  volume={92},
+  pages={123--129},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{di2016recovery,
+  title={Recovery of Interdependent Networks},
+  author={Di Muro, MA and La Rocca, CE and Stanley, HE and Havlin, S and Braunstein, LA},
+  journal={Scientific reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@inproceedings{gaogao2016shell,
+  title={Shell attack on interdependent networks},
+  author={Gaogao, Dong and Ruijin, Du and Huifang, Hao and Lixin, Tian},
+  booktitle={Control Conference (CCC), 2016 35th Chinese},
+  pages={1198--1201},
+  year={2016},
+  organization={TCCT}
+}
+@inproceedings{rueda2016reducing,
+  title={Reducing the impact of targeted attacks in interdependent telecommunication networks},
+  author={Rueda, DF and Calle, E and Maldonado-Lopez, FA and Donoso, Y},
+  booktitle={Telecommunications (ICT), 2016 23rd International Conference on},
+  pages={1--5},
+  year={2016},
+  organization={IEEE}
+}
+@article{chai2016resilience,
+  title={Resilience of interdependent communication and power distribution networks against cascading failures},
+  author={Chai, Wei Koong and Kyritsis, Vaios and Katsaros, K and Pavlou, George},
+  journal={15th IFIP Networking, Vienna, Austria},
+  year={2016}
+}
+@article{ji2016improving,
+  title={Improving interdependent networks robustness by adding connectivity links},
+  author={Ji, Xingpei and Wang, Bo and Liu, Dichen and Chen, Guo and Tang, Fei and Wei, Daqian and Tu, Lian},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={444},
+  pages={9--19},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{wang2016robustness,
+  title={Robustness of single and interdependent scale-free interaction networks with various parameters},
+  author={Wang, Shuai and Liu, Jing},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={460},
+  pages={139--151},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{liu2016redundant,
+  title={Redundant Design in Interdependent Networks},
+  author={Liu, Lijun and Yin, Yongfeng and Zhang, Zenghu and Malaiya, Yashwant K},
+  journal={PloS one},
+  volume={11},
+  number={10},
+  pages={e0164777},
+  year={2016},
+  publisher={Public Library of Science}
+}
+@inproceedings{han2016improved,
+  title={Improved percolation theory incorporating power flow analysis to model cascading failures in Cyber-Physical Power System},
+  author={Han, Yuqi and Li, Zhi and Guo, Chuangxin and Tang, Yuezhong},
+  booktitle={Power and Energy Society General Meeting (PESGM), 2016},
+  pages={1--5},
+  year={2016},
+  organization={IEEE}
+}
+@inproceedings{alashaikh2016supporting,
+  title={Supporting differentiated resilience classes in multilayer networks},
+  author={Alashaikh, Abdulaziz and Tipper, David and Gomes, Teresa},
+  booktitle={2016 12th International Conference on the Design of Reliable Communication Networks (DRCN)},
+  pages={31--38},
+  year={2016},
+  organization={IEEE}
+}
+@article{wang2016study,
+  title={Study of Robustness in Functionally Identical Coupled Networks against Cascading Failures},
+  author={Wang, Xingyuan and Cao, Jianye and Qin, Xiaomeng},
+  journal={PloS one},
+  volume={11},
+  number={8},
+  pages={e0160545},
+  year={2016},
+  publisher={Public Library of Science}
+}
+@article{zhu2016fuzzy,
+  title={Fuzzy-information-based robustness of interconnected networks against attacks and failures},
+  author={Zhu, Qian and Zhu, Zhiliang and Wang, Yifan and Yu, Hai},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={458},
+  pages={194--203},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{xia2016effect,
+  title={The effect of capacity redundancy disparity on the robustness of interconnected networks},
+  author={Xia, Yongxiang and Zhang, Wenping and Zhang, Xuejun},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={447},
+  pages={561--568},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{zhao2016robustness,
+  title={The robustness of multiplex networks under layer node-based attack},
+  author={Zhao, Da-wei and Wang, Lian-hai and Zhi, Yong-feng and Zhang, Jun and Wang, Zhen},
+  journal={Scientific reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@article{liu2016cascadinginner,
+  title={Cascading failures in coupled networks with both inner-dependency and inter-dependency links},
+  author={Liu, Run-Ran and Li, Ming and Jia, Chun-Xiao and Wang, Bing-Hong},
+  journal={Scientific reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@article{liu2016cascading,
+  title={Cascading failures in coupled networks: The critical role of node-coupling strength across networks},
+  author={Liu, Run-Ran and Li, Ming and Jia, Chun-Xiao},
+  journal={Scientific Reports},
+  volume={6},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+@article{du2016targeted,
+  title={Targeted attack on networks coupled by connectivity and dependency links},
+  author={Du, Ruijin and Dong, Gaogao and Tian, Lixin and Liu, Runran},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={450},
+  pages={687--699},
+  year={2016},
+  publisher={Elsevier}
+}
+@article{rahnamaycascading,
+  title={Cascading Failures in Interdependent Infrastructures: An Interdependent Markov-Chain Approach},
+  author={Rahnamay-Naeini, Mahshid and Hayat, Majeed},
+  publisher={IEEE}
+}@article{ouyang2015resilience,
+  title={Resilience assessment of interdependent infrastructure systems: With a focus on joint restoration modeling and analysis},
+  author={Ouyang, Min and Wang, Zhenghua},
+  journal={Reliability Engineering \& System Safety},
+  volume={141},
+  pages={74--82},
+  year={2015},
+  publisher={Elsevier}
+}@inproceedings{chattopadhyay2015towards,
+  title={Towards Optimal Link Patterns for Robustness of Interdependent Networks against Cascading Failures},
+  author={Chattopadhyay, Srinjoy and Dai, Huaiyu},
+  booktitle={2015 IEEE Global Communications Conference (GLOBECOM)},
+  pages={1--6},
+  year={2015},
+  organization={IEEE}
+}@article{chen2015cascading,
+  title={Cascading failure of interdependent networks with different coupling preference under targeted attack},
+  author={Chen, Zhen and Du, Wen-Bo and Cao, Xian-Bin and Zhou, Xing-Lian},
+  journal={Chaos, Solitons \& Fractals},
+  volume={80},
+  pages={7--12},
+  year={2015},
+  publisher={Elsevier}
+}@article{stippinger2014enhancing,
+  title={Enhancing resilience of interdependent networks by healing},
+  author={Stippinger, Marcell and Kert{\'e}sz, J{\'a}nos},
+  journal={Physica A: Statistical Mechanics and its Applications},
+  volume={416},
+  pages={481--487},
+  year={2014},
+  publisher={Elsevier}
+}@article{reis2014avoiding,
+  title={Avoiding catastrophic failure in correlated networks of networks},
+  author={Reis, Saulo DS and Hu, Yanqing and Babino, Andr{\'e}s and Andrade Jr, Jos{\'e} S and Canals, Santiago and Sigman, Mariano and Makse, Hern{\'a}n A},
+  journal={Nature Physics},
+  volume={10},
+  number={10},
+  pages={762--767},
+  year={2014},
+  publisher={Nature Publishing Group}
+}
+@inproceedings{hong2015cascading,
+  title={Cascading failure propagation in interconnected networks with tunable load redistribution strategy},
+  author={Hong, Sheng and Wang, Baoqing and Wang, Jianghui},
+  booktitle={Prognostics and System Health Management Conference (PHM), 2015},
+  pages={1--7},
+  year={2015},
+  organization={IEEE}
+}@article{huang2011robustness,
+  title={Robustness of interdependent networks under targeted attack},
+  author={Huang, Xuqing and Gao, Jianxi and Buldyrev, Sergey V and Havlin, Shlomo and Stanley, H Eugene},
+  journal={Physical Review E},
+  volume={83},
+  number={6},
+  pages={065101},
+  year={2011},
+  publisher={APS}
+}@article{zhou2012assortativity,
+  title={Assortativity decreases the robustness of interdependent networks},
+  author={Zhou, Di and Stanley, H Eugene and D’Agostino, Gregorio and Scala, Antonio},
+  journal={Physical Review E},
+  volume={86},
+  number={6},
+  pages={066103},
+  year={2012},
+  publisher={APS}
+}@article{gao2012robustness,
+  title={Robustness of a network formed by n interdependent networks with a one-to-one correspondence of dependent nodes},
+  author={Gao, Jianxi and Buldyrev, Sergey V and Havlin, Shlomo and Stanley, H Eugene},
+  journal={Physical Review E},
+  volume={85},
+  number={6},
+  pages={066134},
+  year={2012},
+  publisher={APS}
+}@article{dong2013robustness,
+  title={Robustness of network of networks under targeted attack},
+  author={Dong, Gaogao and Gao, Jianxi and Du, Ruijin and Tian, Lixin and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={87},
+  number={5},
+  pages={052804},
+  year={2013},
+  publisher={APS}
+}@article{zhou2013percolation,
+  title={Percolation of partially interdependent scale-free networks},
+  author={Zhou, Di and Gao, Jianxi and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={87},
+  number={5},
+  pages={052812},
+  year={2013},
+  publisher={APS}
+}@article{hu2013percolation,
+  title={Percolation of interdependent networks with intersimilarity},
+  author={Hu, Yanqing and Zhou, Dong and Zhang, Rui and Han, Zhangang and Rozenblat, C{\'e}line and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={88},
+  number={5},
+  pages={052805},
+  year={2013},
+  publisher={APS}
+}@article{watanabe2014cavity,
+  title={Cavity-based robustness analysis of interdependent networks: Influences of intranetwork and internetwork degree-degree correlations},
+  author={Watanabe, Shunsuke and Kabashima, Yoshiyuki},
+  journal={Physical Review E},
+  volume={89},
+  number={1},
+  pages={012808},
+  year={2014},
+  publisher={APS}
+}@article{zhou2014simultaneous,
+  title={Simultaneous first-and second-order percolation transitions in interdependent networks},
+  author={Zhou, Dong and Bashan, Amir and Cohen, Reuven and Berezin, Yehiel and Shnerb, Nadav and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={90},
+  number={1},
+  pages={012803},
+  year={2014},
+  publisher={APS}
+}@article{kornbluth2014cascading,
+  title={Cascading failures in networks with proximate dependent nodes},
+  author={Kornbluth, Yosef and Lowinger, Steven and Cwilich, Gabriel and Buldyrev, Sergey V},
+  journal={Physical Review E},
+  volume={89},
+  number={3},
+  pages={032808},
+  year={2014},
+  publisher={APS}
+}@article{shao2014robustness,
+  title={Robustness of a partially interdependent network formed of clustered networks},
+  author={Shao, Shuai and Huang, Xuqing and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={89},
+  number={3},
+  pages={032812},
+  year={2014},
+  publisher={APS}
+}@article{grassberger2015percolation,
+  title={Percolation transitions in the survival of interdependent agents on multiplex networks, catastrophic cascades, and solid-on-solid surface growth},
+  author={Grassberger, Peter},
+  journal={Physical Review E},
+  volume={91},
+  number={6},
+  pages={062806},
+  year={2015},
+  publisher={APS}
+}@article{yuan2015breadth,
+  title={How breadth of degree distribution influences network robustness: Comparing localized and random attacks},
+  author={Yuan, Xin and Shao, Shuai and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={92},
+  number={3},
+  pages={032122},
+  year={2015},
+  publisher={APS}
+}@article{tan2015robust,
+  title={Robust-yet-fragile nature of interdependent networks},
+  author={Tan, Fei and Xia, Yongxiang and Wei, Zhi},
+  journal={Physical Review E},
+  volume={91},
+  number={5},
+  pages={052809},
+  year={2015},
+  publisher={APS}
+}@article{lee2016hybrid,
+  title={Hybrid phase transition into an absorbing state: Percolation and avalanches},
+  author={Lee, Deokjae and Choi, S and Stippinger, M and Kert{\'e}sz, J and Kahng, B},
+  journal={Physical Review E},
+  volume={93},
+  number={4},
+  pages={042109},
+  year={2016},
+  publisher={APS}
+}@article{lowinger2016interdependent,
+  title={Interdependent lattice networks in high dimensions},
+  author={Lowinger, Steven and Cwilich, Gabriel A and Buldyrev, Sergey V},
+  journal={Physical Review E},
+  volume={94},
+  number={5},
+  pages={052306},
+  year={2016},
+  publisher={APS}
+}@article{kotnis2015percolation,
+  title={Percolation on networks with antagonistic and dependent interactions},
+  author={Kotnis, Bhushan and Kuri, Joy},
+  journal={Physical Review E},
+  volume={91},
+  number={3},
+  pages={032805},
+  year={2015},
+  publisher={APS}
+}@article{li2012cascading,
+  title={Cascading failures in interdependent lattice networks: The critical role of the length of dependency links},
+  author={Li, Wei and Bashan, Amir and Buldyrev, Sergey V and Stanley, H Eugene and Havlin, Shlomo},
+  journal={Physical review letters},
+  volume={108},
+  number={22},
+  pages={228702},
+  year={2012},
+  publisher={APS}
+}@article{shekhtman2014robustness,
+  title={Robustness of a network formed of spatially embedded networks},
+  author={Shekhtman, Louis M and Berezin, Yehiel and Danziger, Michael M and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={90},
+  number={1},
+  pages={012809},
+  year={2014},
+  publisher={APS}
+}@article{wang2016modeling,
+  title={Modeling region-based interconnection for interdependent networks},
+  author={Wang, Xiangrong and Kooij, Robert E and Van Mieghem, Piet},
+  journal={Physical Review E},
+  volume={94},
+  number={4},
+  pages={042315},
+  year={2016},
+  publisher={APS}
+}@article{parshani2010interdependent,
+  title={Interdependent networks: reducing the coupling strength leads to a change from a first to second order percolation transition},
+  author={Parshani, Roni and Buldyrev, Sergey V and Havlin, Shlomo},
+  journal={Physical review letters},
+  volume={105},
+  number={4},
+  pages={048701},
+  year={2010},
+  publisher={APS}
+}@article{gao2013percolation,
+  title={Percolation of a general network of networks},
+  author={Gao, Jianxi and Buldyrev, Sergey V and Stanley, H Eugene and Xu, Xiaoming and Havlin, Shlomo},
+  journal={Physical Review E},
+  volume={88},
+  number={6},
+  pages={062816},
+  year={2013},
+  publisher={APS}
+}@article{min2014diversity,
+  title={Diversity of multilayer networks and its impact on collaborating epidemics},
+  author={Min, Yong and Hu, Jiaren and Wang, Weihong and Ge, Ying and Chang, Jie and Jin, Xiaogang},
+  journal={Physical Review E},
+  volume={90},
+  number={6},
+  pages={062803},
+  year={2014},
+  publisher={APS}
+}

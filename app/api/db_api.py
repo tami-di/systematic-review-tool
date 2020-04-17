@@ -399,8 +399,9 @@ def add_paper_using_dict_array(db, dict_array):
             summary = dictionary['summary']
         elif dictionary['name'] == 'authors':
             authors = set_as_list(dictionary['authors'])
+
         else:
-            cat_id = get_category_id_from_name(db,dictionary['name'])
+            cat_id = get_category_id_from_name(db,(dictionary['name']).replace("-"," "))
             cat_name = create_category_name(cat_id)
             table_name = create_paper_has_category_name(cat_id)
             categories.append({'table_name':table_name,'values':dictionary[dictionary['name']],'cat_name':cat_name})
@@ -533,6 +534,9 @@ def add_authors_to_paper(db, paper_id, authors):
     cursor = db.cursor()
     for author in authors:
         id = get_author_id_from_name(db,author)
+        if id == None:
+            add_author(db, str(author), "MUST UPDATE")
+            id = get_author_id_from_name(db,author)
         cursor.execute("insert into paper_has_authors (paper_id, author_id) values (%s, %s)", (paper_id,id))
     # Commit changes in the database
     db.commit()
@@ -542,8 +546,7 @@ def add_data_to_categories_from_dict_array(db, categories, paper_id):
     cursor = db.cursor()
     for category in categories:
         for value in category['values']:
-            cursor.execute("insert into "+category['table_name']+" (paper_id,"+category['cat_name']+
-                           "_id) values (%s,%s)",(paper_id,value))
+            cursor.execute("insert into "+category['table_name']+" (paper_id,"+category['cat_name']+"_id) values (%s,%s)",(paper_id,value))
 
 
 def get_data_from_subategory_as_headers_and_column_data(db, subcat_id):
@@ -609,6 +612,47 @@ def get_subcategory_data(db, subcat_id):
         dict_array.append({'name': row[1],'id': row[0]})
     return dict_array
 
+
+def get_model_type(db,model_name):
+    cursor = db.cursor()
+    # get model_name id
+    model_id = ""
+    cursor.execute("SELECT id from cat3 WHERE name=\""+model_name+"\"")
+    for row in cursor.fetchall():
+        model_id = row[0]
+
+    # get model type id
+    cursor.execute("SELECT subcat3_id FROM cat3_has_subcat3 WHERE cat3_id =\""+str(model_id)+"\"")
+    model_type_id = ""
+    for row in cursor.fetchall():
+        model_type_id = row[0]
+    # get model type name
+    model_type_name = ""
+    cursor.execute("SELECT name FROM subcat3 WHERE id="+str(model_type_id))
+    for row in cursor.fetchall():
+        model_type_name = row[0]
+
+    return model_type_name
+
+def get_metric_type(db,metric_name):
+    cursor = db.cursor()
+    # get metric_name id
+    metric_id = ""
+    cursor.execute("SELECT id from cat2 WHERE name=\""+metric_name+"\"")
+    for row in cursor.fetchall():
+        metric_id = row[0]
+    # get metrci type id
+    cursor.execute("SELECT subcat1_id FROM cat2_has_subcat1 WHERE cat2_id =\""+str(metric_id)+"\"")
+    metric_type_id = ""
+    for row in cursor.fetchall():
+        metric_type_id = row[0]
+    # get metric type name
+    metric_type_name = ""
+    cursor.execute("SELECT name FROM subcat1 WHERE id="+str(metric_type_id))
+    for row in cursor.fetchall():
+        metric_type_name = row[0]
+
+    return metric_type_name
 
 def get_data_from_category_as_headers_and_column_data(db, cat_id):
     cursor = db.cursor()
@@ -757,6 +801,9 @@ def delete_row_from_category(db, cat_id, row_id):
 
 
 def search_papers_id(db, paper_values, authors_value, categories_values,show_not_in_selection=False):
+
+
+
     cursor = db.cursor()
     # Search paper ids with paper_values
     where_clause = ""
@@ -808,7 +855,9 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         if is_this_table_empty:
             continue
         # - - get the category_ids that meet the non-subcat specifications as a set
+
         for element in category['values']:
+
             if not element['is_subcat']:
                 category_where_clause = category_where_clause+element['id_name']+" like %s AND "
                 category_values_tuple += ("%"+element['value']+"%",)
@@ -841,6 +890,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                                ''' WHERE '''+subcat_name+'''_id IN (SELECT id FROM '''+subcat_name
                                +''' WHERE name LIKE %s)''',
                                ["%"+element['name_value']+"%"])
+
                 category_id_list_by_this_subcategory_conditions = []
                 for row in cursor.fetchall():
                     category_id_list_by_this_subcategory_conditions.append(row[0])
@@ -955,3 +1005,11 @@ def get_category_name_from_id(db, cat_id):
     for row in cursor.fetchall():
         return row[0]
 
+
+def get_paper_id_by_year_less_than(db,year):
+    cursor = db.cursor()
+    cursor.execute("SELECT id FROM paper WHERE year < %s",[year])
+    result = []
+    for row in cursor.fetchall():
+        result.append(row[0])
+    return result

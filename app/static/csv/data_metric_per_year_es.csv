@@ -1,0 +1,8 @@
+Año,Cantidad de elementos,Punto de quiebre,Tiempo,Probabilidad,Costo,Largo de camino,Ratio,Desempeño
+2010,0,1,0,1,0,0,0,0
+2011,1,1,1,0,1,0,0,0
+2012,0,0,0,0,0,0,0,0
+2013,3,4,2,0,2,0,0,0
+2014,7,4,1,0,0,0,1,0
+2015,11,8,1,1,0,1,0,1
+2016,17,4,2,2,0,2,0,0

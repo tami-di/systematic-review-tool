@@ -1,0 +1,18 @@
+\begin{table}[h!]
+\centering
+\caption{Main aspects of frameworks studied}
+\label{catsummary-metric}
+\begin{tabular}{|l|l|}
+\hline
+\pbox{\textwidth}{\vspace{0.2cm}Robustness measure\vspace{0.2cm}} \\ \hline \pbox{\textwidth}{\vspace{0.2cm}
+Eight classifications: ``counting elements'' \cite{parshani2010interdependent,zhang2011overlay,huang2011robustness,zhou2012assortativity,li2012cascading,gao2012robustness,hu2013percolation,schneider2013towards,zhou2013percolation,nguyen2013detecting,gao2013percolation,dong2013robustness,bashan2013extreme,adler2014study,jiang2014effect,zhou2014simultaneous,shekhtman2014robustness,watanabe2014cavity,stippinger2014enhancing,kornbluth2014cascading,wang2014robustness,shao2014robustness,reis2014avoiding,matsui2014modeling,ouboter2014design,chen2015cascading,chattopadhyay2015towards,wang2015cascading,huang2015cascading,cheng2015cascade,hong2015cascading,kotnis2015percolation,grassberger2015percolation,yuan2015breadth,tan2015robust,huang2015small,li2015robust,gong2015enhancing,dong2015robustness,zhang2015effect,wang2016modeling,lee2016hybrid,xia2016effect,wang2016robustness,zhu2016fuzzy,ji2016improving,tang2016complex,chai2016resilience,gaogao2016shell,han2016improved,wang2016study,liu2016redundant,ganin2016operational,di2016recovery,zhao2016robustness,liu2016cascadinginner,liu2016cascading,zhang2016cascade,du2016targeted},
+``breaking point'' \cite{parshani2010interdependent,buldyrev2010catastrophic,huang2011robustness,ranjanglue,zhou2012assortativity,li2012cascading,gao2012robustness,radicchi2013abrupt,hu2013percolation,zhou2013percolation,zhang2013reliability,parandehgheibi2013robustness,dong2013robustness,gao2013percolation,danziger2013interdependent,watanabe2014cavity,dong2014analysis,reis2014avoiding,shao2014robustness,stippinger2014enhancing,kornbluth2014cascading,shekhtman2014robustness,jiang2014effect,hong2015cascading,yuan2015breadth,dong2015robustness,radicchi2015percolation,berezin2015localized,zhang2015effect,wang2015cascading,huang2015cascading,cheng2015cascade,du2016targeted,limiao2016reliability,liu2016cascading,lowinger2016interdependent,gaogao2016shell},
+``time'' \cite{zhang2011overlay,zhou2012assortativity,bashan2013extreme,dong2013robustness,zhou2013percolation,hu2013percolation,danziger2013interdependent,dong2014analysis,zhou2014simultaneous,shekhtman2014robustness,cheng2015cascade,alashaikh2016supporting,di2016recovery,lee2016hybrid},
+``probability'' \cite{buldyrev2010catastrophic,min2014diversity,radicchi2015percolation,grassberger2015percolation,rahnamaycascading,rueda2016reducing,lee2016hybrid,lowinger2016interdependent},
+``ratio'' \cite{adler2014study,zhou2014simultaneous,wang2016modeling},
+``cost'' \cite{zhang2011overlay,qiu2013optimal,qiu2013effect},
+``path length'' \cite{zhao2015cascading,chai2016resilience,sun2016impact},  and
+``Performance''\cite{ouyang2015resilience}.
+\vspace{0.2cm}} \\ \hline
+\end{tabular}
+\end{table}

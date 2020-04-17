@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="http://127.0.0.1:5000/static/js/jquery.min.js"></script>
+  <script src="http://127.0.0.1:5000/static/js/jquery.csv.min.js"></script>
+  <div id="chart_div"></div>
+    <script src="http://127.0.0.1:5000/static/js/visual.js"></script>
+    <script>
+        is_year = false
+        if ({{ visualize_year|tojson }}){
+            is_year = true
+        }
+
+        if ({{ bar_visualization|tojson }}){
+            set_bar_chart_data({{category|tojson}},{{visualization_name|tojson}}, {{ dict|tojson }}, is_year)
+            google.charts.setOnLoadCallback(drawBarChart);
+        } else if ({{ pie_visualization|tojson }}){
+            set_pie_chart_data({{category|tojson}},{{visualization_name|tojson}}, {{ dict|tojson }}, is_year)
+            google.charts.setOnLoadCallback(drawPieChart);
+        } else if ({{ line_visualization|tojson }}){
+            set_line_chart_data({{category|tojson}},{{visualization_name|tojson}}, {{ dict|tojson }}, is_year)
+            google.charts.setOnLoadCallback(drawLineColors)
+        }
+    </script>
+</body>
+</html>

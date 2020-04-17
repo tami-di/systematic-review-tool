@@ -1,0 +1,8 @@
+Año,Tipo one-to-one,Red eléctrica acoplada,Dependencias múltiples,Transmisión de carga entre redes,Mezcla de interacción intra/inter red,Mapeo,Cadena de suministro,Definido por probabilidades
+2010,1,0,0,0,0,0,0,0
+2011,1,0,0,0,0,1,0,0
+2012,0,0,0,0,0,0,0,0
+2013,5,1,3,0,0,0,0,0
+2014,3,2,3,0,0,0,0,0
+2015,7,3,2,3,1,0,0,0
+2016,12,1,0,3,3,1,1,1
