@@ -11,8 +11,3 @@ def connect_db():
 db = connect_db()
 import views
 import api
-
-
-
-
-

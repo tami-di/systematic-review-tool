@@ -88,7 +88,7 @@ def search():
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
         # here the search is made and then we render the template again
         paper_ids = db_api.search_papers_id(db, paper_values, authors_value, categories_values)
-        print paper_ids
+        print(paper_ids)
         headers = ['title']+[str(a) for a in checkbox_values]
         data = []
         for paper_id in paper_ids:
