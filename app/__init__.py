@@ -9,5 +9,6 @@ def connect_db():
                          passwd=db_config['passwd'], db=db_config['db'])
     return db
 db = connect_db()
+
 import views
 import api

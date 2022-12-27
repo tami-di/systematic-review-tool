@@ -4,7 +4,6 @@ from flask import request
 import api.db_api as db_api
 
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -18,11 +17,7 @@ def index():
     return render_template('index.html',
                            paper=paper_id,
                            set_form=set_hidden)
-
-
-@app.route('/visual')
-def visual():
-    return render_template('visual.html')
+                           
 
 @app.route('/categorias')
 def categorias():
