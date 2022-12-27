@@ -13,7 +13,7 @@ def index():
         set_hidden = True
     else:
         paper_id = ""
-    return render_template('app/templates/index.html',
+    return render_template('index.html',
                            paper=paper_id,
                            set_form=set_hidden)
                            
