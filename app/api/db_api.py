@@ -1,5 +1,4 @@
 __author__ = 'ivana'
-from sets import Set
 
 def create_category_name(category_id):
     return "cat"+str(category_id)
@@ -774,7 +773,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
     all_papers = cursor.fetchall()
     for row in all_papers:
         paper_conditions_id_list.append(row[0])
-    paper_conditions_id_set = Set(paper_conditions_id_list)
+    paper_conditions_id_set = set(paper_conditions_id_list)
 
     # Search for all the papers with all authors in authors_value
     # - create a list using authors_value string
@@ -788,7 +787,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
         all_ids_by_author = cursor.fetchall()
         for row in all_ids_by_author:
             id_list_by_author.append(row[0])
-        id_dict_by_author[author] = Set(id_list_by_author)
+        id_dict_by_author[author] = set(id_list_by_author)
 
     # Search for all the paper that meet the 'category' specifications
     paper_id_sets_by_category_list = []
@@ -818,7 +817,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                        category_values_tuple)
         for row in cursor.fetchall():
             category_id_by_column_conditions_list.append(row[0])
-        category_id_by_column_conditions_set = Set(category_id_by_column_conditions_list)
+        category_id_by_column_conditions_set = set(category_id_by_column_conditions_list)
 
         # - - for each subcat get the category_ids that meet the subcat spec. as a set (create a set list)
         category_ids_sets_by_subcategory_condition_list = [] # note that here each element is a set of ids
@@ -844,7 +843,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
                 category_id_list_by_this_subcategory_conditions = []
                 for row in cursor.fetchall():
                     category_id_list_by_this_subcategory_conditions.append(row[0])
-                category_ids_sets_by_subcategory_condition_list.append(Set(category_id_list_by_this_subcategory_conditions))
+                category_ids_sets_by_subcategory_condition_list.append(set(category_id_list_by_this_subcategory_conditions))
         # - - get the intersection of the previous sets as a new set
         for id_set in category_ids_sets_by_subcategory_condition_list:
             category_id_by_column_conditions_set.intersection_update(id_set)
@@ -862,7 +861,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values,show_not
             paper_id_list_for_this_category_conditions.append(row[0])
 
         # - - create a set of paper_ids with those (append to a list of paper_ids by category)
-        paper_id_sets_by_category_list.append(Set(paper_id_list_for_this_category_conditions))
+        paper_id_sets_by_category_list.append(set(paper_id_list_for_this_category_conditions))
     # Return the intersection of all the paper_id sets and set lists previously created
     for cat_set in paper_id_sets_by_category_list:
 
