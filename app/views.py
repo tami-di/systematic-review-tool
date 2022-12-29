@@ -29,7 +29,7 @@ def categorias():
 
 @app.route('/data')
 def data():
-    cats = db_api.get_all_categories_as_dict_array(db.coonection)
+    cats = db_api.get_all_categories_as_dict_array(db.connection)
     return render_template('data.html', categorias=cats)
 
 
