@@ -4,8 +4,8 @@ __author__ = 'ivana'
 from flask import *
 from flask_mysqldb import MySQL
 #Import field
-from app.db_config import db_config
-import app.api as api
+from db_config import db_config
+import api as api
 
 #--------------------------------------- server connection ----------------------------------------
 app = Flask(__name__)
