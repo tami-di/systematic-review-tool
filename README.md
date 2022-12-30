@@ -9,8 +9,21 @@ This tool has been developed to assist a systematic review or a paper qualitativ
 * Search papers filtering by any data available about it (incluiding categories, metacategories and their descriptions)
 * Search papers obtaining only the pieces of information wanted
 
-This is the first version of this tool and it may contain bugs.
+This is the first version in Python3 of this tool and it may contain bugs.
+
+## Mode of use:
+* Install flask and flask_mysqldb libraries 2.
+* Upload the DB found in the DB.sql file to a server.
+* Change db_config.py file with your DB information.
+* In the terminal run the following command: flask --app app/app run  
+* From your browser enter to localhost:5000
+
+## Warnings for use:
+* Before adding the paper add the corresponding author in the author category
+* Search engines are case sensitive.
+* In the first search engine you must add the exact name
 
 ## Dependencies:
- * Flask
+ * flask
+ * flask_mysqldb
  * MySQL 
