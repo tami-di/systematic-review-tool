@@ -5,10 +5,11 @@ from flask import *
 from flask_mysqldb import MySQL
 #Import field
 from db_config import db_config
-import api as api
+import api
 
 #--------------------------------------- server connection ----------------------------------------
 app = Flask(__name__)
+app.run(port=3000)
 
 app.config['MYSQL_HOST'] = db_config['host']
 app.config['MYSQL_USER'] = db_config['user']

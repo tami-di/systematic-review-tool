@@ -19,7 +19,6 @@ This is the first version in Python3 of this tool and it may contain bugs.
 * From your browser enter to localhost:5000
 
 ## Warnings for use:
-* Before adding the paper add the corresponding author in the author category
 * Search engines are case sensitive.
 * In the first search engine you must add the exact name
 
