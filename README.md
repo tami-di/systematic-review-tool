@@ -15,7 +15,7 @@ This is the first version in Python3 of this tool and it may contain bugs.
 * Install flask and flask_mysqldb libraries 2.
 * Upload the DB found in the DB.sql file to a server.
 * Change db_config.py file with your DB information.
-* In the terminal run the following command: flask --app app/app run  
+* In the terminal run the following command: python -m flask --app app/app run  
 * From your browser enter to localhost:5000
 
 ## Warnings for use:

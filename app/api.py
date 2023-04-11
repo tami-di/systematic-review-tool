@@ -1,5 +1,6 @@
 __author__ = 'ivana'
 import re
+import db_connection as con
 
 #-------------------------Funciones para Index---------------------------
 
@@ -377,7 +378,9 @@ def delete_category_column(db, cat_id,column_name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
     extra=cursor.fetchall()
-    extra1=re.split(';',extra[0][0])
+    while re.search(r"\$[^$;]*;", extra):
+        texto = re.sub(r"\$[^$;]*;", ";", extra, count=1)
+    extra1=re.split(';',extra1[0][0])
     extranew=""
     for i in extra1:
         if i==column_name or i=="":
@@ -423,7 +426,7 @@ def create_category(db,name, description):
 def add_column_to_category(db, cat_id, col_name, col_data):
     cursor = db.connection.cursor()
     # add column to table
-    cursor.execute("UPDATE categories SET extra=%s WHERE id=%s",(col_name+";",cat_id))
+    cursor.execute("UPDATE categories SET extra=%s WHERE id=%s",(col_name+"$"+col_data+";",cat_id))
     # Commit changes in the database
     db.connection.commit()
 
@@ -447,3 +450,67 @@ def delete_subcategory_by_id(db, subcat_id,cat_id):
     cursor.execute("DELETE FROM content WHERE id=%s",(subcat_id))
     db.connection.commit()
 
+def get_data_from_category_as_headers_and_column_data(db, cat_id):
+    cursor = db.connection.cursor()
+    # headers is a dict array
+    headers = []
+    category_columns = []
+    # --------------------------------------------------------------------------------
+    # get category columns
+    cat_name = create_category_name(cat_id)
+    cursor.execute("SHOW COLUMNS FROM "+cat_name)
+    for row in cursor.fetchall():
+        #if row[0] == 'id':
+        #    continue
+        col_type = parse_type(row[1])
+        name = (row[0]).replace("_"," ")
+        headers.append({'name': name,'type': col_type})
+        category_columns.append({'name': name,'type': col_type})
+    # get subcategories (without value) from category with cat_id
+    cursor.execute('''SELECT cat_subcat_interactions.interaction, subcategories.name, subcategories.id
+    FROM cat_subcat_interactions INNER JOIN subcategories ON cat_subcat_interactions.subcat_id=subcategories.id
+     WHERE cat_subcat_interactions.cat_id=%s''',[cat_id])
+    for row in cursor.fetchall():
+        name = (row[0]+" "+row[1]).replace("_"," ")
+        subcat_id = row[2]
+        headers.append({'name':name,'type':'subcat','id':subcat_id,'rel_with_cat':row[0]})
+    # --------------------------------------------------------------------------------
+
+    # rows is a dict array
+    # --------------------------------------------------------------------------------
+    cursor_2 = db.connection.cursor()
+    rows = []
+    # get all data/rows from category
+    cursor.execute("SELECT * FROM "+cat_name)
+    for row in cursor.fetchall():
+        id = row[0]
+        # - save column data from category table
+        dict_row = {}
+        i = 0
+        for column in category_columns:
+            dict_row[column['name']] = row[i]
+            i += 1
+        # - with the id search for cat_interaction_subcat tables
+        cat_interaction_subcat_table_names = []
+        cursor_2.execute("SELECT interaction, subcat_id FROM cat_subcat_interactions WHERE cat_id=%s",[cat_id])
+        for row_2 in cursor_2.fetchall():
+            cat_interaction_subcat_table_names.append(
+                {'table_name':create_cat_has_subcat_name(cat_id,row_2[1],row_2[0]),
+                 'subcat_id':row_2[1],
+                 'subcat_name':(row_2[0]+get_subcategory_name_from_id(db,row_2[1])).replace("_","").replace(" ","")})
+        # - in those tables search for the subcat_id that matches the current id (from previous step)
+        # - with those subcat_id go to the subcategory table and get their names
+        for dictionary in cat_interaction_subcat_table_names:
+            subcat_table_name = create_subcategory_name(dictionary['subcat_id'])
+            get_names = "SELECT "+subcat_table_name+".name FROM "+dictionary['table_name']+" INNER JOIN "\
+                        +subcat_table_name+" ON "+dictionary['table_name']+"."+subcat_table_name+"_id="+\
+                        subcat_table_name+".id WHERE "+cat_name+"_id=%s"
+            cursor_2.execute(get_names, [id])
+            subcat_names_as_str = ""
+            for row_2 in cursor_2.fetchall():
+                subcat_names_as_str += row_2[0] + ";"
+            dict_row[dictionary['subcat_name']] = subcat_names_as_str
+        # - append subcategory name with value
+        rows.append(dict_row)
+
+    return {'headers':headers,'rows':rows}
