@@ -40,6 +40,8 @@ DROP TABLE IF EXISTS papers2.content;
 CREATE TABLE papers2.content (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   name varchar(100) DEFAULT NULL,
+  description text,
+  extra text,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -77,7 +79,6 @@ DROP TABLE IF EXISTS papers2.cat_cont;
 CREATE TABLE papers2.cat_cont (
   cat_id mediumint(9) NOT NULL,
   cont_id mediumint(9) NOT NULL,
-  extra text,
   KEY cat_id (cat_id),
   KEY cont_id (cont_id),
   FOREIGN KEY (cat_id) REFERENCES categories (id),
