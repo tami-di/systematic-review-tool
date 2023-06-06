@@ -6,6 +6,8 @@ import re
 def parse_type(type_name):
     if 'int' in type_name:
         return 'number'
+    if 'number' in type_name:
+        return 'number'
     if 'varchar' in type_name:
         return 'varchar'
     if 'text' in type_name:
@@ -22,8 +24,30 @@ def set_as_list(string):
 def get_columns_data_types():
     return ['varchar', 'number', 'text']
 
-"""Funtion to"""
-#def show_colums_category(): -----------------------------------------DEFINIR
+"""function to separate the information separated by ; and $ used in the extra attribute of category"""
+def show_colums_category(db,cat_id):
+    cursor = db.connection.cursor()
+    dict_array = []
+    # get all columns from the category table and create properties
+    cursor.execute("show columns from categories")
+    for row in cursor.fetchall():
+        if row[0] == 'id' or row[0] == 'extra':
+            continue
+        else:
+            # - add 'type' to the dictionary
+            type = parse_type(row[1])
+            # - set 'is_subcat' to false
+            dict_array.append({'name':row[0],'type':type,'is_subcat':False,'properties':[]})
+    cursor.execute("SELECT extra FROM categories WHERE id=%s", cat_id)
+    row=cursor.fetchall()
+    split_data = row[0][0].split(";")
+    split_data = split_data[:-1]
+    for i in split_data:
+        data = i.split("$")
+        if data[0] != '':
+            type = parse_type(data[1])
+            dict_array.append({'name':data[0],'type':type,'is_subcat':False,'properties':[]})
+    return dict_array
 
 
 #-------------------------Functions for Index---------------------------
@@ -98,7 +122,6 @@ def add_paper_using_dict_array(db, dict_array):
     add_data_to_categories_from_dict_array(db, categories, paper_id)
     # Commit changes in the database
     db.connection.commit()
-
 
 """Funtion to"""
 def get_content_id_from_name(db,name):
@@ -293,23 +316,8 @@ def get_all_categories_as_dict_array(db):
 """Funtion to"""
 def get_all_properties_from_category_as_dict_array(db, cat_id):
     cursor = db.connection.cursor()
-    dict_array = []
     # get all columns from the category table and create properties
-    cursor.execute("show columns from categories")
-    for row in cursor.fetchall():
-        if row[0] == 'id' or row[0] == 'extra':
-            continue
-        # - add 'type' to the dictionary
-        type = parse_type(row[1])
-        # - set 'is_subcat' to false
-        dict_array.append({'name':row[0],'type':type,'is_subcat':False,'properties':[]})
-    cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
-    extra=cursor.fetchall()
-    extra1= re.split(';',extra[0][0])
-    for i in extra1:
-        if i=='':
-            continue
-        dict_array.append({'name':i,'type':'varchar','is_subcat':False,'properties':[]})
+    dict_array = show_colums_category(db,cat_id)
     # get all subcategories from category
     subcats_id = get_all_subcategories_id_of_category_as_array(db, cat_id)
     for subcat_id in subcats_id:
@@ -336,8 +344,7 @@ def get_all_subcategories_id_of_category_as_array(db, cat_id):
     for row in cursor.fetchall():
         subcat_id_array.append(row[0])
     return subcat_id_array
-
-"""Funtion to""" 
+ 
 #---Functions to add column to category---
 """Funtion to""" 
 def add_column_to_category(db, cat_id, col_name, col_data):
@@ -355,9 +362,11 @@ def delete_category_column(db, cat_id,column_name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
     extra=cursor.fetchall()
+    print(extra)
     while re.search(r"\$[^$;]*;", extra):
         texto = re.sub(r"\$[^$;]*;", ";", extra, count=1)
     extra1=re.split(';',extra1[0][0])
+    print(extra1)
     extranew=""
     n=0
     for i in extra1:
@@ -395,3 +404,4 @@ def create_category(db,name, description):
     cursor.execute('''INSERT INTO categories (name, description, extra)
                   VALUES (%s, %s, %s)''', (name, description, ""))
     db.connection.commit()
+
