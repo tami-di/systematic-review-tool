@@ -397,5 +397,5 @@ def get_authors():
 
 @app.route('/api/delete/data/author/<author_id>', methods=['POST'])
 def delete_author(author_id):
-    api.delete_row_from_author(db, author_id)
+    api.delete_author(db, author_id)
     return redirect(request.referrer)

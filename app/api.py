@@ -25,7 +25,7 @@ def get_columns_data_types():
     return ['varchar', 'number', 'text']
 
 """function to separate the information separated by ; and $ used in the extra attribute of category"""
-def show_colums_category(db,cat_id):
+def show_columns_category(db,cat_id):
     cursor = db.connection.cursor()
     dict_array = []
     # get all columns from the category table and create properties
@@ -317,7 +317,7 @@ def get_all_categories_as_dict_array(db):
 def get_all_properties_from_category_as_dict_array(db, cat_id):
     cursor = db.connection.cursor()
     # get all columns from the category table and create properties
-    dict_array = show_colums_category(db,cat_id)
+    dict_array = show_columns_category(db,cat_id)
     # get all subcategories from category
     subcats_id = get_all_subcategories_id_of_category_as_array(db, cat_id)
     for subcat_id in subcats_id:
@@ -361,26 +361,23 @@ def add_column_to_category(db, cat_id, col_name, col_data):
 def delete_category_column(db, cat_id,column_name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
-    extra=cursor.fetchall()
-    print(extra)
-    while re.search(r"\$[^$;]*;", extra):
-        texto = re.sub(r"\$[^$;]*;", ";", extra, count=1)
-    extra1=re.split(';',extra1[0][0])
-    print(extra1)
+    tupla=cursor.fetchall()
+    cadena = tupla[0][0]
+    columnas = cadena.split(';')
+    columnas = [columna.split('$') for columna in columnas]
     extranew=""
-    n=0
-    for i in extra1:
-        if i==column_name:
-            break
-        n+=1
-    for i in extra1:
-        if i==column_name or i=="":
-            continue
+    m=0
+    for i in columnas:
+        if i[0]==column_name :
+            n=m
+        elif i[0]=='':
+            pass
         else:
-            extranew+=i+";"
+            m+=1
+            extranew+=str(i[0])+"$"+str(i[1])+";"
     # delete column
     cursor.execute("UPDATE categories SET extra=%s WHERE id=%s",(extranew,cat_id)) 
-    cursor.execute("SELECT cont_id WHERE cat_id=%s",(cat_id))   #----------------------------------------PROBAR CUANDO AGREGUE CONT
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",(cat_id))   #----------------------------------------PROBAR CUANDO AGREGUE CONT
     for cont_id in cursor.fetchall():
         cursor.execute("SELECT extra FROM content WHERE id=%s",(cont_id))
         extra=cursor.fetchall()
@@ -388,8 +385,8 @@ def delete_category_column(db, cat_id,column_name):
         extranew=""
         x=0
         for i in extra:
-            if x==n:
-                continue
+            if x==n or "":
+                pass
             else:
                 extranew+=i+";"
             x+=1
@@ -399,9 +396,105 @@ def delete_category_column(db, cat_id,column_name):
 
 
 #---Functions to add category---
+"""Funtion to"""
 def create_category(db,name, description):
     cursor = db.connection.cursor()
     cursor.execute('''INSERT INTO categories (name, description, extra)
                   VALUES (%s, %s, %s)''', (name, description, ""))
     db.connection.commit()
 
+#---Functions to delete category---
+"""Funtion to"""
+def delete_category_by_id(db, cat_id):
+    cursor = db.connection.cursor()
+    # delete subcategories attached to this category
+    # - get subcategories attached
+    subcategories_id_list = get_all_subcategories_id_of_category_as_array(db, cat_id)
+    # - delete subcategories
+    cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id))
+    cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id))
+    for subcat_id in subcategories_id_list:
+        delete_subcategory_by_id(db, subcat_id)
+    cursor.execute("DELETE FROM int_cat WHERE cat_id1=%s OR cat_id2=%s",(cat_id,cat_id))
+    cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
+    db.connection.commit()
+
+"""Funtion to"""
+def delete_subcategory_by_id(db, subcat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("DELETE FROM int_cont WHERE cont_id1=%s OR cont_id2=%s",(subcat_id,subcat_id))
+    cursor.execute("DELETE FROM content WHERE id=%s",(subcat_id))
+    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(subcat_id))
+    db.connection.commit()
+
+#-------------------------Functions for Data---------------------------
+#---functions for displaying author data and their respective functionalities---
+"""Funtion to"""
+def get_data_from_authors_as_headers_and_column_data(db):
+    cursor = db.connection.cursor()
+    # headers is a dict array
+    headers = []
+    category_columns = []
+    cursor.execute("SHOW COLUMNS FROM author")
+    for row in cursor.fetchall():
+        col_type = parse_type(row[1])
+        name = (row[0]).replace("_"," ")
+        headers.append({'name': name,'type': col_type})
+        category_columns.append({'name': name,'type': col_type})
+    rows = []
+    # get all data/rows from category
+    cursor.execute("SELECT * FROM author")
+    for row in cursor.fetchall():
+        # - save column data from category table
+        dict_row = {}
+        i = 0
+        for column in category_columns:
+            dict_row[column['name']] = row[i]
+            i += 1
+        rows.append(dict_row)
+    return {'headers':headers,'rows':rows}
+
+"""Funtion to"""
+def modify_author(db, author_id, author_name, author_affiliation):
+    cursor = db.connection.cursor()
+    cursor.execute("UPDATE author SET name=%s, affiliation=%s WHERE id=%s",(author_name, author_affiliation, author_id))
+    # Commit changes in the database
+    db.connection.commit()
+
+"""Funtion to"""
+def add_author(db, author_name, author_affiliation):
+    cursor = db.connection.cursor()
+    cursor.execute("INSERT INTO author (name, affiliation) values (%s,%s)",(author_name,author_affiliation))
+    # Commit changes in the database
+    db.connection.commit()
+
+"""Funtion to"""
+def delete_author(db, author_id):
+    cursor = db.connection.cursor()
+    cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s",author_id)
+    cursor.execute("DELETE FROM author WHERE id=%s",author_id)
+    # Commit changes in the database
+    db.connection.commit()
+
+#---functions for displaying category data and their respective functionalities---
+def get_data_from_category_as_headers_and_column_data(db, cat_id):##########    EDITAR--------------------------------------------------
+    cursor = db.connection.cursor()
+    columns=show_columns_category(db,cat_id)
+    print(columns)
+    headers = []
+    rows = []
+
+    return {'headers':headers,'rows':rows}
+
+
+def remove_subcategories_duplicated(dict_array_subcategories):
+    dict_array = []##########    EDITAR--------------------------------------------------
+    subcat_ids_added = []
+    for element in dict_array_subcategories:
+        if element['is_subcat']:
+            if element['id'] not in subcat_ids_added:
+                subcat_ids_added.append(element['id'])
+                dict_array.append(element)
+        else:
+            dict_array.append(element)
+    return dict_array
