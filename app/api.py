@@ -476,17 +476,62 @@ def delete_author(db, author_id):
     # Commit changes in the database
     db.connection.commit()
 
-#---functions for displaying category data and their respective functionalities---
-def get_data_from_category_as_headers_and_column_data(db, cat_id):##########    EDITAR--------------------------------------------------
+#---functions to add, edit or delete content---
+"""Function to add a content to a category"""
+def add_data_row_to_category(db,cat_id,dict_array):
     cursor = db.connection.cursor()
-    columns=show_columns_category(db,cat_id)
-    print(columns)
-    headers = []
-    rows = []
+    print(dict_array)
+    prop_str = "("
+    values_str = "("
+    values = ()
+    n=0
+    for element in dict_array:
+        if not element['is_subcat']:
+            if element['id_name'] == 'name':
+                name_of_new_element = element[element['id_name']]
+            if element['id_name']=='name' or element['id_name']=='description':
+                prop_str = prop_str + element[element['id_name']] + ","
+                values_str = values_str + "%s,"
+                values += (element[element['id_name']],)
+            else:
+                if n==0:
+                    prop_str = prop_str + element[element['id_name']] + ";"
+                    values_str = values_str + "%s,"
+                    values += (element[element['id_name']],)
+                    n+=1
+                else:
+                    print(element[element['id_name']] )
+                    values += (element[element['id_name']],)
 
-    return {'headers':headers,'rows':rows}
+    # finish strings
+    prop_str = prop_str[0:len(prop_str)-1]+")"
+    values_str = values_str[0:len(values_str)-1]+")"
+    print(prop_str)
+    print(values_str)
+    # add new row to category table
+    cursor.execute("INSERT INTO content (name,description,extra) values %s",(prop_str))
+    last_id = cursor.lastrowid()
+    ids="("+cat_id+last_id+")"
+    print(ids)
+    cursor.execute("INSERT INTO cat_cont %(cat_id,cont_id) values %s",("(%s,%s)",ids))
+    #cursor.execute("INSERT INTO "+cat_table_name+" "+prop_str+" values "+values_str,values)
+    ## get new row id
+    #new_cat_element_id = get_row_id_from_category_by_name(db, cat_id, name_of_new_element)
+    #for element in dict_array:
+    #    if element['is_subcat']:
+    #        # in this case we have that the value is from a subcategory of this category
+    #        subcat_id = element['id']
+    #        subcat_table_name = create_subcategory_name(subcat_id)
+    #        rel_table_name = create_cat_has_subcat_name(cat_id,subcat_id,element['rel_with_cat'])
+    #        for value in element[element['id_name']]:
+    #            # note that the subcat value already exists in that table so the relation it's the only thing to be added
+    #            cursor.execute("INSERT INTO "+rel_table_name+" ("+cat_table_name+"_id,"+subcat_table_name+"_id) values (%s,%s)",
+    #                           (new_cat_element_id,value))
+    ## Commit changes in the database
+    #db.commit()
 
-
+#---functions for displaying category data and their respective functionalities---
+"""Funtion to"""
 def remove_subcategories_duplicated(dict_array_subcategories):
     dict_array = []##########    EDITAR--------------------------------------------------
     subcat_ids_added = []
@@ -498,3 +543,19 @@ def remove_subcategories_duplicated(dict_array_subcategories):
         else:
             dict_array.append(element)
     return dict_array
+
+"""Funtion to"""
+def get_data_from_category_as_headers_and_column_data(db, cat_id):
+    cursor = db.connection.cursor()
+    columns=show_columns_category(db,cat_id)
+    print(columns)
+    headers=[]
+    for element in columns:
+        headers.append(element['name'])
+    print(headers)
+    cont_ids=cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",cat_id)
+    print(str(cont_ids))
+    rows = []
+    return {'headers':headers,'rows':rows}
+
+
