@@ -501,6 +501,7 @@ def add_data_row_to_category(db,cat_id,dict_array):
                     n+=1
                 else:
                     print(element[element['id_name']] )
+                    prop_str += element[element['id_name']] + ";"
                     values += (element[element['id_name']],)
 
     # finish strings
