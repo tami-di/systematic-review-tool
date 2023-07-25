@@ -52,7 +52,7 @@ def show_columns_category(db,cat_id):
 
 #-------------------------Functions for Index---------------------------
 #---Functions to display form to add paper---
-"""Funtion to"""
+"""Function to obtain the properties of a paper"""
 def get_paper_properties(db):
     cursor = db.connection.cursor()
     dict_array = []
@@ -72,7 +72,7 @@ def get_paper_properties(db):
         dict_array.append({'name':row[1],'type':'category','data':data,'id':row[0]})
     return dict_array
 
-"""Funtion to"""
+"""Function to obtain the contents corresponding to a category"""
 def get_data_from_category_by_cat_id(db, cat_id):
     cursor = db.connection.cursor()
     #select the content that is related to the category
@@ -83,7 +83,7 @@ def get_data_from_category_by_cat_id(db, cat_id):
     return dict_array
 
 #---Functions for adding paper---
-"""Funtion to"""
+"""Function to add paper attributes to the DB"""
 def add_paper_using_dict_array(db, dict_array):
     cursor = db.connection.cursor()
     categories = []
@@ -123,7 +123,7 @@ def add_paper_using_dict_array(db, dict_array):
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to"""
+"""Function to"""
 def get_content_id_from_name(db,name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT id FROM content WHERE name = %s", [name])
@@ -319,17 +319,17 @@ def get_all_properties_from_category_as_dict_array(db, cat_id):
     # get all columns from the category table and create properties
     dict_array = show_columns_category(db,cat_id)
     # get all subcategories from category
-    subcats_id = get_all_subcategories_id_of_category_as_array(db, cat_id)
+    subcats_id = get_all_content_id_of_category_as_array(db, cat_id)
     for subcat_id in subcats_id:
-        subcat_name = get_subcategory_name_from_id(db, subcat_id)
+        subcat_name = get_content_name_from_id(db, subcat_id)
         # - for each subcategory, get their columns and add it to their properties
-        properties_type = get_subcategory_properties_type_as_dict(db,subcat_id)
+        properties_type = get_content_properties_type_as_dict(db,subcat_id)
         properties = [name for name in properties_type]
         # - add 'type'='subcat' to the dictionary
         type = 'subcat'
         # - set 'is_subcat' to true
         is_subcat = 'True'
-        cursor.execute("SELECT name FROM interaction WHERE id IN (SELECT int_id FROM int_cont WHERE cont_id=%s or cont_id=%s)",[subcat_id,subcat_id])
+        cursor.execute("SELECT name FROM interaction WHERE id IN (SELECT int_id FROM int_cont WHERE cont_id1=%s or cont_id2=%s)",[subcat_id,subcat_id])
         for row in cursor.fetchall():
             interaction = row[0]
             dict_array.append({'name':subcat_name,'id':subcat_id,'properties':properties, 'properties_type':properties_type,
@@ -337,7 +337,26 @@ def get_all_properties_from_category_as_dict_array(db, cat_id):
     return dict_array
 
 """Funtion to"""
-def get_all_subcategories_id_of_category_as_array(db, cat_id):
+def get_content_name_from_id(db,cont_id):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT name FROM content WHERE id=%s",[cont_id])
+    for row in cursor.fetchall():
+        return row[0]
+
+"""Funtion to"""
+def get_content_properties_type_as_dict(db, subcat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("show columns from content")
+    prop_dict = {}
+    for row in cursor.fetchall():
+        if row[0] == 'id':
+            continue
+        type = parse_type(row[1])
+        prop_dict[row[0]] = type
+    return prop_dict
+    
+"""Funtion to"""
+def get_all_content_id_of_category_as_array(db, cat_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT DISTINCT cont_id FROM cat_cont WHERE cat_id=%s", [cat_id])
     subcat_id_array = []
@@ -480,41 +499,37 @@ def delete_author(db, author_id):
 """Function to add a content to a category"""
 def add_data_row_to_category(db,cat_id,dict_array):
     cursor = db.connection.cursor()
-    print(dict_array)
-    prop_str = "("
+    prop_str = []
     values_str = "("
     values = ()
     n=0
-    for element in dict_array:
+    for element in dict_array:   ####ARREGLAR SADASDSADSADASDASDASDSADSAD
         if not element['is_subcat']:
-            if element['id_name'] == 'name':
-                name_of_new_element = element[element['id_name']]
-            if element['id_name']=='name' or element['id_name']=='description':
-                prop_str = prop_str + element[element['id_name']] + ","
+            if element['id_name']=='name':
+                prop_str.append(element[element['id_name']])
                 values_str = values_str + "%s,"
                 values += (element[element['id_name']],)
+            elif element['id_name']=='description':
+                prop_str.append(element[element['id_name']])
+                values_str = values_str + "%s,"
+                values += (element[element['id_name']],)
+                prop_str.append("")
             else:
                 if n==0:
-                    prop_str = prop_str + element[element['id_name']] + ";"
+                    prop_str[2]+=element[element['id_name']]
                     values_str = values_str + "%s,"
                     values += (element[element['id_name']],)
                     n+=1
                 else:
-                    print(element[element['id_name']] )
-                    prop_str += element[element['id_name']] + ";"
+                    prop_str[2]+=";"+element[element['id_name']]
                     values += (element[element['id_name']],)
 
     # finish strings
-    prop_str = prop_str[0:len(prop_str)-1]+")"
     values_str = values_str[0:len(values_str)-1]+")"
-    print(prop_str)
-    print(values_str)
     # add new row to category table
-    cursor.execute("INSERT INTO content (name,description,extra) values %s",(prop_str))
-    last_id = cursor.lastrowid()
-    ids="("+cat_id+last_id+")"
-    print(ids)
-    cursor.execute("INSERT INTO cat_cont %(cat_id,cont_id) values %s",("(%s,%s)",ids))
+    cursor.execute("INSERT INTO content (name, description, extra) VALUES (%s,%s,%s)", (prop_str[0],prop_str[1],prop_str[2]))
+    last_id = cursor.lastrowid
+    cursor.execute("INSERT INTO cat_cont (cat_id, cont_id) VALUES (%s, %s)", (cat_id, last_id))
     #cursor.execute("INSERT INTO "+cat_table_name+" "+prop_str+" values "+values_str,values)
     ## get new row id
     #new_cat_element_id = get_row_id_from_category_by_name(db, cat_id, name_of_new_element)
@@ -528,8 +543,8 @@ def add_data_row_to_category(db,cat_id,dict_array):
     #            # note that the subcat value already exists in that table so the relation it's the only thing to be added
     #            cursor.execute("INSERT INTO "+rel_table_name+" ("+cat_table_name+"_id,"+subcat_table_name+"_id) values (%s,%s)",
     #                           (new_cat_element_id,value))
-    ## Commit changes in the database
-    #db.commit()
+    # Commit changes in the database
+    db.connection.commit()
 
 #---functions for displaying category data and their respective functionalities---
 """Funtion to"""
@@ -544,7 +559,7 @@ def remove_subcategories_duplicated(dict_array_subcategories):
         else:
             dict_array.append(element)
     return dict_array
-
+ 
 """Funtion to"""
 def get_data_from_category_as_headers_and_column_data(db, cat_id):
     cursor = db.connection.cursor()
@@ -554,9 +569,17 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
     for element in columns:
         headers.append(element['name'])
     print(headers)
-    cont_ids=cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",cat_id)
-    print(str(cont_ids))
+    print(cat_id)
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",cat_id)
+    result = cursor.fetchall()
+    print(result)
     rows = []
+    for id in result:
+        cursor.execute("SELECT name,description,extra FROM content WHERE id=%s",id)
+        row=cursor.fetchall()
+        print(row)
+        rows.append(row)
+    print(rows)
     return {'headers':headers,'rows':rows}
 
 
