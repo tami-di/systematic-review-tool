@@ -624,7 +624,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         row = d3.select(this).attr("value")
                         d3.select("#delete-data-modal")
                         .select("form")
-                        .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+column_data[row]['id'])
+                        .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
 
                     })
                     .append("i")

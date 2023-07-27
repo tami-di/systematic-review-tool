@@ -563,23 +563,36 @@ def remove_subcategories_duplicated(dict_array_subcategories):
 """Funtion to"""
 def get_data_from_category_as_headers_and_column_data(db, cat_id):
     cursor = db.connection.cursor()
-    columns=show_columns_category(db,cat_id)
-    print(columns)
-    headers=[]
-    for element in columns:
-        headers.append(element['name'])
-    print(headers)
-    print(cat_id)
+    headers=show_columns_category(db,cat_id)
     cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",cat_id)
     result = cursor.fetchall()
-    print(result)
     rows = []
-    for id in result:
-        cursor.execute("SELECT name,description,extra FROM content WHERE id=%s",id)
-        row=cursor.fetchall()
-        print(row)
-        rows.append(row)
-    print(rows)
+    for cont_id in result:
+        cursor.execute("SELECT name, description, extra FROM content WHERE id=%s", (cont_id[0],))
+        row = cursor.fetchall()
+        row_dict = {}
+        for row_data in row:
+            row_dict['name'] = row_data[0]
+            row_dict['description'] = row_data[1]
+            extras = row_data[2].split(';')  # Separar la columna 'extra' por el carácter ';'
+            for extra,i in enumerate(extras, start=2):
+                if extra<len(headers):
+                    name=headers[extra]['name']
+                    row_dict[name] = i
+            rows.append(row_dict.copy())
     return {'headers':headers,'rows':rows}
 
+#---functions for edit and delete a category---
+"""Funtion to"""
+def delete_row_from_category(db, cat_id, row_id):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
+    cont_id= cursor.fetchall()[int(row_id)][0]
 
+    cursor.execute("DELETE FROM int_cont WHERE cont_id1=%s",(cont_id,))
+    cursor.execute("DELETE FROM int_cont WHERE cont_id2=%s",(cont_id,))
+    cursor.execute("DELETE FROM paper_has_cont WHERE cont_id=%s",(cont_id,))###Update or delete?
+    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(cont_id,))
+
+    cursor.execute("DELETE FROM content WHERE id=%s",(cont_id,))
+    db.connection.commit()
