@@ -596,3 +596,39 @@ def delete_row_from_category(db, cat_id, row_id):
 
     cursor.execute("DELETE FROM content WHERE id=%s",(cont_id,))
     db.connection.commit()
+
+"""Funtion to"""
+def edit_data_row_to_category(db, cat_id, row_id, dict_array):
+    cursor = db.connection.cursor()
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
+    cont_id= cursor.fetchall()[int(row_id)][0]
+    prop_str = []
+    values_str = "("
+    values = ()
+    n=0
+    for element in dict_array:   
+        if not element['is_subcat']:
+            if element['id_name']=='name':
+                prop_str.append(element[element['id_name']])
+                values_str = values_str + "%s,"
+                values += (element[element['id_name']],)
+            elif element['id_name']=='description':
+                prop_str.append(element[element['id_name']])
+                values_str = values_str + "%s,"
+                values += (element[element['id_name']],)
+                prop_str.append("")
+            else:
+                if n==0:
+                    prop_str[2]+=element[element['id_name']]
+                    values_str = values_str + "%s,"
+                    values += (element[element['id_name']],)
+                    n+=1
+                else:
+                    prop_str[2]+=";"+element[element['id_name']]
+                    values += (element[element['id_name']],)
+    # finish strings
+    values_str = values_str[0:len(values_str)-1]+")"
+    # add new row to category table
+    cursor.execute("UPDATE content SET name=%s,description=%s,extra=%s WHERE id=%s", (prop_str[0],prop_str[1],prop_str[2],cont_id))
+    db.connection.commit()

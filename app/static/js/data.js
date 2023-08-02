@@ -569,7 +569,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                     form_body = d3.select("#modify-data-body")
                     // set action to form
                     form = d3.select(form_body.node().parentNode)
-                    form.attr("action",'/api/edit/category/'+cat_id+'/row/'+column_data[row]['id'])
+                    form.attr("action",'/api/edit/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
                     // remove last elements of the form
                     d3.select("#modify-data-body").selectAll(".form-group").remove()
                     for(var i = 0; i < length; i++){
