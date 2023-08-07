@@ -632,3 +632,15 @@ def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     # add new row to category table
     cursor.execute("UPDATE content SET name=%s,description=%s,extra=%s WHERE id=%s", (prop_str[0],prop_str[1],prop_str[2],cont_id))
     db.connection.commit()
+
+
+#-------------------------Functions for Search---------------------------
+
+#---functions for displaying search---
+"""Funtion to"""
+def get_category_name_from_id(db, cat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT name FROM categories WHERE id=%s",[cat_id])
+    for row in cursor.fetchall():
+        return row[0]
+
