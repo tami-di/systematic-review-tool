@@ -2,11 +2,20 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-CREATE SCHEMA IF NOT EXISTS `papers2` DEFAULT CHARACTER SET utf8 ;
-USE `papers2` ;
+CREATE SCHEMA IF NOT EXISTS `papers` DEFAULT CHARACTER SET utf8 ;
+USE `papers` ;
 
-DROP TABLE IF EXISTS papers2.paper;
-CREATE TABLE papers2.paper (
+DROP TABLE IF EXISTS papers.int_cat;
+DROP TABLE IF EXISTS papers.cat_cont;
+DROP TABLE IF EXISTS papers.paper_has_cont;
+DROP TABLE IF EXISTS papers.paper_has_authors;
+DROP TABLE IF EXISTS papers.interaction;
+DROP TABLE IF EXISTS papers.content;
+DROP TABLE IF EXISTS papers.categories;
+DROP TABLE IF EXISTS papers.author;
+DROP TABLE IF EXISTS papers.paper;
+
+CREATE TABLE papers.paper (
   id int(11) NOT NULL AUTO_INCREMENT,
   title varchar(200) NOT NULL,
   library varchar(20) DEFAULT NULL,
@@ -19,16 +28,14 @@ CREATE TABLE papers2.paper (
   UNIQUE KEY id (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.author;
-CREATE TABLE papers2.author (
+CREATE TABLE papers.author (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   name varchar(50) DEFAULT NULL,
   affiliation text,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.categories;
-CREATE TABLE papers2.categories (
+CREATE TABLE papers.categories (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   name varchar(100) DEFAULT NULL,
   description text,
@@ -36,24 +43,22 @@ CREATE TABLE papers2.categories (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.content;
-CREATE TABLE papers2.content (
+CREATE TABLE papers.content (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   name varchar(100) DEFAULT NULL,
   description text,
   extra text,
+  extra_int text,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.interaction;
-CREATE TABLE papers2.interaction (
+CREATE TABLE papers.interaction (
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   name varchar(100) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.paper_has_authors;
-CREATE TABLE papers2.paper_has_authors (
+CREATE TABLE papers.paper_has_authors (
   author_id mediumint(9) NOT NULL,
   paper_id int(11) NOT NULL,
   KEY author_id (author_id),
@@ -62,8 +67,7 @@ CREATE TABLE papers2.paper_has_authors (
   FOREIGN KEY (paper_id) REFERENCES paper (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.paper_has_cont;
-CREATE TABLE papers2.paper_has_cont (
+CREATE TABLE papers.paper_has_cont (
   paper_id int(11) NOT NULL,
   cat_id mediumint(9) NOT NULL,
   cont_id mediumint(9) NOT NULL,
@@ -75,8 +79,7 @@ CREATE TABLE papers2.paper_has_cont (
   FOREIGN KEY (cont_id) REFERENCES content (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.cat_cont;
-CREATE TABLE papers2.cat_cont (
+CREATE TABLE papers.cat_cont (
   cat_id mediumint(9) NOT NULL,
   cont_id mediumint(9) NOT NULL,
   KEY cat_id (cat_id),
@@ -85,28 +88,12 @@ CREATE TABLE papers2.cat_cont (
   FOREIGN KEY (cont_id) REFERENCES content (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS papers2.int_cat;
-CREATE TABLE papers2.int_cat (
-  cat_id1 mediumint(9) NOT NULL,
+CREATE TABLE papers.int_cat (
+  cat_id mediumint(9) NOT NULL,
   int_id mediumint(9) NOT NULL,
-  cat_id2 mediumint(9) NOT NULL,
-  KEY cat_id1 (cat_id1),
+  name varchar(200) NOT NULL,
+  KEY cat_id (cat_id),
   KEY int_id (int_id),
-  KEY cat_id2 (cat_id2),
-  FOREIGN KEY (cat_id1) REFERENCES categories (id),
-  FOREIGN KEY (int_id) REFERENCES interaction (id),
-  FOREIGN KEY (cat_id2) REFERENCES categories (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS papers2.int_cont;
-CREATE TABLE papers2.int_cont (
-  cont_id1 mediumint(9) NOT NULL,
-  int_id mediumint(9) NOT NULL,
-  cont_id2 mediumint(9) NOT NULL,
-  KEY cont_id1 (cont_id1),
-  KEY int_id (int_id),
-  KEY cont_id2 (cont_id2),
-  FOREIGN KEY (cont_id1) REFERENCES content (id),
-  FOREIGN KEY (int_id) REFERENCES interaction (id),
-  FOREIGN KEY (cont_id2) REFERENCES content (id)
+  FOREIGN KEY (cat_id) REFERENCES categories (id),
+  FOREIGN KEY (int_id) REFERENCES interaction (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
