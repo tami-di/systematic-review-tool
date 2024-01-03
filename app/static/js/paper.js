@@ -1,4 +1,5 @@
 // what to do if the search-paper button is pressed
+// add paper button pressed (add paper to database) 
 d3.selectAll(".btn-success").on("click", function(){
     d3.select("#put-form-here").selectAll("form").remove()
     d3.json("/api/request/headers/paper/",
@@ -6,7 +7,7 @@ d3.selectAll(".btn-success").on("click", function(){
             // get data
             paper_properties = data.properties
             paper_properties_length = paper_properties.length
-            paper_title = paper_properties[0].value
+            paper_title = paper_properties[0].value 
             // make form structure
             fieldset = d3.select("#put-form-here")
             .append("form")
@@ -24,7 +25,7 @@ d3.selectAll(".btn-success").on("click", function(){
                 element_id = "paper-"+(paper_properties[i].name).split(' ').join('-')
                 value = ""
                 text_label = paper_properties[i].name
-                placeholder = "Instert "+text_label
+                placeholder = "Insert "+text_label
                 if(type == 'varchar'){
                     set_varchar_input (form_group,element_id,text_label,value,placeholder)
                 }
@@ -65,7 +66,7 @@ var set_form_with_paper = function(paper_id){
                 // get data
                 paper_properties = data.properties
                 paper_properties_length = paper_properties.length
-                paper_title = paper_properties[0].value
+                paper_title = paper_properties[0].value //paper title 
                 // make form structure
                 fieldset = d3.select("#put-form-here")
                 .append("form")

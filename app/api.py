@@ -209,7 +209,7 @@ def get_authors_from_paper_id_as_str(db, paper_id):
 """Function to obtain the name associated with an id of an author"""
 def get_author_name_from_id(db,author_id):
     cursor = db.connection.cursor()
-    cursor.execute("select name from author where id=%s",[author_id])
+    cursor.execute("SELECT name FROM author WHERE id=%s",[author_id])
     for row in cursor.fetchall():
         return row[0]
 

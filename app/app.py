@@ -34,6 +34,15 @@ def index():
     return render_template('index.html',
                            paper=paper_id,
                            set_form=set_hidden)
+    
+    
+      
+@app.route('/searchNew', methods=['POST','GET'])
+def searchNew(): 
+    # obtain data 
+    
+    render_template('searchNew.html')
+
 
 @app.route('/categorias')
 def categorias():
