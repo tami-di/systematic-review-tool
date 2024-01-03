@@ -512,3 +512,4 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
         rows.append(dict_row)
 
     return {'headers':headers,'rows':rows}
+

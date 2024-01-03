@@ -38,7 +38,8 @@ def show_columns_category(db,cat_id):
             type = parse_type(row[1])
             # - set 'is_subcat' to false
             dict_array.append({'name':row[0],'type':type,'is_subcat':False,'properties':[]})
-    cursor.execute("SELECT extra FROM categories WHERE id=%s", cat_id)
+    print(f"cat_id: {cat_id}")
+    cursor.execute("SELECT extra FROM categories WHERE id=%s", [int(cat_id)])
     row=cursor.fetchall()
     split_data = row[0][0].split(";")
     split_data = split_data[:-1]
@@ -123,7 +124,7 @@ def add_paper_using_dict_array(db, dict_array):
     # Commit changes in the database
     db.connection.commit()
 
-"""Function to"""
+"""Function to obtain the id from the content name"""
 def get_content_id_from_name(db,name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT id FROM content WHERE name = %s", [name])
@@ -133,7 +134,7 @@ def get_content_id_from_name(db,name):
         break
     return category_id
 
-"""Funtion to"""
+"""Function to obtain the category id from the id of a content"""
 def get_category_id_from_id_cont(db,id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT cat_id FROM cat_cont WHERE cont_id="+id)
@@ -143,7 +144,7 @@ def get_category_id_from_id_cont(db,id):
         break
     return category_id
 
-"""Funtion to"""
+"""Function to get the paper id from the paper title"""
 def get_paper_id_where_title_exactly(db, title):
     cursor = db.connection.cursor()
     cursor.execute("select id from paper where title=%s",[title])
@@ -158,7 +159,7 @@ def add_authors_to_paper(db, paper_id, authors):
         cursor.execute("insert into paper_has_authors (paper_id, author_id) values (%s, %s)", (paper_id,id))
     db.connection.commit()
 
-"""Funtion to"""
+"""function to create or add an author"""
 def get_or_create_author_id_from_name(db,author_name):
     cursor = db.connection.cursor()
     cursor.execute("select id from author where name=%s",[author_name])
@@ -171,7 +172,7 @@ def get_or_create_author_id_from_name(db,author_name):
         x = cursor.fetchone()
         return x[0]
 
-"""Funtion to""" 
+"""Funtion to create a categorie""" 
 def add_data_to_categories_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
     for category in categories:
@@ -181,7 +182,7 @@ def add_data_to_categories_from_dict_array(db, categories, paper_id):
             i+=1
 
 #---Search functions by name---            
-"""Funtion to""" 
+"""Function to obtain the properties of a paper""" 
 def get_paper_properties_and_values(db, paper_id):
     dict_array = get_paper_properties(db)
     for dictionary in dict_array:
@@ -196,7 +197,7 @@ def get_paper_properties_and_values(db, paper_id):
             dictionary['value'] = value[dictionary['name']]
     return dict_array
 
-"""Funtion to""" 
+"""Function to obtain the authors of a paper""" 
 def get_authors_from_paper_id_as_str(db, paper_id):
     cursor = db.connection.cursor()
     authors_str = ""
@@ -205,14 +206,14 @@ def get_authors_from_paper_id_as_str(db, paper_id):
         authors_str += get_author_name_from_id(db,row[0]) + ";"
     return authors_str
 
-"""Funtion to"""
+"""Function to obtain the name associated with an id of an author"""
 def get_author_name_from_id(db,author_id):
     cursor = db.connection.cursor()
     cursor.execute("select name from author where id=%s",[author_id])
     for row in cursor.fetchall():
         return row[0]
 
-"""Funtion to"""
+"""Function to extract the contents associated with a paper id"""
 def get_value_from_category_where_paper_id(db,paper_id,cat_id):
     cursor = db.connection.cursor()
     value = []
@@ -221,7 +222,7 @@ def get_value_from_category_where_paper_id(db,paper_id,cat_id):
         value.append(row[0])
     return value
 
-"""Funtion to"""
+"""Funtion to obtain values from paper id"""
 def get_values_from_paper_as_dict(db, paper_id):
     cursor = db.connection.cursor()
     dict = {}
@@ -238,7 +239,7 @@ def get_values_from_paper_as_dict(db, paper_id):
     return dict
 
 #---Functions for modifying a paper---
-"""Funtion to"""
+"""Funtion to edit a paper"""
 def edit_paper_using_dict_array(db, paper_id,dict_array):
     cursor = db.connection.cursor()
     title = ""
@@ -284,7 +285,7 @@ def edit_paper_using_dict_array(db, paper_id,dict_array):
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to"""
+"""Function to change the author of a paper"""
 def update_authors_to_paper(db, paper_id, authors):
     cursor = db.connection.cursor()
     # remove authors from paper
@@ -294,7 +295,7 @@ def update_authors_to_paper(db, paper_id, authors):
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to"""
+"""Function to edit the categories of a paper"""
 def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s",(paper_id))
@@ -329,21 +330,21 @@ def get_all_properties_from_category_as_dict_array(db, cat_id):
         type = 'subcat'
         # - set 'is_subcat' to true
         is_subcat = 'True'
-        cursor.execute("SELECT name FROM interaction WHERE id IN (SELECT int_id FROM int_cont WHERE cont_id1=%s or cont_id2=%s)",[subcat_id,subcat_id])
+        cursor.execute("SELECT name FROM interaction WHERE id IN (SELECT int_id FROM int_cat WHERE cat_id=%s)",[subcat_id])
         for row in cursor.fetchall():
             interaction = row[0]
             dict_array.append({'name':subcat_name,'id':subcat_id,'properties':properties, 'properties_type':properties_type,
                            'type':type,'is_subcat':is_subcat,'interaction':interaction})
     return dict_array
 
-"""Funtion to"""
+"""Function to get the name of a content through its id"""
 def get_content_name_from_id(db,cont_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT name FROM content WHERE id=%s",[cont_id])
     for row in cursor.fetchall():
         return row[0]
 
-"""Funtion to"""
+"""Funtion to obtain the type of content properties such as dict"""
 def get_content_properties_type_as_dict(db, subcat_id):
     cursor = db.connection.cursor()
     cursor.execute("show columns from content")
@@ -355,7 +356,7 @@ def get_content_properties_type_as_dict(db, subcat_id):
         prop_dict[row[0]] = type
     return prop_dict
     
-"""Funtion to"""
+"""Funtion to get the contents of a category"""
 def get_all_content_id_of_category_as_array(db, cat_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT DISTINCT cont_id FROM cat_cont WHERE cat_id=%s", [cat_id])
@@ -364,8 +365,8 @@ def get_all_content_id_of_category_as_array(db, cat_id):
         subcat_id_array.append(row[0])
     return subcat_id_array
  
-#---Functions to add column to category---
-"""Funtion to""" 
+#---Functions to manage the column of a category---
+"""Funtion to add column to category""" 
 def add_column_to_category(db, cat_id, col_name, col_data):
     cursor = db.connection.cursor()
     # add column to table
@@ -376,7 +377,7 @@ def add_column_to_category(db, cat_id, col_name, col_data):
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to""" 
+"""Funtion to delete column to category""" 
 def delete_category_column(db, cat_id,column_name):
     cursor = db.connection.cursor()
     cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
@@ -414,16 +415,15 @@ def delete_category_column(db, cat_id,column_name):
     db.connection.commit()
 
 
-#---Functions to add category---
-"""Funtion to"""
+#---Functions to manage a category---
+"""Funtion to add category"""
 def create_category(db,name, description):
     cursor = db.connection.cursor()
     cursor.execute('''INSERT INTO categories (name, description, extra)
                   VALUES (%s, %s, %s)''', (name, description, ""))
     db.connection.commit()
 
-#---Functions to delete category---
-"""Funtion to"""
+"""Funtion to delete category"""
 def delete_category_by_id(db, cat_id):
     cursor = db.connection.cursor()
     # delete subcategories attached to this category
@@ -438,17 +438,16 @@ def delete_category_by_id(db, cat_id):
     cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
     db.connection.commit()
 
-"""Funtion to"""
+"""Funtion to delete content"""
 def delete_subcategory_by_id(db, subcat_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM int_cont WHERE cont_id1=%s OR cont_id2=%s",(subcat_id,subcat_id))
     cursor.execute("DELETE FROM content WHERE id=%s",(subcat_id))
     cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(subcat_id))
     db.connection.commit()
 
 #-------------------------Functions for Data---------------------------
 #---functions for displaying author data and their respective functionalities---
-"""Funtion to"""
+"""Funtion to obtain the authors' information"""
 def get_data_from_authors_as_headers_and_column_data(db):
     cursor = db.connection.cursor()
     # headers is a dict array
@@ -473,21 +472,21 @@ def get_data_from_authors_as_headers_and_column_data(db):
         rows.append(dict_row)
     return {'headers':headers,'rows':rows}
 
-"""Funtion to"""
+"""Function to modify an author"""
 def modify_author(db, author_id, author_name, author_affiliation):
     cursor = db.connection.cursor()
     cursor.execute("UPDATE author SET name=%s, affiliation=%s WHERE id=%s",(author_name, author_affiliation, author_id))
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to"""
+"""Funtion to add an author"""
 def add_author(db, author_name, author_affiliation):
     cursor = db.connection.cursor()
     cursor.execute("INSERT INTO author (name, affiliation) values (%s,%s)",(author_name,author_affiliation))
     # Commit changes in the database
     db.connection.commit()
 
-"""Funtion to"""
+"""Funtion to delete an author"""
 def delete_author(db, author_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s",author_id)
@@ -547,7 +546,7 @@ def add_data_row_to_category(db,cat_id,dict_array):
     db.connection.commit()
 
 #---functions for displaying category data and their respective functionalities---
-"""Funtion to"""
+"""Function to remove duplicate subcategories"""
 def remove_subcategories_duplicated(dict_array_subcategories):
     dict_array = []##########    EDITAR--------------------------------------------------
     subcat_ids_added = []
@@ -560,7 +559,7 @@ def remove_subcategories_duplicated(dict_array_subcategories):
             dict_array.append(element)
     return dict_array
  
-"""Funtion to"""
+"""Function to obtain category information"""
 def get_data_from_category_as_headers_and_column_data(db, cat_id):
     cursor = db.connection.cursor()
     headers=show_columns_category(db,cat_id)
@@ -583,21 +582,19 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
     return {'headers':headers,'rows':rows}
 
 #---functions for edit and delete a category---
-"""Funtion to"""
+"""Function to remove a content from a category"""
 def delete_row_from_category(db, cat_id, row_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
     cont_id= cursor.fetchall()[int(row_id)][0]
 
-    cursor.execute("DELETE FROM int_cont WHERE cont_id1=%s",(cont_id,))
-    cursor.execute("DELETE FROM int_cont WHERE cont_id2=%s",(cont_id,))
     cursor.execute("DELETE FROM paper_has_cont WHERE cont_id=%s",(cont_id,))###Update or delete?
     cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(cont_id,))
 
     cursor.execute("DELETE FROM content WHERE id=%s",(cont_id,))
     db.connection.commit()
 
-"""Funtion to"""
+"""Function to edit a content"""
 def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     cursor = db.connection.cursor()
     cursor = db.connection.cursor()
@@ -633,11 +630,17 @@ def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     cursor.execute("UPDATE content SET name=%s,description=%s,extra=%s WHERE id=%s", (prop_str[0],prop_str[1],prop_str[2],cont_id))
     db.connection.commit()
 
+def create_subcategory(db,name,cat_id,interaction):
+    cursor = db.connection.cursor()
+    cursor.execute("INSERT INTO interaction (name) VALUES (%s)",[name])
+    nuevo_id = cursor.lastrowid
+    cursor.execute("INSERT INTO int_cat (cat_id,int_id,name) VALUES (%s,%s,%s)",[cat_id,nuevo_id,interaction])
+    db.connection.commit()
 
 #-------------------------Functions for Search---------------------------
 
 #---functions for displaying search---
-"""Funtion to"""
+"""Function to get the name of the category from the id"""
 def get_category_name_from_id(db, cat_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT name FROM categories WHERE id=%s",[cat_id])
