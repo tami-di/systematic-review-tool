@@ -438,6 +438,15 @@ def delete_category_by_id(db, cat_id):
     cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
     db.connection.commit()
 
+"""function to obtain contents associated to a category"""
+def get_all_subcategories_id_of_category_as_array(db, cat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT DISTINCT cont_id FROM cat_cont WHERE cat_id=%s", [cat_id])
+    subcat_id_array = []
+    for row in cursor.fetchall():
+        subcat_id_array.append(row[0])
+    return subcat_id_array
+
 """Funtion to delete content"""
 def delete_subcategory_by_id(db, subcat_id):
     cursor = db.connection.cursor()
@@ -630,6 +639,7 @@ def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     cursor.execute("UPDATE content SET name=%s,description=%s,extra=%s WHERE id=%s", (prop_str[0],prop_str[1],prop_str[2],cont_id))
     db.connection.commit()
 
+"""Function to create a interaction"""
 def create_subcategory(db,name,cat_id,interaction):
     cursor = db.connection.cursor()
     cursor.execute("INSERT INTO interaction (name) VALUES (%s)",[name])
