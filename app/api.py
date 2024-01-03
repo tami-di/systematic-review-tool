@@ -657,3 +657,13 @@ def get_category_name_from_id(db, cat_id):
     for row in cursor.fetchall():
         return row[0]
 
+
+#-------------------------Functions for Search--------------------------- 
+
+# Function to fetch autocomplete suggestions from the database
+def get_suggestions(db,term):
+    cursor = db.connection.cursor()
+    ## cursor.execute("SELECT algo FROM tabla WHERE algo LIKE ?", ('%' + term + '%',))
+    suggestions = [row[0] for row in cursor.fetchall()]
+    db.connection.close()
+    return suggestions

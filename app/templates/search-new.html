@@ -5,41 +5,14 @@
     - autocomplete
     - filter by category (dropdown) 
 -->
-<div class="content-container container">
-    <div class="row">
-        <div class="col-md-12">
-            <form class="form-horizontal" autocomplete = "off">
-            <fieldset>
 
-            <!-- Form Name -->
-            <legend></legend>
+<title>Autocomplete Input</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+    <h1>Autocomplete Input Example</h1>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <ul id="suggestions"></ul>
 
-            <!-- Search input-->
-            <div class="form-group">
-              <button class="col-md-0 control-label btn btn-info" for="searchinput">Search</button>
-              <div class="col-md-4">
-                <input id="searchinput" name="searchinput" type="text" placeholder="ñau" class="form-control">
-                <p class="help-block"></p>
-              </div>
-              <ul class="list"></ul>
-            </div>
-
-            </fieldset>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-
-    <!-- Scripts -->
-<script src="/static/js/d3.v4.min.js"></script>
-<script src="/static/js/paper.js"></script>
-{% if set_form %}
-    <script>
-        set_form_with_paper("{{ paper }}")
-    </script>
-{% endif%}
+<script src="/static/js/autocomplete.js"></script>
 
 {% endblock %}

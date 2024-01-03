@@ -37,11 +37,12 @@ def index():
     
     
       
-@app.route('/searchNew', methods=['POST','GET'])
+@app.route('/searchNew', methods=['GET'])
 def searchNew(): 
     # obtain data 
-    
-    render_template('searchNew.html')
+    term = request.args.get('term', '')
+    suggestions = api.get_suggestions(db,term)
+    return jsonify(suggestions)
 
 
 @app.route('/categorias')
