@@ -1,18 +1,27 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<!-- Created By CodingNepal - www.codingnepalweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Autocomplete Search Box | CodingNepal</title>
+    <link rel="stylesheet" href="/static/css/search.css">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="search-input">
+        <a href="" target="_blank" hidden></a>
+        <input type="text" placeholder="Type to search..">
+        <div class="autocom-box">
+          <!-- here list are inserted from javascript -->
+        </div>
+        <div class="icon"><i class="fas fa-search"></i></div>
+      </div>
+    </div>
 
-<!-- search bar: 
-    - autocomplete
-    - filter by category (dropdown) 
--->
+     <script src="static/js/suggestions.js"></script> 
+     <script src="static/js/autocomplete.js"></script> 
 
-<title>Autocomplete Input</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<body>
-    <h1>Autocomplete Input Example</h1>
-    <input type="text" id="searchInput" placeholder="Search...">
-    <ul id="suggestions"></ul>
-
-<script src="/static/js/autocomplete.js"></script>
-
-{% endblock %}
+  </body>
+</html>

@@ -36,13 +36,17 @@ def index():
                            set_form=set_hidden)
     
     
-      
-@app.route('/searchNew', methods=['GET'])
-def searchNew(): 
-    # obtain data 
-    term = request.args.get('term', '')
-    suggestions = api.get_suggestions(db,term)
-    return jsonify(suggestions)
+
+@app.route('/searchNew')
+def searchNew():
+    return render_template('search-new.html')
+
+
+@app.route('/getSuggestions', methods=['GET'])
+def getSuggestions():
+    s = api.get_suggestions(db)
+    return s
+
 
 
 @app.route('/categorias')

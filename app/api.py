@@ -1,5 +1,6 @@
 __author__ = 'ivana'
 import re
+from flask import jsonify, request
 
 #-------------------------General Functions---------------------------
 """Function that returns the data type of a variable"""
@@ -661,9 +662,15 @@ def get_category_name_from_id(db, cat_id):
 #-------------------------Functions for Search--------------------------- 
 
 # Function to fetch autocomplete suggestions from the database
-def get_suggestions(db,term):
+def get_suggestions(db):
     cursor = db.connection.cursor()
-    ## cursor.execute("SELECT algo FROM tabla WHERE algo LIKE ?", ('%' + term + '%',))
-    suggestions = [row[0] for row in cursor.fetchall()]
-    db.connection.close()
-    return suggestions
+    user_input = request.args.get('input')
+    if (user_input): 
+        sql = "SELECT title FROM paper WHERE title LIKE %s LIMIT 10"
+        cursor.execute(sql, (user_input + '%',))
+        
+        suggestions = cursor.fetchall()
+        paper_titles = [paper[0] for paper in suggestions]
+        
+        return jsonify({'suggestions': paper_titles})
+    return jsonify({'suggestions': []})
