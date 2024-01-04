@@ -100,6 +100,12 @@ a:hover {
     font-size:22px;
 }
 
+.btn btn-success{
+    position: fixed;
+    float: right;
+
+}
+
 .lato {
     font-family: 'Lato', sans-serif;
 }
@@ -289,3 +295,4 @@ footer .nav>li>a:hover {
     background-color:transparent;
 	color:#fff;
 }
+
