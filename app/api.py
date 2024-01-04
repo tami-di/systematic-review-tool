@@ -666,11 +666,18 @@ def get_suggestions(db):
     cursor = db.connection.cursor()
     user_input = request.args.get('input')
     if (user_input): 
+        
         sql = "SELECT title FROM paper WHERE title LIKE %s LIMIT 10"
         cursor.execute(sql, (user_input + '%',))
-        
+
         suggestions = cursor.fetchall()
         paper_titles = [paper[0] for paper in suggestions]
-        
         return jsonify({'suggestions': paper_titles})
+         
     return jsonify({'suggestions': []})
+
+
+
+
+
+

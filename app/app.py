@@ -37,11 +37,6 @@ def index():
     
     
 
-@app.route('/searchNew')
-def searchNew():
-    return render_template('search-new.html')
-
-
 @app.route('/getSuggestions', methods=['GET'])
 def getSuggestions():
     s = api.get_suggestions(db)

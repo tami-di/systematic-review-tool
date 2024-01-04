@@ -7,13 +7,13 @@
 }
 
 body{
-  background: #644bff;
+  background: white;
   padding: 0 20px;
 }
 
 ::selection{
   color: #fff;
-  background: #664AFF;
+  background: lightblue;
 }
 
 .wrapper{
@@ -83,6 +83,19 @@ body{
   text-align: center;
   line-height: 55px;
   font-size: 20px;
-  color: #644bff;
+  color: lightseagreen;
   cursor: pointer;
+}
+
+.search-input button{
+  color: #fff;
+  background: transparent;
+  border: none;
+
+}
+
+.search-input button :hover{
+  color: lightblue;
+  background: transparent;
+  border: none;
 }
