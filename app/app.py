@@ -227,6 +227,10 @@ def delete_category_data(cat_id,row_id):
     api.delete_row_from_category(db, cat_id, row_id)
     return redirect(request.referrer)
 
+@app .route('/api/delete/data/paper/<paper_id>', methods=['POST'])
+def delete_paper_data(paper_id):
+    api.delete_paper_by_id(db, paper_id)
+    return redirect(request.referrer)
 
 @app.route('/api/add/data/category/<cat_id>/subcategory/<subcat_id>', methods=['POST'])
 def add_data_to_subcat(cat_id,subcat_id):

@@ -101,27 +101,28 @@ var set_form_with_paper = function(paper_id){
     }
     d3.select("#put-form-here").selectAll("table").remove()
     d3.json("/api/request/data/paper/"+paper_id+"/",
-            function(error, data){
+            function(error, data) {
                 // get data
                 paper_properties = data.properties
                 paper_properties_length = paper_properties.length
                 paper_title = paper_properties[0].value //paper title 
                 // make table structure
                 table = d3.select("#put-form-here")
-                .append("table")
-                .attr("class","table table-bordered")
-                .append("tbody")
+                    .append("table")
+                    .attr("class", "table table-bordered")
+                    .append("tbody")
+            
                 // set table header
                 table.append("tr")
                     .append("th")
                     .attr("colspan", "2")
                     .text(paper_title[0].toUpperCase() + paper_title.substring(1) + " information")
                 // set table body
-                for(i = 0; i < paper_properties_length; i++){
+                for (i = 0; i < paper_properties_length; i++) {
                     row = table.append("tr")
                     type = paper_properties[i].type
 
-                    element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).split(' ').join('-')
+                    element_id = "paper-" + paper_id + "-" + (paper_properties[i].name).split(' ').join('-')
                     value = paper_properties[i].value
                     text_label = paper_properties[i].name
 
@@ -139,23 +140,34 @@ var set_form_with_paper = function(paper_id){
                     .attr("class", "btn btn-primary")
                     .text("Back")
                     .on("click", function() {
-                        window.location.href = "/"; 
+                        window.location.href = "/";
                     });
-                    put_modify_button(div_for_buttons);
+                put_modify_button(div_for_buttons);
+                put_delete_button(div_for_buttons); // Add delete button
 
-                    function put_modify_button(div_for_buttons) {
-                        div_for_buttons.append("button")
-                            .attr("class", "btn btn-primary")
-                            .text("Modify")
-                            .on("click", function() {
-                                d3.select("#put-modify-here").style("display", "block");
-                            });
-                            
-                    }
-                
-                
-})
-}
+                function put_modify_button(div_for_buttons) {
+                    div_for_buttons.append("button")
+                        .attr("class", "btn btn-primary")
+                        .text("Modify")
+                        .on("click", function() {
+                            d3.select("#put-modify-here").style("display", "block");
+                        });
+                }
+
+                function put_delete_button(div_for_buttons) {
+                    div_for_buttons.append("button")
+                    .attr("class", "btn btn-danger")
+                    .text("Delete")
+                    .on("click",function(){
+                        d3.select("#delete-here")
+                        .select("form")
+                        .attr("action",'/api/delete/data/paper/'+paper_id+'/')
+                        .attr("method","post")
+                        d3.select("#put-form-here").selectAll("table").remove()
+                    });
+                }
+            });
+    }
 
 
 var set_form_with_paper_modify = function(paper_id){
@@ -247,6 +259,24 @@ var put_modify_button = function(div_for_buttons){
                     .attr("class", "btn btn-warning")
                     .text("Modify")
 }
+
+
+
+var put_delete_button = function(div_for_buttons){
+    div_for_buttons.append("button")
+                    .attr("id","delete-element-btn")
+                    .attr("type","submit")
+                    .attr("name","delete-element-btn")
+                    .attr("class", "btn btn-danger")
+                    .text("Delete")
+}
+
+
+
+
+
+
+
 var set_number_input = function(form_group,id,text_label,value,placeholder){
     form_group.append("label")
         .attr("class","col-md-2 control-label")

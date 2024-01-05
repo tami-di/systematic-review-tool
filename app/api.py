@@ -301,6 +301,15 @@ def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s",(paper_id))
     add_data_to_categories_from_dict_array(db, categories, paper_id)
+    
+    
+"""Funtion to delete paper"""
+def delete_paper_by_id(db, paper_id):
+    cursor = db.connection.cursor()
+    cursor.execute("DELETE FROM papers WHERE id=%s", (paper_id,))
+    cursor.execute("DELETE FROM paper_has_authors WHERE paper_id=%s", (paper_id,))
+    cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s", (paper_id,))
+    db.connection.commit()
 
 
 #-------------------------Functions for Categories---------------------------
