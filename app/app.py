@@ -304,6 +304,7 @@ def get_paper_info():
     return jsonify(properties=paper_properties)
 
 
+
 @app.route('/api/edit/category/<cat_id>/row/<row_id>', methods=['POST'])
 def edit_data_from_category(cat_id,row_id):
     category_properties = api.get_all_properties_from_category_as_dict_array(db, cat_id)

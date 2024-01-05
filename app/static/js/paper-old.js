@@ -1,61 +1,25 @@
 // what to do if the search-paper button is pressed
 // add paper button pressed (add paper to database) 
-
 d3.selectAll(".btn-success").on("click", function(){
-    // Create modal dialog
-    var modal = d3.select("body").append("div")
-        .attr("class", "modal fade")
-        .attr("id", "paperFormModal")
-        .attr("tabindex", "-1")
-        .attr("role", "dialog")
-        .attr("aria-labelledby", "paperFormModalLabel")
-        .attr("aria-hidden", "true");
-
-    var modalDialog = modal.append("div")
-        .attr("class", "modal-dialog")
-        .attr("role", "document");
-
-    var modalContent = modalDialog.append("div")
-        .attr("class", "modal-content");
-
-    // Close button
-    modalContent.append("button")
-        .attr("type", "button")
-        .attr("class", "close")
-        .attr("data-dismiss", "modal")
-        .attr("aria-label", "Close")
-        .append("span")
-        .attr("aria-hidden", "true")
-        .text("×");
-
-    // make form structure
-    fieldset = d3.select("#put-add-here")
-    .append("form")
-    .attr("class","form-horizontal")
-    .attr("action","/api/add/paper/")
-    .attr("method","post")
-    .append("fieldset")
-
-
-    // Set form legend
-    fieldset.append("legend")
-        .text("Add paper to database");
-
-    // Set form body
-    var formBody = fieldset.append("div");
-
+    d3.select("#put-form-here").selectAll("form").remove()
     d3.json("/api/request/headers/paper/",
-
-        function(error, data){
+            function(error, data){
             // get data
             paper_properties = data.properties
             paper_properties_length = paper_properties.length
             paper_title = paper_properties[0].value 
-
-            
+            // make form structure
+            fieldset = d3.select("#put-form-here")
+            .append("form")
+            .attr("class","form-horizontal")
+            .attr("action","/api/add/paper/")
+            .attr("method","post")
+            .append("fieldset")
+            // set form legend
+            fieldset.append("legend").text("Add paper to database")
             // set form body
             for(i = 0; i < paper_properties_length; i++){
-                form_group = formBody.append("div").attr("class","form-group")
+                form_group = fieldset.append("div").attr("class","form-group")
                 type = paper_properties[i].type
 
                 element_id = "paper-"+(paper_properties[i].name).split(' ').join('-')
@@ -76,22 +40,19 @@ d3.selectAll(".btn-success").on("click", function(){
                     set_category_select(form_group,element_id,text_label,value,data)
                 }
             }
-        
+            // add buttons
+            form_group = fieldset.append("div").attr("class","form-group")
+            // label?
+            form_group.append("label")
+            .attr("class","col-md-4 control-label")
+            .attr("for","accept-modified-data")
+            // buttons
+            div_for_buttons = form_group.append("div").attr("class","col-md-8")
+            put_submit_button(div_for_buttons)
+            put_dismiss_button(div_for_buttons)
+        })
 
-        // add buttons
-        form_group = fieldset.append("div").attr("class","form-group")
-        // label?
-        form_group.append("label")
-        .attr("class","col-md-4 control-label")
-        .attr("for","accept-modified-data")
-        // buttons
-        div_for_buttons = form_group.append("div").attr("class","col-md-8")
-        put_submit_button(div_for_buttons)
-        put_dismiss_button(div_for_buttons)
-        // Show modal dialog
-        modal.modal("show");
-    });
-});
+})
 
 // what to do if the search-paper button is pressed (any search really)
 var set_form_with_paper = function(paper_id){
@@ -99,71 +60,7 @@ var set_form_with_paper = function(paper_id){
         console.log("No match found")
         return
     }
-    d3.select("#put-form-here").selectAll("table").remove()
-    d3.json("/api/request/data/paper/"+paper_id+"/",
-            function(error, data){
-                // get data
-                paper_properties = data.properties
-                paper_properties_length = paper_properties.length
-                paper_title = paper_properties[0].value //paper title 
-                // make table structure
-                table = d3.select("#put-form-here")
-                .append("table")
-                .attr("class","table table-bordered")
-                .append("tbody")
-                // set table header
-                table.append("tr")
-                    .append("th")
-                    .attr("colspan", "2")
-                    .text(paper_title[0].toUpperCase() + paper_title.substring(1) + " information")
-                // set table body
-                for(i = 0; i < paper_properties_length; i++){
-                    row = table.append("tr")
-                    type = paper_properties[i].type
-
-                    element_id = "paper-"+paper_id+"-"+(paper_properties[i].name).split(' ').join('-')
-                    value = paper_properties[i].value
-                    text_label = paper_properties[i].name
-
-                    row.append("td")
-                        .text(text_label)
-                    row.append("td")
-                        .text(value)
-                }
-                // add buttons
-                form_group = table.append("tr")
-                // buttons
-                div_for_buttons = form_group.append("td")
-                    .attr("colspan", "3")
-                div_for_buttons.append("button")
-                    .attr("class", "btn btn-primary")
-                    .text("Back")
-                    .on("click", function() {
-                        window.location.href = "/"; 
-                    });
-                    put_modify_button(div_for_buttons);
-
-                    function put_modify_button(div_for_buttons) {
-                        div_for_buttons.append("button")
-                            .attr("class", "btn btn-primary")
-                            .text("Modify")
-                            .on("click", function() {
-                                d3.select("#put-modify-here").style("display", "block");
-                            });
-                            
-                    }
-                
-                
-})
-}
-
-
-var set_form_with_paper_modify = function(paper_id){
-    if(paper_id == ""){
-        console.log("No match found")
-        return
-    }
-    d3.selectAll("#put-modify-here").selectAll("form").remove()
+    d3.selectAll("#put-form-here").selectAll("form").remove()
     d3.json("/api/request/data/paper/"+paper_id+"/",
             function(error, data){
                 // get data
@@ -171,7 +68,7 @@ var set_form_with_paper_modify = function(paper_id){
                 paper_properties_length = paper_properties.length
                 paper_title = paper_properties[0].value //paper title 
                 // make form structure
-                fieldset = d3.select("#put-modify-here")
+                fieldset = d3.select("#put-form-here")
                 .append("form")
                 .attr("class","form-horizontal")
                 .attr("action","/api/edit/data/paper/"+paper_id+"/")
@@ -214,18 +111,11 @@ var set_form_with_paper_modify = function(paper_id){
                 put_dismiss_button(div_for_buttons)
             })
 }
-
-
-
-
-
-
-
 var put_dismiss_button = function(div_for_buttons){
     div_for_buttons.append("button")
                     .attr("data-dismiss","modal")
                     .attr("class", "btn btn-danger")
-                    .text("Cancel")
+                    .text("cancel")
 }
 
 var put_submit_button = function(div_for_buttons){
@@ -236,16 +126,6 @@ var put_submit_button = function(div_for_buttons){
                     .attr("class", "btn btn-success")
                     .text("Accept")
 
-}
-
-
-var put_modify_button = function(div_for_buttons){
-    div_for_buttons.append("button")
-                    .attr("id","modify-data")
-                    .attr("type","submit")
-                    .attr("name","modify-data")
-                    .attr("class", "btn btn-warning")
-                    .text("Modify")
 }
 var set_number_input = function(form_group,id,text_label,value,placeholder){
     form_group.append("label")

@@ -457,6 +457,7 @@ def delete_subcategory_by_id(db, subcat_id):
 
 #-------------------------Functions for Data---------------------------
 #---functions for displaying author data and their respective functionalities---
+
 """Funtion to obtain the authors' information"""
 def get_data_from_authors_as_headers_and_column_data(db):
     cursor = db.connection.cursor()
@@ -481,6 +482,7 @@ def get_data_from_authors_as_headers_and_column_data(db):
             i += 1
         rows.append(dict_row)
     return {'headers':headers,'rows':rows}
+
 
 """Function to modify an author"""
 def modify_author(db, author_id, author_name, author_affiliation):

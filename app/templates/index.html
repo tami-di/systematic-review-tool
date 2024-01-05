@@ -32,14 +32,43 @@
 
                 </fieldset>
                 </form>
-                <button class="btn btn-success" >Add paper</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#addPaperModal">Add paper</button>
+                <!-- Modal -->
+                <div class="modal fade" id="addPaperModal" tabindex="-1" role="dialog" aria-labelledby="addPaperModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" id="put-add-here">
+                        <!-- Add paper form content here -->
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
             </div>
         </div>
-        <div class="row content-container">
-            <div class="col-md-12" id="put-form-here">
+        <div class="row content-container" id= "put-form-here">
+            <div class="col-md-12">
+                <!-- Form content here -->
+            </div>
+            <div class = "col-md-12" id = "put-modify-here" hidden>
+                <!-- Modify content here -->
+            </div>
+        </div>
+      </div>
+      
+       
+      </div>
 
-            </div>
-        </div>
+        
     </div>
     <!-- Scripts -->
     <script src="static/js/autocomplete.js"></script> 
@@ -48,7 +77,9 @@
     {% if set_form %}
         <script>
             set_form_with_paper("{{ paper }}")
+            set_form_with_paper_modify("{{ paper }}")
         </script>
+
     {% endif%}
 {% endblock %}
  
