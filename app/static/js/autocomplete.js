@@ -15,7 +15,9 @@ inputBox.onkeyup = (e) => {
                 let emptyArray = data.suggestions; // Assuming the response contains suggestions in a 'suggestions' field
 
                 if (emptyArray.length > 0) {
-                    emptyArray = emptyArray.map((data) => {
+                    emptyArray = emptyArray.filter((data) => {
+                        return data.toLowerCase().startsWith(userData.toLowerCase());
+                    }).map((data) => {
                         return '<li>' + data + '</li>';
                     });
                     searchWrapper.classList.add("active");

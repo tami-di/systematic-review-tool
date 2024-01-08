@@ -678,13 +678,25 @@ def get_suggestions(db):
     user_input = request.args.get('input')
     if (user_input): 
         
-        sql = "SELECT title FROM paper WHERE title LIKE %s LIMIT 10"
-        cursor.execute(sql, (user_input + '%',))
+        sql = "SELECT * FROM paper WHERE title LIKE %s OR library LIKE %s OR code_name LIKE %s OR year LIKE %s OR abstract LIKE %s OR summary LIKE %s OR source LIKE %s  LIMIT 10"
+        query = f"%{user_input}%"
+        cursor.execute(sql, (query, query, query, query, query, query, query))
 
         suggestions = cursor.fetchall()
-        paper_titles = [paper[0] for paper in suggestions]
-        return jsonify({'suggestions': paper_titles})
-         
+        paper_info = [
+                {'title': str(paper[1]), 'library': str(paper[2]), 'code_name': str(paper[3]),
+                 'year': str(paper[4]), 'abstract': str(paper[5]),
+                 'summary': str(paper[6]), 'source': str(paper[7])} for paper in suggestions
+            ]
+        json_responses = []  # List to hold individual JSON responses for each element
+        for element in paper_info:
+             for value in element.values():
+                if value != '':
+                    json_responses.append(value) 
+        print(json_responses)
+    
+        return jsonify({'suggestions': json_responses})
+        
     return jsonify({'suggestions': []})
 
 
