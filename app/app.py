@@ -298,8 +298,13 @@ def request_data_from_subcat(subcat_id):
 
 @app.route('/api/request/data/paper/<paper_id>/')
 def get_paper_info_and_values(paper_id):
-    paper_properties = api.get_paper_properties_and_values(db, paper_id)
+    if paper_id == None:
+        id = api.get_paper_id_by_property_value(db, request.args.get("searchinput"))
+        paper_properties = api.get_paper_properties_and_values(db, id)
+    else:
+        paper_properties = api.get_paper_properties_and_values(db, paper_id)
     return jsonify(properties=paper_properties)
+
 
 
 @app.route('/api/request/headers/paper/')
