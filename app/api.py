@@ -304,7 +304,7 @@ def update_categories_data_from_dict_array(db, categories, paper_id):
 
 #-------------------------Functions for Categories---------------------------
 #---functions for displaying the page od Categories---
-"""Funtion to"""
+"""Funtion to get categories"""
 def get_all_categories_as_dict_array(db):
     cursor = db.connection.cursor()
     cursor.execute("SELECT id, name FROM categories")
@@ -314,7 +314,7 @@ def get_all_categories_as_dict_array(db):
     return category_dict_array
 
 #---Functions to display the information of a Category--- ----------------------------ARREGLAR CUANDO PONGA EL TIPO DE DATO
-"""Funtion to"""
+"""Funtion to get all properties from category"""
 def get_all_properties_from_category_as_dict_array(db, cat_id):
     cursor = db.connection.cursor()
     # get all columns from the category table and create properties
@@ -429,12 +429,16 @@ def delete_category_by_id(db, cat_id):
     # delete subcategories attached to this category
     # - get subcategories attached
     subcategories_id_list = get_all_subcategories_id_of_category_as_array(db, cat_id)
+    print(subcategories_id_list)
     # - delete subcategories
     cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id))
     cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id))
-    for subcat_id in subcategories_id_list:
+    if len(subcategories_id_list)>1:
+        for subcat_id in subcategories_id_list:
+            delete_subcategory_by_id(db, subcat_id)
+    else:
         delete_subcategory_by_id(db, subcat_id)
-    cursor.execute("DELETE FROM int_cat WHERE cat_id1=%s OR cat_id2=%s",(cat_id,cat_id))
+    cursor.execute("DELETE FROM int_cat WHERE cat_id=%s",(cat_id))
     cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
     db.connection.commit()
 
@@ -450,8 +454,8 @@ def get_all_subcategories_id_of_category_as_array(db, cat_id):
 """Funtion to delete content"""
 def delete_subcategory_by_id(db, subcat_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM content WHERE id=%s",(subcat_id))
-    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(subcat_id))
+    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(str(subcat_id)))
+    cursor.execute("DELETE FROM content WHERE id=%s",(str(subcat_id)))
     db.connection.commit()
 
 #-------------------------Functions for Data---------------------------
