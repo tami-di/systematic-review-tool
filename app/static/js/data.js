@@ -129,9 +129,11 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
         // get length of subcategories
         length = subcategories.length
         set_title = true
+        console.log("entro a subcat")
         // set a button for each subcategory
         for(var i = 0; i < length; i++){
-            if(subcategories[i].type == 'subcat'){
+            if(subcategories[i].type == 'subcat'){ //no entra en este if (?)
+                console.log("entro a subcat for")
                 if(set_title){
                     set_title = false
                     d3.select("#subcategorias")
@@ -145,18 +147,18 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         .text("Metacategories of category " + cat_name)
                 }
 
-                subcategory_buttons_container =
-                d3.select("#subcategorias")
-                .append("div")
-                .attr("class","row")
-                .append("div")
-                .attr("class","col-md-12")
+                subcategory_buttons_container = d3.select("#subcategorias")
+                    .append("div")
+                    .attr("class","row")
+                    .append("div")
+                    .attr("class","col-md-12")
                 // set subcategory button
                 subcategory_buttons_container.append("button")
                 .attr("class","btn btn-grey btn-ctnr-data")
                 .attr("id","subcat"+subcategories[i].id)
                 .attr("value",cat_id + "." + subcategories[i].id)
                 .text(subcategories[i].name)
+
                 // set see-all-data from subcategory button
                 subcategory_buttons_container.append("button")
                 .attr("type","button")

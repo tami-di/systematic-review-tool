@@ -201,13 +201,11 @@ def get_paper_id_by_value(db, property_value):
     
     # Adjust the property value to include wildcards for partial matching
     adjusted_value = f"%{property_value}%"
-    search_values = tuple([adjusted_value] * len(columns))
     
-    cursor.execute(query, search_values)
+    cursor.execute(query, tuple([adjusted_value] * len(columns)))
     
     paper_id = cursor.fetchone()
-    if paper_id:
-        return paper_id[0]
+    return paper_id[0] if paper_id else None
 
 
 #---Search functions by name---            
@@ -219,7 +217,9 @@ def search_paper_by_value(db, value, paper_id):
         if dictionary['value'] == value:
             papers.append(dictionary)
     return papers
-    
+ 
+ 
+ #--------Autocomplete functions----------------   
 
 def get_all_papers(db):
     cursor = db.connection.cursor()
@@ -229,34 +229,22 @@ def get_all_papers(db):
         papers.append(row[0])
     return papers
 
-
-
-#---Search functions by name---            
+                
 """Function to obtain the properties of a paper""" 
 def get_paper_properties_and_values(db, paper_id):
-    # Get additional properties and values for the specific paper
     dict_array = get_paper_properties(db)
     for dictionary in dict_array:
         if dictionary['name'] == 'authors':
             value = get_authors_from_paper_id_as_str(db, paper_id)
             dictionary['value'] = value
         elif dictionary['type'] == 'category':
-            value = get_value_from_category_where_paper_id(db, paper_id, dictionary['id'])
+            value = get_value_from_category_where_paper_id(db,paper_id,dictionary['id'])
             dictionary['value'] = value
         else:
-            # Handle cases where the property is neither author nor category
-            property_name = dictionary['name']  # Assuming the property name is stored in 'name' key
-        
-            property_value = get_property_value_for_paper(db, property_name)
-            
-            if property_value != None:
-                id = get_paper_id_by_value(db, property_value)
-                print(id)
-                value = get_values_from_paper_as_dict(db, id)
-                print(value)
-                dictionary['value'] = value[property_name]
-                       
-    return dict_array
+            value = get_values_from_paper_as_dict(db, paper_id)
+            dictionary['value'] = value[dictionary['name']]
+    return dict_array  
+
 
 
 
@@ -280,6 +268,9 @@ def get_property_value_for_paper(db, property_name):
         print(paper)
         return paper
 
+
+
+#----------------------------------------
 
 """Function to obtain the authors of a paper""" 
 def get_authors_from_paper_id_as_str(db, paper_id):
@@ -389,15 +380,16 @@ def update_categories_data_from_dict_array(db, categories, paper_id):
 """Funtion to delete paper"""
 def delete_paper_by_id(db, paper_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM papers WHERE id=%s", (paper_id,))
     cursor.execute("DELETE FROM paper_has_authors WHERE paper_id=%s", (paper_id,))
     cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s", (paper_id,))
+    cursor.execute("DELETE FROM paper WHERE id=%s", (paper_id,))
+    
     db.connection.commit()
 
 
 #-------------------------Functions for Categories---------------------------
 #---functions for displaying the page od Categories---
-"""Funtion toget categories"""
+"""Funtion to get categories"""
 def get_all_categories_as_dict_array(db):
     cursor = db.connection.cursor()
     cursor.execute("SELECT id, name FROM categories")
@@ -526,11 +518,12 @@ def delete_category_by_id(db, cat_id):
     # - delete subcategories
     cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id))
     cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id))
-    if len(subcategories_id_list)>1:
-        for subcat_id in subcategories_id_list:
+    for subcat_id in subcategories_id_list:
+        if len(subcategories_id_list)>1:
+            for subcat_id in subcategories_id_list:
+                delete_subcategory_by_id(db, subcat_id)
+        else:
             delete_subcategory_by_id(db, subcat_id)
-    else:
-        delete_subcategory_by_id(db, subcat_id)
     cursor.execute("DELETE FROM int_cat WHERE cat_id=%s",(cat_id))
     cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
     db.connection.commit()
@@ -543,6 +536,8 @@ def get_all_subcategories_id_of_category_as_array(db, cat_id):
     for row in cursor.fetchall():
         subcat_id_array.append(row[0])
     return subcat_id_array
+
+
 
 
 """Funtion to delete content"""
@@ -746,6 +741,16 @@ def create_subcategory(db,name,cat_id,interaction):
     nuevo_id = cursor.lastrowid
     cursor.execute("INSERT INTO int_cat (cat_id,int_id,name) VALUES (%s,%s,%s)",[cat_id,nuevo_id,interaction])
     db.connection.commit()
+    
+    
+def create_interaction_for_existing_subcategory(db, cat_id, interaction, existing_subcat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("INSERT INTO interaction (name) VALUES (%s)", [interaction])
+    new_interaction_id = cursor.lastrowid
+    cursor.execute("INSERT INTO int_cat (cat_id, int_id, name) VALUES (%s, %s, %s)", [cat_id, new_interaction_id, existing_subcat_id])
+    db.connection.commit()
+    
+    
 
 #-------------------------Functions for Search---------------------------
 

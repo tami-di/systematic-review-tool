@@ -58,18 +58,63 @@
         <div class="row content-container" id= "put-form-here">
             <div class="col-md-12">
                 <!-- Form content here -->
-                <div class = "delete-paper" id= "put-delete-here" hidden>
-                  <button class= "btn btn-danger" id = "delete-paper">Delete paper</button>
                 </div>
             </div>
-            <div class = "col-md-12" id = "put-modify-here" hidden>
-                <!-- Modify content here -->
-            </div>
+
         </div>
       </div>
       
        
       </div>
+
+
+<!-- modify data modal -->
+<div id="modify-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modify-data-modal" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 class="text-center" id="modify-data-message">Modificar datos</h3>
+          </div>
+          <div class="modal-body row">
+              <form method="post" class="col-md-10 col-md-offset-0 col-xs-12
+              col-xs-offset-0 form-horizontal">
+                  <fieldset id="modify-data-body">
+
+                  </fieldset>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+      <!-- Delete modal -->
+<div id="delete-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-data-modal" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 class="text-center" id="delete-element-message">This data will be deleted, are you sure?</h3>
+          </div>
+          <div class="modal-body row">
+
+              <form action="" method="post" class="col-md-10 col-md-offset-0 col-xs-12
+              col-xs-offset-0 form-horizontal">
+                  <fieldset>
+                      <!-- Button -->
+                      <div class="form-group">
+                        <label class="col-md-4 control-label" for="delete-element-btn"></label>
+                        <div class="col-md-4">
+                          <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger">
+                              Delete
+                          </button>
+                        </div>
+                      </div>
+                  </fieldset>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
 
         
     </div>

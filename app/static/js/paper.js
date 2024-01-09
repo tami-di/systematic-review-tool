@@ -1,6 +1,5 @@
-// what to do if the search-paper button is pressed
-// add paper button pressed (add paper to database) 
 
+// add paper button pressed (add paper to database) 
 d3.selectAll(".btn-success").on("click", function(){
     // Create modal dialog
     var modal = d3.select("body").append("div")
@@ -93,7 +92,7 @@ d3.selectAll(".btn-success").on("click", function(){
     });
 });
 
-// what to do if the search-paper button is pressed (any search really)
+// what to do if the search-paper button is pressed
 var set_form_with_paper = function(paper_id){
     if(paper_id == ""){
         console.log("No match found")
@@ -142,40 +141,51 @@ var set_form_with_paper = function(paper_id){
                     .on("click", function() {
                         window.location.href = "/";
                     });
-                put_modify_button(div_for_buttons);
-                put_delete_button(div_for_buttons); // Add delete button
 
-                function put_modify_button(div_for_buttons) {
-                    div_for_buttons.append("button")
-                        .attr("class", "btn btn-primary")
-                        .text("Modify")
-                        .on("click", function() {
-                            d3.select("#put-modify-here").style("display", "block");
-                        });
-                }
-
-                function put_delete_button(div_for_buttons) {
-                    div_for_buttons.append("button")
-                    .attr("class", "btn btn-danger")
-                    .text("Delete")
+                // add modify-button
+                div_for_buttons.append("button")
+                    .attr("class","btn btn-warning")
+                    .attr("data-toggle","modal")
+                    .attr("data-target","#modify-data-modal")
                     .on("click",function(){
-                        d3.select("#delete-here")
+                        // set modal form parameter to delete row
+                        row = d3.select(this).attr("value")
+                        d3.select("#modify-data-modal")
                         .select("form")
-                        .attr("action",'/api/delete/data/paper/'+paper_id+'/')
-                        .attr("method","post")
-                        d3.select("#put-form-here").selectAll("table").remove()
-                    });
-                }
+                        .attr("action",'/api/edit/data/paper/'+paper_id)
+                    })
+                    .append("i")
+                    .attr("class","fa fa-pencil-square-o fa-lg")
+
+                
+
+                // add delete-button
+                div_for_buttons.append("button")
+                    .attr("class","btn btn-danger")
+                    .attr("data-toggle","modal")
+                    .attr("data-target","#delete-data-modal")
+                    .on("click",function(){
+                        // set modal form parameter to delete row
+                        row = d3.select(this).attr("value")
+                        d3.select("#delete-data-modal")
+                        .select("form")
+                        .attr("action",'/api/delete/data/paper/'+paper_id)
+                    })
+                    .append("i")
+                    .attr("class","fa fa-trash fa-lg")
+                
             });
     }
 
 
+
+// what to do if the modify button is pressed 
 var set_form_with_paper_modify = function(paper_id){
     if(paper_id == ""){
         console.log("No match found")
         return
     }
-    d3.selectAll("#put-modify-here").selectAll("form").remove()
+    d3.selectAll("#modify-data-body").selectAll("form").remove()
     d3.json("/api/request/data/paper/"+paper_id+"/",
             function(error, data){
                 // get data
@@ -183,7 +193,7 @@ var set_form_with_paper_modify = function(paper_id){
                 paper_properties_length = paper_properties.length
                 paper_title = paper_properties[0].value //paper title 
                 // make form structure
-                fieldset = d3.select("#put-modify-here")
+                fieldset = d3.select("#modify-data-body")
                 .append("form")
                 .attr("class","form-horizontal")
                 .attr("action","/api/edit/data/paper/"+paper_id+"/")
@@ -251,32 +261,6 @@ var put_submit_button = function(div_for_buttons){
 }
 
 
-var put_modify_button = function(div_for_buttons){
-    div_for_buttons.append("button")
-                    .attr("id","modify-data")
-                    .attr("type","submit")
-                    .attr("name","modify-data")
-                    .attr("class", "btn btn-warning")
-                    .text("Modify")
-}
-
-
-
-var put_delete_button = function(div_for_buttons){
-    div_for_buttons.append("button")
-                    .attr("id","delete-element-btn")
-                    .attr("type","submit")
-                    .attr("name","delete-element-btn")
-                    .attr("class", "btn btn-danger")
-                    .text("Delete")
-}
-
-
-
-
-
-
-
 var set_number_input = function(form_group,id,text_label,value,placeholder){
     form_group.append("label")
         .attr("class","col-md-2 control-label")
@@ -288,6 +272,7 @@ var set_number_input = function(form_group,id,text_label,value,placeholder){
         .attr("id",id)
         .attr("name",id)
         .attr("type","number")
+        .attr("autocomplete","off")
         .attr("class","form-control input-md")
     if(placeholder == ""){
         input_element.attr("value",value)
@@ -309,6 +294,7 @@ var set_varchar_input = function(form_group,id,text_label,value,placeholder){
                 .attr("id",id)
                 .attr("name",id)
                 .attr("type","text")
+                .attr("autocomplete","off")
                 .attr("class","form-control input-md")
 
     if(placeholder == ""){
@@ -330,6 +316,7 @@ var set_text_input = function(form_group,id,text_label,value,placeholder){
                     .append("textarea")
                     .attr("id",id)
                     .attr("name",id)
+                    .attr("autocomplete","off")
                     .attr("class","form-control input-md")
     if(placeholder == ""){
         input_element.text(value)

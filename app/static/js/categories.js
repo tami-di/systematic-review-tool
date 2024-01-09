@@ -41,7 +41,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     .append("a")
                     .attr("data-toggle","collapse")
                     .attr("data-parent","#subcategories")
-                    .attr("href","#ccollapse"+i)
+                    .attr("href","#collapse"+i)
                     if(subcategories[i].type == 'subcat'){
                         collapse_title.text((subcategories[i].interaction).split('_').join(' ')+" "+subcategories[i].name)
                     }else{
@@ -51,7 +51,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
 
                     d3.select("#panel-default-"+i)
                     .append("div")
-                    .attr("id","ccollapse"+i)
+                    .attr("id","collapse"+i)
                     .attr("class","panel-collapse collapse")
                     .append("div")
                     .attr("class","panel-body")
@@ -106,7 +106,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         .attr("class","row container")
                         .append("button")
                         .attr("class","btn btn-success btn-ctnr-collapsable")
-                        .text("Add column")
+                        .text("Add criteria")
                         .attr("href","#")
                         .attr("data-toggle","modal")
                         .attr("value",i+"")
@@ -115,7 +115,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                             var index = parseInt(d3.select(this).attr("value"))
                             // set personalized message on modal
                             d3.select("#add-column-message")
-                            .text("Insert new column in metacategory \"" + subcategories[index].name + "\"")
+                            .text("Insert new criteria in metacategory \"" + subcategories[index].name + "\"")
                             subcat_id = subcategories[index].id
                             // put proper action in form
                             action_url = '/api/add/column/subcategory/'+subcat_id
@@ -162,7 +162,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .attr("value",""+cat_id)
 
                 // set_success_button(parent-of-button, button-id, button-text)
-                set_success_button("#subcat-btn-container", "add-cat-col", "Add column")
+                set_success_button("#subcat-btn-container", "add-cat-col", "Add criteria")
                 // here columns of data are added to a category
                 d3.select("#add-cat-col")
                 .attr("href","#")
@@ -171,7 +171,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 .on("click",function(){
                     // set personalized message on modal
                     d3.select("#add-column-message")
-                    .text("Insert new column in category \"" + cat_name + "\"")
+                    .text("Insert new criteria in category \"" + cat_name + "\"")
                     // put proper action in form
                     action_url = '/api/add/column/category/'+cat_id
                     d3.select("#add-column-form")

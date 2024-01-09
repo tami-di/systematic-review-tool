@@ -57,6 +57,12 @@ def data():
     cats = api.get_all_categories_as_dict_array(db)
     return render_template('data.html', categorias=cats)
 
+
+@app. route('/autores')
+def autores():
+    return render_template('authors.html')
+
+
 @app.route('/search',  methods=['POST','GET'])
 def search():
     if request.method == 'POST':
@@ -160,7 +166,7 @@ def get_subcategories_name_and_if_from_category(cat_id):
     subcats_ids = api.get_all_subcategories_id_of_category_as_array(db, cat_id)
     dict_array = []
     for subcat_id in subcats_ids:
-        subcat_name = api.get_subcategory_name_from_id(db,subcat_id)
+        subcat_name = api.get_content_name_from_id(db,subcat_id)
         dict_array.append({'subcat_id':subcat_id,'subcat_name':subcat_name})
     # request.form is a dictionary with the form stuff
     return jsonify(subcategories_info=dict_array )
@@ -227,7 +233,7 @@ def delete_category_data(cat_id,row_id):
     api.delete_row_from_category(db, cat_id, row_id)
     return redirect(request.referrer)
 
-@app .route('/api/delete/data/paper/<paper_id>', methods=['POST'])
+@app. route('/api/delete/data/paper/<paper_id>', methods=['POST'])
 def delete_paper_data(paper_id):
     api.delete_paper_by_id(db, paper_id)
     return redirect(request.referrer)
@@ -290,7 +296,7 @@ def request_data_from_cat(cat_id):
 
 @app.route('/api/request/data/subcategory/<subcat_id>')
 def request_data_from_subcat(subcat_id):
-    full_data = api.get_data_from_subategory_as_headers_and_column_data(db, subcat_id)
+    full_data = api.get_data_from_subcategory_as_headers_and_column_data(db, subcat_id)
     headers = full_data['headers']
     data = full_data['rows']
     return jsonify(column_headers=headers, column_data=data)
@@ -298,13 +304,14 @@ def request_data_from_subcat(subcat_id):
 
 @app.route('/api/request/data/paper/<paper_id>/')
 def get_paper_info_and_values(paper_id):
-    if paper_id == None:
-        id = api.get_paper_id_by_property_value(db, request.args.get("searchinput"))
-        paper_properties = api.get_paper_properties_and_values(db, id)
-    else:
-        paper_properties = api.get_paper_properties_and_values(db, paper_id)
+    paper_properties = api.get_paper_properties_and_values(db, paper_id)
     return jsonify(properties=paper_properties)
 
+
+@app.route('/api/request/data/paper/None/')
+def get_paper_info_and_values_none():
+    paper_properties = api.get_paper_properties_and_values_none(db)
+    return jsonify(properties=paper_properties)
 
 
 @app.route('/api/request/headers/paper/')
