@@ -20,14 +20,14 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                 // get length of subcategories
                 length = subcategories.length
                 d3.select("#subcategorias")
-                .attr("class","panel-group col-md-2")
+                .attr("class","panel-group col-lg-4")
                 .append("div")
                 .attr("class","row")
                 .append("div")
-                .attr("class","col-md-12")
+                .attr("class","col-lg-12")
                 .append("h4")
                 .attr("class","text-center")
-                .text("\"" + cat_name + "\" metacategories and columns")
+                .text("Metacategories and columns of "+"\r\n" +  cat_name[0].toUpperCase() + cat_name.substring(1) )
                 // set a button for each subcategory
                 for(var i = 0; i < length; i++){
                     collapse_title = d3.select("#subcategorias")
