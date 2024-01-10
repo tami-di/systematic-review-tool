@@ -571,7 +571,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                     form_body = d3.select("#modify-data-body")
                     // set action to form
                     form = d3.select(form_body.node().parentNode)
-                    form.attr("action",'/api/edit/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
+                    form.attr("action",'/api/edit/category/'+cat_id+'/row/'+d3.column_data[row]['id'])
                     // remove last elements of the form
                     d3.select("#modify-data-body").selectAll(".form-group").remove()
                     for(var i = 0; i < length; i++){
@@ -626,7 +626,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         row = d3.select(this).attr("value")
                         d3.select("#delete-data-modal")
                         .select("form")
-                        .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
+                        .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+column_data[row]['id'])
 
                     })
                     .append("i")

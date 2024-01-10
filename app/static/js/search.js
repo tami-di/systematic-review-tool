@@ -50,7 +50,7 @@ var set_form = function(dict){
         checkbox_container = form_group.append("div")
                                 .attr("class","col-md-8")
         for(k = 0; k < paper_properties_length; k++){
-            name = paper_properties[k].name
+            var name = paper_properties[k].name
             if(name != 'title'){
                 checkbox_label = checkbox_container.append("label")
                 .attr("class","checkbox-inline")

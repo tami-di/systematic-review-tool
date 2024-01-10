@@ -18,6 +18,12 @@
                 <!-- Search input-->
                 <div class="form-group">
                   <div class = "wrapper">
+                  <form id="ChkBx-form">
+                      <label>title <input type="checkbox" class="checkbox" name="title" ></label>
+                      <label>author<input type="checkbox" class="checkbox" name="author"></label>
+                      <label>year<input type="checkbox" class="checkbox" name="year"></label>
+                      <label>etc<input type="checkbox" class="checkbox" name="etc"></label>
+                  </form>
                     <div class="search-input">
                       <a href="" target="_blank" hidden></a>
                       <input autocomplete = "off" id="searchinput" name="searchinput" type="text" placeholder="Type to search.." class="form-control">
@@ -25,6 +31,7 @@
                         <!-- here list are inserted from javascript -->
                       </div>
                       <button class="icon" for = "searchinput"><i class="fas fa-search"></i></button>
+            
                     </div>
                     <p class="help-block"></p>
                   </div>
@@ -74,7 +81,6 @@
       <div class="modal-content">
           <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 class="text-center" id="modify-data-message">Modificar datos</h3>
           </div>
           <div class="modal-body row">
               <form method="post" class="col-md-10 col-md-offset-0 col-xs-12

@@ -51,7 +51,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
 
                     d3.select("#panel-default-"+i)
                     .append("div")
-                    .attr("id","collapse"+i)
+                    .attr("id","ccollapse"+i)
                     .attr("class","panel-collapse collapse")
                     .append("div")
                     .attr("class","panel-body")

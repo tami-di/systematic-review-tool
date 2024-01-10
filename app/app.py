@@ -63,6 +63,68 @@ def autores():
     return render_template('authors.html')
 
 
+@app. route('/search-copy')
+def searchCopy():
+        if request.method == 'POST':
+            # obtain data
+            checkbox_values = request.form.getlist('checkboxes')
+            paper_properties = api.get_paper_properties(db)
+            # values maintains the previous field values on the search form
+            values = {}
+            paper_values = []
+            authors_value = ""
+            categories_values = []
+            for prop in paper_properties:
+                if not prop['type'] == 'category':
+                    if prop['name'] == 'authors':
+                        field_name = "search-"+(prop['name']).replace(" ","-")
+                        authors_value = request.form.get(field_name)
+                        values[prop['name']] = request.form.get(field_name)
+                    else:
+                        field_name = "search-"+(prop['name']).replace(" ","-")
+                        paper_values.append({'id_name':(prop['name']).replace(" ","_"),
+                                            'value':request.form.get(field_name)})
+                        values[prop['name']] = request.form.get(field_name)
+                else:
+                    category_values = []
+                    full_data = api.get_data_from_category_as_headers_and_column_data(db, prop['id'])
+                    cat_prop = full_data['headers']
+                    for c_prop in cat_prop:
+                        if c_prop['name'] == 'id':
+                            continue
+                        if c_prop['type'] == 'subcat':
+                            field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                            value = request.form.get(field_name)
+                            category_values.append({'subcat_id':c_prop['id'],
+                                                    'rel_with_cat':c_prop['rel_with_cat'],
+                                                    'name_value':value,
+                                                    'is_subcat':True})
+
+                            values[prop['name']+c_prop['name']] = value
+                        else:
+                            field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                            value = request.form.get(field_name)
+                            category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
+                                                    'value':value,
+                                                    'is_subcat':False})
+                            values[prop['name']+c_prop['name']] = value
+
+                    categories_values.append({'cat_id':prop['id'],'values':category_values})
+            # here the search is made and then we render the template again
+            paper_ids = api.search_papers_id(db, paper_values, authors_value, categories_values)
+            print(paper_ids)
+            headers = ['title']+[str(a) for a in checkbox_values]
+            data = []
+            for paper_id in paper_ids:
+                paper_properties = api.get_paper_properties_and_values_on_table_format(db, paper_id)
+                data.append(paper_properties)
+
+            results = {'headers':headers,'data':data}
+        else:
+            values = {}
+            results = {}
+        return render_template('search-copy.html', dict=values, results=results)
+
 @app.route('/search',  methods=['POST','GET'])
 def search():
     if request.method == 'POST':
@@ -308,10 +370,6 @@ def get_paper_info_and_values(paper_id):
     return jsonify(properties=paper_properties)
 
 
-@app.route('/api/request/data/paper/None/')
-def get_paper_info_and_values_none():
-    paper_properties = api.get_paper_properties_and_values_none(db)
-    return jsonify(properties=paper_properties)
 
 
 @app.route('/api/request/headers/paper/')

@@ -79,6 +79,12 @@ a:hover {
 .btn-danger {
     background-color:#f44d3c;
 }
+
+.btn btn-danger{
+    position: fixed;
+    float: center;  
+
+}
 .btn-grey {
     border-color:#ededed;
     background-color:#f9fafc;

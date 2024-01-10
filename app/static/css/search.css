@@ -51,7 +51,7 @@ body{
   max-height: 280px;
   overflow-y: auto;
   position: absolute;
-  width: 100%; /* Added this line */
+  width: 100%; 
 }
 
 .search-input.active .autocom-box{
@@ -102,6 +102,7 @@ body{
   background: transparent;
   border: none;
 }
+
 
 
 

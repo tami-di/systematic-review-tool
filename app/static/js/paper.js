@@ -1,4 +1,3 @@
-
 // add paper button pressed (add paper to database) 
 d3.selectAll(".btn-success").on("click", function(){
     // Create modal dialog
@@ -153,6 +152,7 @@ var set_form_with_paper = function(paper_id){
                         d3.select("#modify-data-modal")
                         .select("form")
                         .attr("action",'/api/edit/data/paper/'+paper_id)
+                        .attr("class", "centered-form"); 
                     })
                     .append("i")
                     .attr("class","fa fa-pencil-square-o fa-lg")
@@ -161,7 +161,7 @@ var set_form_with_paper = function(paper_id){
 
                 // add delete-button
                 div_for_buttons.append("button")
-                    .attr("class","btn btn-danger")
+                    .attr("class","btn btn-danger btn-delete text-center")
                     .attr("data-toggle","modal")
                     .attr("data-target","#delete-data-modal")
                     .on("click",function(){
@@ -200,7 +200,9 @@ var set_form_with_paper_modify = function(paper_id){
                 .attr("method","post")
                 .append("fieldset")
                 // set form legend
-                fieldset.append("legend").text("Modify data of "+paper_title)
+                fieldset.append("legend")
+                    .text("Modify data of " + paper_title)
+                    .attr("class", "text-center");
                 // set form body
                 for(i = 0; i < paper_properties_length; i++){
                     form_group = fieldset.append("div").attr("class","form-group")
@@ -236,6 +238,43 @@ var set_form_with_paper_modify = function(paper_id){
                 put_dismiss_button(div_for_buttons)
             })
 }
+
+// Function to generate checkboxes dynamically
+function generateCheckboxes(data) {
+    const paperProperties = data.properties;
+    const fieldset = d3.select("#form-body");
+
+    const formGroup = fieldset.append("div")
+                                .attr("class", "form-group");
+
+    formGroup.append("label")
+                .attr("class", "col-md-2 control-label")
+                .attr("for", "checkboxes")
+                .text("Select attributes to show");
+
+    const checkboxContainer = formGroup.append("div")
+                                        .attr("class", "col-md-8");
+
+    paperProperties.forEach((property, index) => {
+        const name = property.name;
+        if (name !== 'title') {
+            const checkboxLabel = checkboxContainer.append("label")
+                                                    .attr("class", "checkbox-inline")
+                                                    .attr("id", `checkbox-id-${index}`)
+                                                    .attr("for", `checkboxes-${index}`);
+
+            checkboxLabel.append("input")
+                            .attr("type", "checkbox")
+                            .attr("name", "checkboxes")
+                            .attr("id", `checkboxes-${index}`)
+                            .attr("value", name);
+
+            checkboxLabel.append("span")
+                            .text(name);
+        }
+    });
+}
+
 
 
 
