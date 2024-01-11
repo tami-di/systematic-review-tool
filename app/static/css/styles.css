@@ -78,13 +78,12 @@ a:hover {
 
 .btn-danger {
     background-color:#f44d3c;
-}
-
-.btn btn-danger{
-    position: fixed;
-    float: center;  
 
 }
+
+
+
+
 .btn-grey {
     border-color:#ededed;
     background-color:#f9fafc;
@@ -301,5 +300,17 @@ footer .nav>li>a:hover {
     background-color:transparent;
 	color:#fff;
 }
+
+.table {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    margin: 2% auto;
+    padding: 2rem;
+    padding-top: .5rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    position: center;
+    float: center;
+}
+
 
 

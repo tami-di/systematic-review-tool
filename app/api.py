@@ -1,4 +1,5 @@
 __author__ = 'ivana'
+from ast import Set
 import re
 from flask import jsonify, request
 
@@ -184,50 +185,8 @@ def add_data_to_categories_from_dict_array(db, categories, paper_id):
             i+=1
 
 
-"""Function to get the paper ID by value"""
-def get_paper_id_by_value(db, property_value):
-    cursor = db.connection.cursor()
-    query = "SELECT id FROM paper WHERE "
-    
-    # Get all column names from the paper table
-    cursor.execute("SHOW COLUMNS FROM paper")
-    columns = [column[0] for column in cursor.fetchall()]
-    
-    # Create a WHERE clause for each column to search for the value using OR
-    where_clause = " OR ".join([f"{column} LIKE %s" for column in columns])
-    
-    # Combine the WHERE clauses
-    query += where_clause
-    
-    # Adjust the property value to include wildcards for partial matching
-    adjusted_value = f"%{property_value}%"
-    
-    cursor.execute(query, tuple([adjusted_value] * len(columns)))
-    
-    paper_id = cursor.fetchone()
-    return paper_id[0] if paper_id else None
-
-
-#---Search functions by name---            
-"""Function to obtain the properties of a paper""" 
-def search_paper_by_value(db, value, paper_id):
-    papers = []
-    dict_array = get_paper_properties_and_values(db, paper_id)
-    for dictionary in dict_array:
-        if dictionary['value'] == value:
-            papers.append(dictionary)
-    return papers
  
- 
- #--------Autocomplete functions----------------   
 
-def get_all_papers(db):
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT id FROM paper")
-    papers = []
-    for row in cursor.fetchall():
-        papers.append(row[0])
-    return papers
 
                 
 """Function to obtain the properties of a paper""" 
@@ -245,28 +204,6 @@ def get_paper_properties_and_values(db, paper_id):
             dictionary['value'] = value[dictionary['name']]
     return dict_array  
 
-
-
-
-def get_paper_year(db):
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT year FROM paper")
-    years = []
-    for row in cursor.fetchall():
-        years.append(row[0])
-    return years
-
-# Function to retrieve property value for the paper by property name
-def get_property_value_for_paper(db, property_name):
-    # Example: Retrieving property value based on the property name (year in this case)
-    if property_name == 'year':
-        for year in get_paper_year(db):
-            return year
-        property_id = get_paper_id_by_value(db, year)  
-        #print(property_id)
-        paper = get_values_from_paper_as_dict(db, property_id)
-        print(paper)
-        return paper
 
 
 
@@ -766,7 +703,7 @@ def get_category_name_from_id(db, cat_id):
         return row[0]
 
 
-#-------------------------Functions for Search--------------------------- 
+#-------------------------Functions for Search autocomplete--------------------------- 
 
 # Function to fetch autocomplete suggestions from the database
 def get_suggestions(db):
@@ -778,25 +715,94 @@ def get_suggestions(db):
         query = f"{user_input}%"
         cursor.execute(sql, (query, query, query, query, query, query, query))
 
-        suggestions = cursor.fetchall()
+        
+        suggestions = cursor.fetchall() 
+        
         paper_info = [
                 {'title': str(paper[1]), 'library': str(paper[2]), 'code_name': str(paper[3]),
                  'year': str(paper[4]), 'abstract': str(paper[5]),
-                 'summary': str(paper[6]), 'source': str(paper[7])} for paper in suggestions
+                 'summary': str(paper[6]), 'source': str(paper[7]), 
+                 'author': get_authors_from_paper_id_as_str(db, paper[0])} for paper in suggestions
             ]
+        
         json_responses = []  # List to hold individual JSON responses for each element
         for element in paper_info:
              for value in element.values():
                 if value != '':
                     json_responses.append(value) 
         
-    
         return jsonify({'suggestions': json_responses})
         
     return jsonify({'suggestions': []})
 
 
-#--------subcategories functions old api ----------------
+def get_paper_year(db):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT year FROM paper")
+    years = []
+    for row in cursor.fetchall():
+        years.append(row[0])
+    return years
+
+# Function to retrieve property value for the paper by property name
+def get_property_value_for_paper(db, property_name):
+    # Example: Retrieving property value based on the property name (year in this case)
+    if property_name == 'year':
+        for year in get_paper_year(db):
+            return year
+        property_id = get_paper_id_by_value(db, year)  
+        #print(property_id)
+        paper = get_values_from_paper_as_dict(db, property_id)
+        print(paper)
+        return paper
+
+
+def get_all_papers(db):
+    cursor = db.connection.cursor()
+    cursor.execute("SELECT id FROM paper")
+    papers = []
+    for row in cursor.fetchall():
+        papers.append(row[0])
+    return papers
+
+
+"""Function to get the paper ID by value"""
+def get_paper_id_by_value(db, property_value):
+    cursor = db.connection.cursor()
+    query = "SELECT id FROM paper WHERE "
+    
+    # Get all column names from the paper table
+    cursor.execute("SHOW COLUMNS FROM paper")
+    columns = [column[0] for column in cursor.fetchall()]
+    
+    # Create a WHERE clause for each column to search for the value using OR
+    where_clause = " OR ".join([f"{column} LIKE %s" for column in columns])
+    
+    # Combine the WHERE clauses
+    query += where_clause
+    
+    # Adjust the property value to include wildcards for partial matching
+    adjusted_value = f"%{property_value}%"
+    
+    cursor.execute(query, tuple([adjusted_value] * len(columns)))
+    
+    paper_id = cursor.fetchone()
+    return paper_id[0] if paper_id else None
+
+
+#---Search functions by name---            
+"""Function to obtain the properties of a paper""" 
+def search_paper_by_value(db, value, paper_id):
+    papers = []
+    dict_array = get_paper_properties_and_values(db, paper_id)
+    for dictionary in dict_array:
+        if dictionary['value'] == value:
+            papers.append(dictionary)
+    return papers
+
+
+
+#-------------------------Functions for Subcategory old api---------------------------
 
 
 def get_subcategory_data(db, subcat_id): 

@@ -5,95 +5,86 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 <!-- Page Content -->
 
-    <div class="content-container container">
-        <div class="row">
-            <div class="col-md-12">
-                <form class="form-horizontal">
-                <fieldset>
+<div class="content-container container">
+  <div class="row">
+    <div class="col-md-12">
+      <form class="form-horizontal">
+        <fieldset>
 
-                <!-- Form Name -->
-                <legend></legend>
+          <!-- Form Name -->
+          <legend></legend>
+  
+          <!-- Search input-->
+          <div class="form-group">
+            <div class = "wrapper">
+              <div class="search-input">
+                <a href="" target="_blank" hidden></a>
+                  <input autocomplete = "off" id="searchinput" name="searchinput" type="text" placeholder="Type to search.." class="form-control">
+                    <div class="autocom-box">
+                      <!-- here list are inserted from javascript -->
+                    </div>
+                    <button class="icon" for = "searchinput"><i class="fas fa-search"></i></button>
+              </div>
+              <p class="help-block"></p>
+            </div>
+          </div>
 
-                
-                <!-- Search input-->
-                <div class="form-group">
-                  <div class = "wrapper">
-                  <form id="ChkBx-form">
-                      <label>title <input type="checkbox" class="checkbox" name="title" ></label>
-                      <label>author<input type="checkbox" class="checkbox" name="author"></label>
-                      <label>year<input type="checkbox" class="checkbox" name="year"></label>
-                      <label>etc<input type="checkbox" class="checkbox" name="etc"></label>
-                  </form>
-                    <div class="search-input">
-                      <a href="" target="_blank" hidden></a>
-                      <input autocomplete = "off" id="searchinput" name="searchinput" type="text" placeholder="Type to search.." class="form-control">
-                      <div class="autocom-box">
-                        <!-- here list are inserted from javascript -->
-                      </div>
-                      <button class="icon" for = "searchinput"><i class="fas fa-search"></i></button>
+        </fieldset>
+      </form>
+            <button class="btn btn-success" data-toggle="modal" data-target="#addPaperModal">Add paper</button>
             
-                    </div>
-                    <p class="help-block"></p>
+            <!-- Add paper modal -->
+            <div class="modal fade" id="addPaperModal" tabindex="-1" role="dialog" aria-labelledby="addPaperModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                    
+                  <div class="modal-body" id="put-add-here">
+                    <!-- Add paper form content here -->
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
                 </div>
-
-                </fieldset>
-                </form>
-                <button class="btn btn-success" data-toggle="modal" data-target="#addPaperModal">Add paper</button>
-                <!-- Modal -->
-                <div class="modal fade" id="addPaperModal" tabindex="-1" role="dialog" aria-labelledby="addPaperModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body" id="put-add-here">
-                        <!-- Add paper form content here -->
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              </div>
+            </div>
                 
-            </div>
-        </div>
-        <div class="row content-container" id= "put-form-here">
-            <div class="col-md-12">
-                <!-- Form content here -->
-                </div>
-            </div>
+    </div>
+  </div>
+  <div class="row content-container" id= "put-form-here">
+    <div class="col-md-12">
+      <!-- Form content here -->
+    </div>
+  </div>
 
-        </div>
-      </div>
-      
-       
-      </div>
+</div>
 
 
-<!-- modify data modal -->
+
+
+<!-- Modify data modal -->
 <div id="modify-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modify-data-modal" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog" role = "document">
       <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <div class="modal-body row">
-              <form method="post" class="col-md-10 col-md-offset-0 col-xs-12
-              col-xs-offset-0 form-horizontal">
-                  <fieldset id="modify-data-body">
-
-                  </fieldset>
-              </form>
-          </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body row">
+            <form method="post" class="col-md-10 col-md-offset-0 col-xs-12 col-xs-offset-0 form-horizontal">
+              <fieldset id="modify-data-body">
+              </fieldset>
+            </form>
+        </div>
       </div>
   </div>
 </div>
-      <!-- Delete modal -->
+
+
+<!-- Delete modal -->
 <div id="delete-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-data-modal" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -101,39 +92,40 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
               <h3 class="text-center" id="delete-element-message">This data will be deleted, are you sure?</h3>
           </div>
+         
           <div class="modal-body row">
-
-              <form action="" method="post" class="col-md-10 col-md-offset-0 col-xs-12
-              col-xs-offset-0 form-horizontal">
-                  <fieldset>
-                      <!-- Button -->
-                      <div class="form-group">
-                        <label class="col-md-4 control-label" for="delete-element-btn"></label>
-                        <div class="col-md-4">
-                          <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger">
-                              Delete
-                          </button>
-                        </div>
-                      </div>
-                  </fieldset>
-              </form>
+            <form action="" method="post" class="col-md-10 col-md-offset-0 col-xs-12 col-xs-offset-0 form-horizontal">
+                <fieldset>
+                  <!-- Button -->
+                  <div class="form-group">
+                    <label class="col-md-6 control-label" for="delete-element-btn"></label>
+                    <div class="col-md-6">
+                      <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger">
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </fieldset>
+            </form>
           </div>
+          
       </div>
   </div>
 </div>
 
         
-    </div>
-    <!-- Scripts -->
-    <script src="static/js/autocomplete.js"></script> 
-    <script src="/static/js/d3.v4.min.js"></script>
-    <script src="/static/js/paper.js"></script>
-    {% if set_form %}
-        <script>
-            set_form_with_paper("{{ paper }}")
-            set_form_with_paper_modify("{{ paper }}")
-        </script>
+</div>
 
-    {% endif%}
+<!-- Scripts -->
+<script src="static/js/autocomplete.js"></script> 
+<script src="/static/js/d3.v4.min.js"></script>
+<script src="/static/js/paper.js"></script>
+
+{% if set_form %}
+    <script>
+        set_form_with_paper("{{ paper }}")
+        set_form_with_paper_modify("{{ paper }}")
+    </script>
+{% endif%}
 {% endblock %}
  

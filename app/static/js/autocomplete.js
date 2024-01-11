@@ -12,7 +12,7 @@ inputBox.onkeyup = (e) => {
         fetch(`/getSuggestions?input=${userData}`)
             .then((response) => response.json())
             .then((data) => {
-                let emptyArray = data.suggestions; // Assuming the response contains suggestions in a 'suggestions' field
+                let emptyArray = data.suggestions; 
 
                 if (emptyArray.length > 0) {
                     emptyArray = emptyArray.filter((data) => {

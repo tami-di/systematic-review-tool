@@ -1,3 +1,5 @@
+document.getElementById("myInput").style.display = "none"
+document.getElementById("filter").style.display = "none"
 // what to do if the add-data-to-category button is pressed
 d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
    // get category id
@@ -279,7 +281,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
             d3.select("#table-placer").append("h3").text(subcat_name)
             the_table = d3.select("#table-placer")
             .append("table")
-            .attr("class","table table-bordered table-striped table-hover table-responsive")
+            .attr("class","table table-bordered table-striped table-responsive")
 
             d3.json('/api/request/data/subcategory/'+subcat_id,
                 function(error, data){
@@ -410,13 +412,15 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
         // if authors do sth different
         if(cat_name == 'authors'){
             parent = this.parentNode
+            document.getElementById("myInput").style.display = "block"
+            document.getElementById("filter").style.display = "block"
             cat_id = d3.select(parent).select(".btn-grey").attr("value")
             d3.select("#table-placer").selectAll("table").remove()
             d3.select("#table-placer").selectAll("h3").remove()
-            d3.select("#table-placer").append("h3").text(cat_name)
+            d3.select("#table-placer").append("h3").text(cat_name[0].toUpperCase() + cat_name.substring(1))
             the_table = d3.select("#table-placer")
             .append("table")
-            .attr("class","table table-bordered table-striped table-hover table-responsive")
+            .attr("class","table table-bordered table-striped table-responsive")
 
             d3.json("/api/request/data/author/",
                 function(error, data){
@@ -432,7 +436,8 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         continue
                     }
                     header_row.append("td")
-                    .text(column_headers[i].name)
+                    .text(column_headers[i].name[0].toUpperCase() + column_headers[i].name.substring(1))
+                    .style("font-weight","bold")
                 }
                 // append row for buttons
                 header_row.append("td")
@@ -528,7 +533,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
         d3.select("#table-placer").append("h3").text(cat_name)
         the_table = d3.select("#table-placer")
         .append("table")
-        .attr("class","table table-bordered table-striped table-hover table-responsive")
+        .attr("class","table table-bordered table-striped table-responsive")
         d3.json("/api/request/data/category/"+ cat_id ,
             function(error, data){
                 if (error){
@@ -796,3 +801,26 @@ var set_str_as_array = function(string){
     }
     return array_2
 }
+
+
+function myFunction() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("table-placer");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }

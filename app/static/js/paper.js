@@ -1,5 +1,16 @@
-// add paper button pressed (add paper to database) 
+// add paper button pressed (add paper to database)
 d3.selectAll(".btn-success").on("click", function(){
+    d3.selectAll("#paperFormModal").selectAll("form").remove()
+     // Check if the modal already exists
+     var existingModal = d3.select("#paperFormModal");
+
+     if (!existingModal.empty()) {
+         // If the modal exists, remove it using Bootstrap's modal method
+         existingModal.modal("hide").on("hidden.bs.modal", function () {
+             existingModal.remove();
+         });
+     }
+ 
     // Create modal dialog
     var modal = d3.select("body").append("div")
         .attr("class", "modal fade")
@@ -17,7 +28,7 @@ d3.selectAll(".btn-success").on("click", function(){
         .attr("class", "modal-content");
 
     // Close button
-    modalContent.append("button")
+    var closeButton = modalContent.append("button")
         .attr("type", "button")
         .attr("class", "close")
         .attr("data-dismiss", "modal")
@@ -25,6 +36,7 @@ d3.selectAll(".btn-success").on("click", function(){
         .append("span")
         .attr("aria-hidden", "true")
         .text("×");
+
 
     // make form structure
     fieldset = d3.select("#put-add-here")
@@ -34,14 +46,13 @@ d3.selectAll(".btn-success").on("click", function(){
     .attr("method","post")
     .append("fieldset")
 
-
     // Set form legend
     fieldset.append("legend")
-        .text("Add paper to database");
+        .text("Add paper to database")
+        .attr("class", "text-center");
 
     // Set form body
     var formBody = fieldset.append("div");
-
     d3.json("/api/request/headers/paper/",
 
         function(error, data){
@@ -107,30 +118,46 @@ var set_form_with_paper = function(paper_id){
                 // make table structure
                 table = d3.select("#put-form-here")
                     .append("table")
-                    .attr("class", "table table-bordered")
-                    .append("tbody")
+                    .attr("class", "table table-bordered table-striped table-responsive")
+                    .style("border-collapse", "collapse")
+                    .style("margin", "25px 0")
+                    .style("min-width", "400px")
+                    .append("tbody");
             
                 // set table header
                 table.append("tr")
                     .append("th")
                     .attr("colspan", "2")
-                    .text(paper_title[0].toUpperCase() + paper_title.substring(1) + " information")
+                    .append("h4").text(paper_title[0].toUpperCase() + paper_title.substring(1) + " information")
+                    .style("padding", "10px")
+                    .style("text-align", "center");
+
                 // set table body
                 for (i = 0; i < paper_properties_length; i++) {
-                    row = table.append("tr")
-                    type = paper_properties[i].type
+                    row = table.append("tr");
+                    type = paper_properties[i].type;
 
-                    element_id = "paper-" + paper_id + "-" + (paper_properties[i].name).split(' ').join('-')
-                    value = paper_properties[i].value
-                    text_label = paper_properties[i].name
+                    element_id = "paper-" + paper_id + "-" + (paper_properties[i].name).split(' ').join('-');
+                    value = paper_properties[i].value;
+                    text_label = paper_properties[i].name;
 
                     row.append("td")
                         .text(text_label)
+                        .style("padding", "12px 15px")
+                        .style("font-family", "Poppins, sans-serif")
+                        .style("width", "30%")
+                        .style("font-weight", "bold")
+                        .style("text-transform", "capitalize");
+
                     row.append("td")
                         .text(value)
+                        .style("font-family", "Poppins, sans-serif")
+                        .style("width", "60%")
+                        .style("padding", "12px 15px");
+                        
                 }
                 // add buttons
-                form_group = table.append("tr")
+                form_group = table.append("tr");
                 // buttons
                 div_for_buttons = form_group.append("td")
                     .attr("colspan", "3")
@@ -151,8 +178,9 @@ var set_form_with_paper = function(paper_id){
                         row = d3.select(this).attr("value")
                         d3.select("#modify-data-modal")
                         .select("form")
-                        .attr("action",'/api/edit/data/paper/'+paper_id)
-                        .attr("class", "centered-form"); 
+                        .style("width","100%")
+                        .attr("action",'/api/edit/data/paper/'+paper_id);
+    
                     })
                     .append("i")
                     .attr("class","fa fa-pencil-square-o fa-lg")
