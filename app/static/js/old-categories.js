@@ -204,3 +204,4 @@ var set_success_button = function(parent_id, button_id, message){
                             attr("id", button_id).
                             text(message)
                         }
+
