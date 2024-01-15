@@ -48,42 +48,43 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function() {
                 table.append("thead")
                     .append("tr")
                     .append("th")
-                    .attr("colspan", "3")
+                    .attr("colspan", "4")
                     .append("h4")
                     .text("Metacategories and other criteria of " + "\r\n" + cat_name[0].toUpperCase() + cat_name.substring(1))
                     .style("padding", "10px")
                     .style("text-align", "center")
                     .attr("class", "text-center");
                 
-                header_row = table.append("thead").append("tr");
-                header_row.append("td").text("Name")
-                    .style("font-weight", "bold");
-                header_row.append("td").text("Type")
-                    .style("font-weight", "bold");
+                
     
                 // set table body
                 tbody = table.append("tbody");
+                
+
             
                 for (var i = 0; i < length; i++) {
                     row = tbody.append("tr");
                     type = subcategories[i].type;
     
                     if (type == 'subcat') { //no entra 
+                        row.append("td")
+                            .text("Metacategory")
                         cell = row.append("td")
-                            .attr("colspan", "3")
-                            .append("a")
-                            .attr("href", "#")
-                            .attr("data-toggle", "collapse")
-                            .attr("data-parent", "#subcategories")
-                            .attr("href", "#collapse" + i)
                             .text((subcategories[i].interaction).split('_').join(' ') + " " + subcategories[i].name);
                     } else {
+                        row.append("td")
+                            .text("Name")
+                            .style("font-weight", "bold");
                         cell = row.append("td")
                             .text(subcategories[i].name);
-                    
+
+                        row.append("td")
+                            .text("Type")
+                            .style("font-weight", "bold");
                         row.append("td")
                             .text(subcategories[i].type);
                     }
+                    
     
                     var isRowAdded = false;
                     // add delete button on subcategory or column of category
