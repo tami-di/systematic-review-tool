@@ -2,10 +2,10 @@ var catShown = false;
 var lastClickedCategoryId = null; // Added variable to store the last clicked category ID
 
 // show subcategories and properties of category
-d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function() {
+d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
     // get category id
     var cat_id = d3.select(this).attr("id");
-    var cat_name = d3.select(this).text();
+    var cat_name = d3.select(this).attr("value");
 
     // Check if the same button is pressed twice
     if (catShown && lastClickedCategoryId === cat_id) {
@@ -230,7 +230,7 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function() {
                     d3.select("#delete-element-message")
                         .text("Do you really want to delete \"" + d3.select(this).attr("value") + "\"?")
                     // get category id
-                    var cat_id = d3.select(this.parentNode.parentNode).selectAll(".btn-grey").attr("id")
+                    var cat_id = d3.select(this.parentNode.parentNode).selectAll(".btn-warning").attr("id")
                     // if the delete button is pressed on the form then the category is permanently deleted
                     d3.select("#delete-form").attr("action","/api/delete/category/"+cat_id)
                 });

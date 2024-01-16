@@ -55,7 +55,9 @@ def categorias():
 @app.route('/data')
 def data():
     cats = api.get_all_categories_as_dict_array(db)
-    return render_template('data.html', categorias=cats)
+    data_types = api.get_columns_data_types()
+    return render_template('data.html', categorias=cats,
+                           data_types=data_types)
 
 
 @app. route('/autores')

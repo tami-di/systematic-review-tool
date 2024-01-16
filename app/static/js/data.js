@@ -104,10 +104,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
      // get category name
      parent = this.parentNode
      cat_name = d3.select(parent).select(".btn-success").attr("value")
-     // if authors do sth different
-     if(cat_name == 'authors'){
-         return
-     }
+
      // set clicked item active, set rest unactive
      set_active("#categorias",this)
      // remove last subcategories shown
@@ -177,6 +174,18 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                  .attr("value",subcategories[i].interaction+"."+subcategories[i].name)
                  .append("i")
                  .attr("class","fa fa-plus-circle fa-lg")
+
+                // set info subcategory button
+                subcategory_buttons_container.append("button")
+                .attr("type","button")
+                .attr("id","info-subcat-" + cat_id + "." + subcategories[i].id)
+                .attr("name","info-subcat-" + cat_id + "." + subcategories[i].id)
+                .attr("data-toggle","modal")
+                .attr("data-target","#info-data-modal")
+                .attr("class","btn btn-primary")
+                .attr("value",subcategories[i].interaction+"."+subcategories[i].name)
+                .append("i")
+                .attr("class","fa fa-info-circle fa-lg")
              }
          }
          // what to do if the add-data-to-subcategory button is pressed
@@ -371,15 +380,17 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                      // add delete-row-button
                      last_column.append("button")
                      .attr("class","btn btn-danger")
+        
                      .attr("id","btn-delete-row-"+j)
                      .attr("value",j)
                      .attr("data-toggle","modal")
-                     .attr("data-target","#delete-data-modal")
+                     .attr("data-target","#delete-element-modal")
                      .on("click",function(){
                          // set modal form parameter to delete row
                          row = d3.select(this).attr("value")
-                         d3.select("#delete-data-modal")
-                         .select("form")
+                         d3.select("#delete-element-message")
+                            .text("Do you really want to delete \"" + d3.select(this).attr("value") + "\"?")
+                         d3.select("#delete-form")
                          .attr("action",'/api/delete/data/subcategory/'+subcat_id+'/row/'+column_data[row]['id'])
                      })
                      .append("i")
@@ -394,249 +405,172 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
  
  
  })
+
+ var lastClicked = null;
  // what to do if the see-all-data-of-category button is pressed
  d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
          cat_name = d3.select(this).attr("value")
-         // if authors do sth different
-         if(cat_name == 'authors'){
-             parent = this.parentNode
-             cat_id = d3.select(parent).select(".btn-grey").attr("value")
-             d3.select("#table-placer").selectAll("table").remove()
-             d3.select("#table-placer").selectAll("h3").remove()
-             d3.select("#table-placer").append("h3").text(cat_name)
-             the_table = d3.select("#table-placer")
-             .append("table")
-             .attr("class","table table-bordered table-striped table-hover table-responsive")
- 
-             d3.json("/api/request/data/author/",
-                 function(error, data){
-                     if (error){
-                         console.log(error);
-                         return
-                     }
-                 column_headers = data.column_headers
-                 column_headers_length = column_headers.length
-                 header_row = the_table.append("thead").append("tr")
-                 for(var i = 0; i < column_headers_length; i++){
-                     if(column_headers[i].name == 'id'){
-                         continue
-                     }
-                     header_row.append("td")
-                     .text(column_headers[i].name)
-                 }
-                 // append row for buttons
-                 header_row.append("td")
- 
-                 column_data = data.column_data
-                 column_data_length = column_data.length
-                 table_body = the_table.append("tbody")
-                 for(var j = 0; j < column_data_length; j++){
-                     body_row = table_body.append("tr")
-                                 .attr("id","row-"+j)
-                     for(var k = 0; k < column_headers_length; k++){
-                         if(column_headers[k].name == 'id'){
-                             continue
-                         }
-                         body_row.append("td")
-                         .attr("id","cell-"+j+"-"+k)
-                         .text(column_data[j][column_headers[k].name])
-                     }
-                     last_column = body_row.append("td")
-                     // add edit-row-button
-                     last_column.append("button")
-                     .attr("class","btn btn-warning")
-                     .attr("value",j)
-                     .attr("data-toggle","modal")
-                     .attr("data-target","#modify-data-modal")
-                     .on("click",function(){
-                         row = d3.select(this).attr("value")
-                         // save subcategories into variable
-                         subcategories = column_headers
-                         // get length of subcategories
-                         length = subcategories.length
-                         title_message = d3.select("#modify-data-message")
-                         title_message.text("Modify data of " + cat_name.trim())
-                         form_body = d3.select("#modify-data-body")
-                         // set action to form
-                         form = d3.select(form_body.node().parentNode)
-                         form.attr("action",'/api/edit/data/author/'+column_data[row]['id'])
-                         // remove last elements of the form
-                         d3.select("#modify-data-body").selectAll(".form-group").remove()
-                         form_group = form_body.append("div").attr("class","form-group")
-                         element_id_name = "author-name"
-                         element_id_affiliation = "author-affiliation"
-                         text_label_name = "name"
-                         text_label_affiliation = "affiliation"
-                         value_name = column_data[row]['name']
-                         value_affiliation = column_data[row]['affiliation']
-                         placeholder = ""
-                         set_varchar_input (form_group,element_id_name,text_label_name,value_name,placeholder)
-                         form_group = form_body.append("div").attr("class","form-group")
-                         set_text_input(form_group,element_id_affiliation,text_label_affiliation,value_affiliation,placeholder)
-                         // add buttons
-                         form_group = form_body.append("div").attr("class","form-group")
-                         // label?
-                         form_group.append("label")
-                         .attr("class","col-md-4 control-label")
-                         .attr("for","accept-new-data")
-                         // buttons
-                         div_for_buttons = form_group.append("div").attr("class","col-md-8")
-                         put_submit_button(div_for_buttons)
-                         put_dismiss_button(div_for_buttons)
- 
-                     })
-                     .append("i")
-                     .attr("class","fa fa-pencil-square-o fa-lg")
-                     // add delete-row-button
-                         last_column.append("button")
-                         .attr("class","btn btn-danger")
-                         .attr("id","btn-delete-row-"+j)
-                         .attr("value",j)
-                         .attr("data-toggle","modal")
-                         .attr("data-target","#delete-data-modal")
-                         .on("click",function(){
-                             // set modal form parameter to delete row
-                             row = d3.select(this).attr("value")
-                             d3.select("#delete-data-modal")
-                             .select("form")
-                             .attr("action",'/api/delete/data/author/'+column_data[row]['id'])
- 
-                         })
-                         .append("i")
-                         .attr("class","fa fa-trash fa-lg")
-                     }
- 
-                     })
-             return
-         }
          parent = this.parentNode
          cat_id = d3.select(parent).select(".btn-grey").attr("value")
-         d3.select("#table-placer").selectAll("table").remove()
-         d3.select("#table-placer").selectAll("h3").remove()
-         d3.select("#table-placer").append("h3").text(cat_name)
-         the_table = d3.select("#table-placer")
-         .append("table")
-         .attr("class","table table-bordered table-striped table-hover table-responsive")
-         d3.json("/api/request/data/category/"+ cat_id ,
-             function(error, data){
-                 if (error){
-                     console.log(error);
-                     return
-                 }
-             column_headers = data.column_headers
-             column_headers_length = column_headers.length
-             header_row = the_table.append("thead").append("tr")
-             for(var i = 0; i < column_headers_length; i++){
-                 if(column_headers[i].name == 'id'){
-                     continue
-                 }
-                 header_row.append("td")
-                 .text(column_headers[i].name)
-             }
-             // append row for buttons
-             header_row.append("td")
+
+          // Check if the clicked category is the same as the last one
+        if (lastClicked === cat_id) {
+            // Toggle the visibility of the table
+            var tablePlacer = d3.select("#table-placer");
+            var table = tablePlacer.select("table");
+            tablePlacer.selectAll("table, h3").remove();  // Remove existing table and header
+            lastClicked = null;  // Reset lastClickedCategoryId
+        } else {
+            d3.select("#table-placer").selectAll("table").remove()
+            d3.select("#table-placer").selectAll("h3").remove()
+            d3.select("#table-placer").append("h3").text(cat_name)
+            the_table = d3.select("#table-placer")
+            .append("table")
+            .attr("class","table table-bordered table-striped table-hover table-responsive")
+            d3.json("/api/request/data/category/"+ cat_id ,
+                function(error, data){
+                    if (error){
+                        console.log(error);
+                        return
+                    }
+                column_headers = data.column_headers
+                column_headers_length = column_headers.length
+                header_row = the_table.append("thead").append("tr")
+                for(var i = 0; i < column_headers_length; i++){
+                    if(column_headers[i].name == 'id'){
+                        continue
+                    }
+                    header_row.append("td")
+                    .text(column_headers[i].name)
+                }
+                // append row for buttons
+                header_row.append("td")
+    
+                column_data = data.column_data
+                column_data_length = column_data.length
+                table_body = the_table.append("tbody")
+                for(var j = 0; j < column_data_length; j++){
+                    body_row = table_body.append("tr")
+                                .attr("id","row-"+j)
+                    for(var k = 0; k < column_headers_length; k++){
+                        if(column_headers[k].name == 'id'){
+                            continue
+                        }
+                        name_from_header_row = (column_headers[k].name).split(" ").join("")
+                        body_row.append("td")
+                        .attr("id","cell-"+j+"-"+k)
+                        .text(column_data[j][name_from_header_row])
+                    }
+                    last_column = body_row.append("td")
+                    // add edit-row-button
+                    last_column.append("button")
+                    .attr("class","btn btn-warning")
+                    .attr("value",j)
+                    .attr("data-toggle","modal")
+                    .attr("data-target","#modify-data-modal")
+                    .on("click",function(){
+                        row = d3.select(this).attr("value")
+                        // save subcategories into variable
+                        subcategories = column_headers
+                        // get length of subcategories
+                        length = subcategories.length
+                        title_message = d3.select("#modify-data-message")
+                        title_message.text("Modify data of " + cat_name.trim())
+                        form_body = d3.select("#modify-data-body")
+                        // set action to form
+                        form = d3.select(form_body.node().parentNode)
+                        form.attr("action",'/api/edit/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
+                        // remove last elements of the form
+                        d3.select("#modify-data-body").selectAll(".form-group").remove()
+                        for(var i = 0; i < length; i++){
+                            if(column_headers[i].name == 'id'){
+                                continue
+                            }
+                            form_group = form_body.append("div").attr("class","form-group")
+                            type = subcategories[i].type
+                            subcat_id = subcategories[i].id
+                            // set parameters for each type of input
+                            name = (column_headers[i].name).split(" ").join("")
+                            value = set_str_as_array(column_data[row][name])
+                            placeholder = ""
+                            element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id
+                            text_label = subcategories[i].name
+                            if(type == 'varchar'){
+                                set_varchar_input(form_group,element_id,text_label,value,placeholder)
+                            }
+                            if(type == 'text'){
+                                set_text_input(form_group,element_id,text_label,value,placeholder)
+                            }
+                            if(type == 'number'){
+                                set_number_input(form_group,element_id,text_label,value,placeholder)
+                            }
+                            if(type == 'subcat'){
+                                set_subcategory_select(form_group,element_id,text_label,value,cat_id,subcat_id)
+                            }
+                        }
+                        // add buttons
+                        form_group = form_body.append("div").attr("class","form-group")
+                        // label?
+                        form_group.append("label")
+                        .attr("class","col-md-4 control-label")
+                        .attr("for","accept-modified-data")
+                        // buttons
+                        div_for_buttons = form_group.append("div").attr("class","col-md-8")
+                        put_submit_button(div_for_buttons)
+                        put_dismiss_button(div_for_buttons)
+    
+                    })
+                    .append("i")
+                    .attr("class","fa fa-pencil-square-o fa-lg")
+                    // add delete-row-button
+                        last_column.append("button")
+                        .attr("class","btn btn-danger")
+                        .attr("id","btn-delete-row-"+j)
+                        .attr("value",j)
+                        .attr("data-toggle","modal")
+                        .attr("data-target","#delete-element-modal")
+                        .on("click",function(){
+                            // set modal form parameter to delete row
+                            row = d3.select(this).attr("value");
+                            d3.select("#delete-form")
+                                .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+d3.select(this).attr("value"));
+                        })
+                        .append("i")
+                        .attr("class","fa fa-trash fa-lg")
+    
+                }
+    
+            })
+            lastClicked = cat_id;
+        }
  
-             column_data = data.column_data
-             column_data_length = column_data.length
-             table_body = the_table.append("tbody")
-             for(var j = 0; j < column_data_length; j++){
-                 body_row = table_body.append("tr")
-                             .attr("id","row-"+j)
-                 for(var k = 0; k < column_headers_length; k++){
-                     if(column_headers[k].name == 'id'){
-                         continue
-                     }
-                     name_from_header_row = (column_headers[k].name).split(" ").join("")
-                     body_row.append("td")
-                     .attr("id","cell-"+j+"-"+k)
-                     .text(column_data[j][name_from_header_row])
-                 }
-                 last_column = body_row.append("td")
-                 // add edit-row-button
-                 last_column.append("button")
-                 .attr("class","btn btn-warning")
-                 .attr("value",j)
-                 .attr("data-toggle","modal")
-                 .attr("data-target","#modify-data-modal")
-                 .on("click",function(){
-                     row = d3.select(this).attr("value")
-                     // save subcategories into variable
-                     subcategories = column_headers
-                     // get length of subcategories
-                     length = subcategories.length
-                     title_message = d3.select("#modify-data-message")
-                     title_message.text("Modify data of " + cat_name.trim())
-                     form_body = d3.select("#modify-data-body")
-                     // set action to form
-                     form = d3.select(form_body.node().parentNode)
-                     form.attr("action",'/api/edit/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
-                     // remove last elements of the form
-                     d3.select("#modify-data-body").selectAll(".form-group").remove()
-                     for(var i = 0; i < length; i++){
-                         if(column_headers[i].name == 'id'){
-                             continue
-                         }
-                         form_group = form_body.append("div").attr("class","form-group")
-                         type = subcategories[i].type
-                         subcat_id = subcategories[i].id
-                         // set parameters for each type of input
-                         name = (column_headers[i].name).split(" ").join("")
-                         value = set_str_as_array(column_data[row][name])
-                         placeholder = ""
-                         element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id
-                         text_label = subcategories[i].name
-                         if(type == 'varchar'){
-                             set_varchar_input(form_group,element_id,text_label,value,placeholder)
-                         }
-                         if(type == 'text'){
-                             set_text_input(form_group,element_id,text_label,value,placeholder)
-                         }
-                         if(type == 'number'){
-                             set_number_input(form_group,element_id,text_label,value,placeholder)
-                         }
-                         if(type == 'subcat'){
-                             set_subcategory_select(form_group,element_id,text_label,value,cat_id,subcat_id)
-                         }
-                     }
-                     // add buttons
-                     form_group = form_body.append("div").attr("class","form-group")
-                     // label?
-                     form_group.append("label")
-                     .attr("class","col-md-4 control-label")
-                     .attr("for","accept-modified-data")
-                     // buttons
-                     div_for_buttons = form_group.append("div").attr("class","col-md-8")
-                     put_submit_button(div_for_buttons)
-                     put_dismiss_button(div_for_buttons)
- 
-                 })
-                 .append("i")
-                 .attr("class","fa fa-pencil-square-o fa-lg")
-                 // add delete-row-button
-                     last_column.append("button")
-                     .attr("class","btn btn-danger")
-                     .attr("id","btn-delete-row-"+j)
-                     .attr("value",j)
-                     .attr("data-toggle","modal")
-                     .attr("data-target","#delete-data-modal")
-                     .on("click",function(){
-                         // set modal form parameter to delete row
-                         row = d3.select(this).attr("value")
-                         d3.select("#delete-data-modal")
-                         .select("form")
-                         .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+d3.select(this).attr("value"))
- 
-                     })
-                     .append("i")
-                     .attr("class","fa fa-trash fa-lg")
- 
-             }
- 
-         })
- 
- 
- 
- })
+ });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
  var put_dismiss_button = function(div_for_buttons){
      div_for_buttons.append("button")
