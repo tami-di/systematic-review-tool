@@ -4,8 +4,8 @@ var lastClickedCategoryId = null; // Added variable to store the last clicked ca
 // show subcategories and properties of category
 d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
     // get category id
-    var cat_id = d3.select(this).attr("id");
-    var cat_name = d3.select(this).attr("value");
+    cat_id = d3.select(this).attr("id");
+    cat_name = d3.select(this).attr("value");
 
     // Check if the same button is pressed twice
     if (catShown && lastClickedCategoryId === cat_id) {
@@ -82,6 +82,16 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                             .text(subcategories[i].type);
                     }
                     
+                    // set properties and delete button on collapsable
+                    properties = subcategories[i].properties
+                    properties_type = subcategories[i].properties_type
+                    properties_length = properties.length
+                    for(var j=0; j < properties_length; j++){
+                        d3.select("#collapse-body"+i)
+                        .append("div")
+                        .attr("class","row container")
+                        .text(properties[j]+" : "+properties_type[properties[j]])
+                    }
     
                     var isRowAdded = false;
                     // add delete button on subcategory or column of category
@@ -100,8 +110,8 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                         cell.on("click", function () {
                             if(!isRowAdded){
                                 var newRow = tbody.append("tr").attr("class", "delete-row");
-                                newRow.append("td")
-                                newRow.append("td").append("button")
+                                newRow.append("td").attr("colspan", "4")
+                                .append("button")
                                     .attr("class", "btn btn-danger btn-ctnr")
                                     .text("Delete")
                                     .style("width","100%")
@@ -127,7 +137,7 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                                         d3.select("#deleted-element")
                                             .attr("value",cat_id + "." +subcategories[index].name);
                                 
-                                    });
+                                    })
                                 isRowAdded = true;
                                 }
                             else {
@@ -161,7 +171,7 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                                 action_url = '/api/add/column/category/'+cat_id;
                                 d3.select("#add-column-form")
                                     .attr("action",action_url);
-                            });
+                            })
                     }
                 }
     
@@ -224,16 +234,7 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                             .attr("action",action_url)
                     })
     
-                // delete categories action
-                d3.selectAll("#categorias").selectAll(".btn-danger").on("click", function(){
-                    // first ask if sure (may be miss-click)
-                    d3.select("#delete-element-message")
-                        .text("Do you really want to delete \"" + d3.select(this).attr("value") + "\"?")
-                    // get category id
-                    var cat_id = d3.select(this.parentNode.parentNode).selectAll(".btn-warning").attr("id")
-                    // if the delete button is pressed on the form then the category is permanently deleted
-                    d3.select("#delete-form").attr("action","/api/delete/category/"+cat_id)
-                });
+                
                     
         });
     
@@ -243,6 +244,19 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
         catShown = true;
         
     }
+})
+
+
+
+// delete categories action
+d3.selectAll("#categorias").selectAll(".btn-danger").on("click", function(){
+    // first ask if sure (may be miss-click)
+    d3.select("#delete-element-message")
+        .text("Do you really want to delete \"" + d3.select(this).attr("value") + "\"?")
+    // get category id
+    var cat_id = d3.select(this.parentNode.parentNode).selectAll(".btn-warning").attr("id")
+    // if the delete button is pressed on the form then the category is permanently deleted
+    d3.select("#delete-form").attr("action","/api/delete/category/"+cat_id)
 });
 
 // set clicked element as 'active'

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="content-container container">
     <div class="row">
-        <div class="col-md-4" id="categorias">
+        <div class="col-md-5" id="categorias">
             <div class="row">
                 <div class="col-md-12">
                     <h3>Categories Data</h3>
@@ -29,9 +29,20 @@
                             class="btn btn-warning" value="{{ categoria.name }}">
                         <i class="fa fa-info-circle fa-lg"></i>
                     </button>
+                    <button id="delete-cat{{ categoria.id }}" name="delete-cat{{ categoria.id }}"
+                            data-toggle="modal" data-target="#delete-element-modal"
+                            class="btn btn-danger btn-fill-height" value="{{ categoria.name }}"><i class="fa fa-trash fa-lg"></i>
+                    </button>
                 </div>
             </div>
             {% endfor %}
+            <div class="row">
+                <div class="col-md-12 content-container">
+                    <button type="button" class="btn btn-success btn-ctnr-cat" id="add-cat"
+                            href="#" data-toggle="modal" data-target="#add-category-modal">Create new category
+                    </button>
+                </div>
+            </div>
 
 
         </div>

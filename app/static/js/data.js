@@ -111,8 +111,6 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
      d3.select("#subcategorias").selectAll("div").remove()
      d3.select("#subcategorias").selectAll("button").remove()
  
-     ///////
- 
      // get subcategories of current category
      d3.json("/api/request/headers+subcategories/norep/"+ cat_id,
      function(error, data){
