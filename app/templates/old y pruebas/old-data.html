@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-container container">
+    <div class="row">
+        <div class="col-md-3" id="categorias">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Categories and authors</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                        <button class="btn btn-grey btn-ctnr-data" id="authors-grey-btn" value="authors">
+                            authors
+                        </button>
+                        <button type="button" id="see-all-data-of-authors" name="see-all-data-of-authors"
+                                class="btn btn-info" value="authors">
+                            <i class="fa fa-search-plus fa-lg"></i>
+                        </button>
+                        <button type="button" id="add-data-to-authors" name="add-data-to-authors"
+                                data-toggle="modal" data-target="#add-data-modal"
+                                class="btn btn-success" value="authors">
+                            <i class="fa fa-plus-circle fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            {% for categoria in categorias %}
+            <div class="row">
+                <div class="col-md-12">
+                        <button class="btn btn-grey btn-ctnr-data" id="cat{{ categoria.id }}"
+                                value="{{ categoria.id }}">
+                            {{ categoria.name }}
+                        </button>
+                        <button type="button" id="see-all-data-of-cat-{{ categoria.id }}" name="see-all{{ categoria.id }}"
+                                class="btn btn-info" value="{{ categoria.name }}">
+                            <i class="fa fa-search-plus fa-lg"></i>
+                        </button>
+                        <button type="button" id="add-data-to-{{ categoria.id }}" name="add-data-to-{{ categoria.id }}"
+                                data-toggle="modal" data-target="#add-data-modal"
+                                class="btn btn-success" value="{{ categoria.name }}">
+                            <i class="fa fa-plus-circle fa-lg"></i>
+                        </button>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+        <div class="list-group col-md-3" id="subcategorias"></div>
+        <div class="list-group col-md-8" id="detalle"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="table-placer" name="table-placer"></div>
+    </div>
+
+</div>
+<!-- Modals -->
+<!-- Add data modal -->
+<div id="add-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="add-data-message">Add data to</h3>
+            </div>
+            <div class="modal-body row">
+
+                <form method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                <fieldset id="add-data-body">
+
+                </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modify data modal -->
+<div id="modify-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modify-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="modify-data-message">Modificar datos</h3>
+            </div>
+            <div class="modal-body row">
+                <form method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                    <fieldset id="modify-data-body">
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<div id="delete-data-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-data-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="text-center" id="delete-element-message">This data will be deleted, are you sure?</h3>
+            </div>
+            <div class="modal-body row">
+
+                <form action="" method="post" class="col-md-10 col-md-offset-0 col-xs-12
+                col-xs-offset-0 form-horizontal">
+                    <fieldset>
+                        <!-- Button -->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="delete-element-btn"></label>
+                          <div class="col-md-4">
+                            <button id="delete-element-btn" name="delete-element-btn" class="btn btn-danger">
+                                Delete
+                            </button>
+                          </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Scripts -->
+<script src="/static/js/d3.v4.min.js"></script>
+<script src="/static/js/old-data.js"></script>
+{% endblock %}

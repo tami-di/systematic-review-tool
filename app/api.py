@@ -661,7 +661,7 @@ def edit_data_row_to_category(db, cat_id, row_id, dict_array):
                 prop_str.append("")
             else:
                 if n==0:
-                    prop_str[2]+=element[element['id_name']]
+                    prop_str[2]+= element[element['id_name']]
                     values_str = values_str + "%s,"
                     values += (element[element['id_name']],)
                     n+=1

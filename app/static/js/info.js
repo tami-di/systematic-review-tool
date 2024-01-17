@@ -81,17 +81,7 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                         row.append("td")
                             .text(subcategories[i].type);
                     }
-                    
-                    // set properties and delete button on collapsable
-                    properties = subcategories[i].properties
-                    properties_type = subcategories[i].properties_type
-                    properties_length = properties.length
-                    for(var j=0; j < properties_length; j++){
-                        d3.select("#collapse-body"+i)
-                        .append("div")
-                        .attr("class","row container")
-                        .text(properties[j]+" : "+properties_type[properties[j]])
-                    }
+                
     
                     var isRowAdded = false;
                     // add delete button on subcategory or column of category
