@@ -493,7 +493,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                             subcat_id = subcategories[i].id
                             // set parameters for each type of input
                             name = (column_headers[i].name).split(" ").join("")
-                            value = set_str_as_array(column_data[row][column_headers[i].name])
+                            value = set_str_as_array(column_data[row][name])
                             placeholder = ""
                             element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id
                             text_label = subcategories[i].name

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-container container">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" method="post" action="/copy">
+                <fieldset id="form-body">
+                    <!-- Form Name -->
+                    <legend>Paper Search</legend>
+
+                    <!-- Search Bar -->
+                    <div class="form-group">
+                 
+                    </div>
+
+                    <!-- Checkboxes Container -->
+                    <div id="checkbox-container" class="form-group">
+                        <!-- Checkboxes will be dynamically added here -->
+                    </div>
+
+                    <!-- Additional Hidden Fields for Checkbox Values, etc. -->
+                    <input type="hidden" name="checkboxes" value="">
+                    <!-- Add other hidden fields as needed -->
+
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="results-body">
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="/static/js/d3.v4.min.js"></script>
+<script src="/static/js/copy.js"></script>
+<script>
+    // Set form values if needed
+    set_form({{ dict|tojson }});
+    // Show results if needed
+    show_results({{ results|tojson }});
+</script>
+{% endblock %}
