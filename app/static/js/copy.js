@@ -30,7 +30,7 @@ var show_results =  function(results){
 
 
 // Initialize search form
-var set_form = function(dict){
+var set_form = function(){
     d3.json("/api/request/headers/paper/",
         function(error, data){
             if(error){
@@ -42,6 +42,30 @@ var set_form = function(dict){
             paper_title = paper_properties[0].value
             // make form structure
             fieldset = d3.select("#form-body")
+             // set checkboxes
+            form_group = fieldset.append("div").attr("class","form-group")
+            form_group.append("label")
+            .attr("class","col-md-2 control-label")
+            .attr("for","checkboxes")
+            .text("Select attributes to show")
+            checkbox_container = form_group.append("div")
+                                    .attr("class","col-md-8")
+            for(k = 0; k < paper_properties_length; k++){
+                var name = paper_properties[k].name
+                if(name != 'title'){
+                    checkbox_label = checkbox_container.append("label")
+                    .attr("class","checkbox-inline")
+                    .attr("id","checkbox-id-"+k)
+                    .attr("for","checkboxes-"+k)
+                    checkbox_label.append("input")
+                    .attr("type","checkbox")
+                    .attr("name","checkboxes")
+                    .attr("id","checkboxes-"+k)
+                    .attr("value",paper_properties[k].name)
+                    checkbox_label.append("span")
+                    .text(name)
+                }
+            }
             // set search bar
             form_group = fieldset.append("div").attr("class","form-group")
             form_group.append("label")
@@ -51,11 +75,11 @@ var set_form = function(dict){
             input_element = form_group.append("div")
                 .attr("class","col-md-8")
                 .append("input")
-                .attr("id","search-bar")
-                .attr("name","search-bar")
+                .attr("id","searchinput")
+                .attr("name","query")
                 .attr("type","text")
                 .attr("class","form-control input-md")
-                .attr("placeholder","Enter search query")
+                .attr("placeholder","Search ...")
             // add buttons
             form_group = fieldset.append("div")
                 .attr("class","form-group")

@@ -1,8 +1,7 @@
 __author__ = 'ivana'
-import re
 from ast import Set
+import re
 from flask import jsonify, request
-
 
 #-------------------------General Functions---------------------------
 """Function that returns the data type of a variable"""
@@ -41,7 +40,7 @@ def show_columns_category(db,cat_id):
             type = parse_type(row[1])
             # - set 'is_subcat' to false
             dict_array.append({'name':row[0],'type':type,'is_subcat':False,'properties':[]})
-    print(f"cat_id: {cat_id}")
+    
     cursor.execute("SELECT extra FROM categories WHERE id=%s", [int(cat_id)])
     row=cursor.fetchall()
     split_data = row[0][0].split(";")
@@ -174,7 +173,8 @@ def get_or_create_author_id_from_name(db,author_name):
         cursor.execute("select id from author where name=%s",[author_name])
         x = cursor.fetchone()
         return x[0]
-
+    
+    
 """Funtion to create a categorie""" 
 def add_data_to_categories_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
@@ -184,7 +184,11 @@ def add_data_to_categories_from_dict_array(db, categories, paper_id):
             cursor.execute("INSERT INTO paper_has_cont (paper_id, cat_id, cont_id) VALUES (%s,%s,%s)",(paper_id,category['cat_id'][i],value))
             i+=1
 
-#---Search functions by name---            
+
+ 
+
+
+                
 """Function to obtain the properties of a paper""" 
 def get_paper_properties_and_values(db, paper_id):
     dict_array = get_paper_properties(db)
@@ -198,7 +202,12 @@ def get_paper_properties_and_values(db, paper_id):
         else:
             value = get_values_from_paper_as_dict(db, paper_id)
             dictionary['value'] = value[dictionary['name']]
-    return dict_array
+    return dict_array  
+
+
+
+
+#----------------------------------------
 
 """Function to obtain the authors of a paper""" 
 def get_authors_from_paper_id_as_str(db, paper_id):
@@ -212,7 +221,7 @@ def get_authors_from_paper_id_as_str(db, paper_id):
 """Function to obtain the name associated with an id of an author"""
 def get_author_name_from_id(db,author_id):
     cursor = db.connection.cursor()
-    cursor.execute("select name from author where id=%s",[author_id])
+    cursor.execute("SELECT name FROM author WHERE id=%s",[author_id])
     for row in cursor.fetchall():
         return row[0]
 
@@ -303,6 +312,16 @@ def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s",(paper_id))
     add_data_to_categories_from_dict_array(db, categories, paper_id)
+    
+    
+"""Funtion to delete paper"""
+def delete_paper_by_id(db, paper_id):
+    cursor = db.connection.cursor()
+    cursor.execute("DELETE FROM paper_has_authors WHERE paper_id=%s", (paper_id,))
+    cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s", (paper_id,))
+    cursor.execute("DELETE FROM paper WHERE id=%s", (paper_id,))
+    
+    db.connection.commit()
 
 
 #-------------------------Functions for Categories---------------------------
@@ -434,15 +453,16 @@ def delete_category_by_id(db, cat_id):
     subcategories_id_list = get_all_subcategories_id_of_category_as_array(db, cat_id)
     print(subcategories_id_list)
     # - delete subcategories
-    cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id))
-    cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id))
-    if len(subcategories_id_list)>1:
-        for subcat_id in subcategories_id_list:
+    cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id,))
+    cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id,))
+    for subcat_id in subcategories_id_list:
+        if len(subcategories_id_list)>1:
+            for subcat_id in subcategories_id_list:
+                delete_subcategory_by_id(db, subcat_id)
+        else:
             delete_subcategory_by_id(db, subcat_id)
-    else:
-        delete_subcategory_by_id(db, subcat_id)
-    cursor.execute("DELETE FROM int_cat WHERE cat_id=%s",(cat_id))
-    cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id))
+    cursor.execute("DELETE FROM int_cat WHERE cat_id=%s",(cat_id,))
+    cursor.execute("DELETE FROM categories WHERE id=%s",(cat_id,))
     db.connection.commit()
 
 """function to obtain contents associated to a category"""
@@ -454,6 +474,9 @@ def get_all_subcategories_id_of_category_as_array(db, cat_id):
         subcat_id_array.append(row[0])
     return subcat_id_array
 
+
+
+
 """Funtion to delete content"""
 def delete_subcategory_by_id(db, subcat_id):
     cursor = db.connection.cursor()
@@ -463,6 +486,7 @@ def delete_subcategory_by_id(db, subcat_id):
 
 #-------------------------Functions for Data---------------------------
 #---functions for displaying author data and their respective functionalities---
+
 """Funtion to obtain the authors' information"""
 def get_data_from_authors_as_headers_and_column_data(db):
     cursor = db.connection.cursor()
@@ -487,6 +511,7 @@ def get_data_from_authors_as_headers_and_column_data(db):
             i += 1
         rows.append(dict_row)
     return {'headers':headers,'rows':rows}
+
 
 """Function to modify an author"""
 def modify_author(db, author_id, author_name, author_affiliation):
@@ -574,6 +599,9 @@ def remove_subcategories_duplicated(dict_array_subcategories):
         else:
             dict_array.append(element)
     return dict_array
+
+
+
  
 """Function to obtain category information"""
 def get_data_from_category_as_headers_and_column_data(db, cat_id):
@@ -601,7 +629,7 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
 """Function to remove a content from a category"""
 def delete_row_from_category(db, cat_id, row_id):
     cursor = db.connection.cursor()
-    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id,))
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
     cont_id= cursor.fetchall()[int(row_id)][0]
 
     cursor.execute("DELETE FROM paper_has_cont WHERE cont_id=%s",(cont_id,))###Update or delete?
@@ -614,7 +642,7 @@ def delete_row_from_category(db, cat_id, row_id):
 def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     cursor = db.connection.cursor()
     cursor = db.connection.cursor()
-    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id,))
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
     cont_id= cursor.fetchall()[int(row_id)][0]
     prop_str = []
     values_str = "("
@@ -633,7 +661,7 @@ def edit_data_row_to_category(db, cat_id, row_id, dict_array):
                 prop_str.append("")
             else:
                 if n==0:
-                    prop_str[2]+=element[element['id_name']]
+                    prop_str[2]+= element[element['id_name']]
                     values_str = values_str + "%s,"
                     values += (element[element['id_name']],)
                     n+=1
@@ -653,6 +681,16 @@ def create_subcategory(db,name,cat_id,interaction):
     nuevo_id = cursor.lastrowid
     cursor.execute("INSERT INTO int_cat (cat_id,int_id,name) VALUES (%s,%s,%s)",[cat_id,nuevo_id,interaction])
     db.connection.commit()
+    
+    
+def create_interaction_for_existing_subcategory(db, cat_id, interaction, existing_subcat_id):
+    cursor = db.connection.cursor()
+    cursor.execute("INSERT INTO interaction (name) VALUES (%s)", [interaction])
+    new_interaction_id = cursor.lastrowid
+    cursor.execute("INSERT INTO int_cat (cat_id, int_id, name) VALUES (%s, %s, %s)", [cat_id, new_interaction_id, existing_subcat_id])
+    db.connection.commit()
+    
+    
 
 #-------------------------Functions for Search---------------------------
 
@@ -663,7 +701,6 @@ def get_category_name_from_id(db, cat_id):
     cursor.execute("SELECT name FROM categories WHERE id=%s",[cat_id])
     for row in cursor.fetchall():
         return row[0]
-
 
 
 def search_papers_id(db, paper_values, authors_value, categories_values, show_not_in_selection=False):
@@ -689,7 +726,10 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     paper_conditions_id_set = set(paper_conditions_id_list)
 
     # Search for all the papers with all authors in authors_value
-    authors_list = set(authors_value.split(','))
+    if authors_value is not None:
+        authors_list = set(authors_value.split(','))
+    else:
+        authors_list = set()
 
     id_dict_by_author = {}
     for author in authors_list:
@@ -744,6 +784,11 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
 
+    # Include papers that don't have a category but match the input
+    cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE code_name='not-in-selection'")
+    not_in_selection_id_list = [row[0] for row in cursor.fetchall()]
+    paper_conditions_id_set.update(not_in_selection_id_list)
+
     str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
 
     if len(str_in) > 2:
@@ -752,7 +797,106 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list
     else:
-        return list(paper_conditions_id_set)
+        return paper_conditions_id_list
+
+
+
+def search_papers_id2(db, paper_values, authors_value, categories_values, show_not_in_selection=False):
+    cursor = db.connection.cursor()
+
+    # Search paper ids with paper_values
+    where_clause = ""
+    values_tuple = ()
+    
+    if not show_not_in_selection:
+        where_clause = "NOT code_name='not-in-selection' AND "
+
+    for value in paper_values:
+        where_clause += "("
+        for column in ['title', 'library', 'code_name', 'year', 'abstract', 'summary', 'source']:
+            where_clause += f"{column} LIKE %s OR "
+            values_tuple += (f"%{value['value']}%",)
+        where_clause = where_clause[:-4] + ") AND "
+
+    where_clause = where_clause[:-5]
+    cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE " + where_clause, values_tuple)
+    paper_conditions_id_list = [row[0] for row in cursor.fetchall()]
+    paper_conditions_id_set = set(paper_conditions_id_list)
+
+    # Search for all the papers with all authors in authors_value
+    if authors_value is not None:
+        authors_list = set(authors_value.split(','))
+    else:
+        authors_list = set()
+
+    id_dict_by_author = {}
+    for author in authors_list:
+        cursor.execute('''SELECT DISTINCT paper_id FROM papers.paper_has_authors
+                          WHERE author_id IN (SELECT id FROM papers.author WHERE name LIKE %s)''', ["%" + author + "%"])
+        id_list_by_author = [row[0] for row in cursor.fetchall()]
+        id_dict_by_author[author] = set(id_list_by_author)
+
+    # Search for all the paper that meet the 'category' specifications
+    paper_id_sets_by_category_list = []
+
+    for category in categories_values:
+        cat_id = category['cat_id']
+        cat_table_name = "papers.paper_has_cont"
+        category_where_clause = ""
+        category_values_tuple = ()
+
+        for element in category['values']:
+            if not element['is_subcat']:
+                category_where_clause += f"{element['id_name']} LIKE %s AND "
+                category_values_tuple += (f"%{element['value']}%",)
+
+        category_where_clause = category_where_clause[:-5]
+        full_query = f"SELECT DISTINCT paper_id FROM {cat_table_name} WHERE cat_id = {cat_id} AND " + category_where_clause
+        print(category_values_tuple)
+        print("Full Query:", full_query)
+        cursor.execute(f"SELECT DISTINCT paper_id FROM {cat_table_name} WHERE cat_id = {cat_id}")
+
+        category_id_by_column_conditions_list = [row[0] for row in cursor.fetchall()]
+        category_id_by_column_conditions_set = set(category_id_by_column_conditions_list)
+
+        for element in category['values']:
+            if element['is_subcat']:
+                subcat_id = element['subcat_id']
+                subcat_name = "papers.cat_cont"  # Adjust this based on your actual subcategory table
+                interaction = element['rel_with_cat']
+                cat_interact_subcat_table_name = "papers.int_cat"  # Adjust this based on your actual linking table
+                cursor.execute(f'''SELECT DISTINCT paper_id FROM {cat_interact_subcat_table_name}
+                                   WHERE cat_id = %s AND int_id = %s AND name LIKE %s''',
+                               (cat_id, subcat_id, "%" + element['name_value'] + "%"))
+
+                category_id_list_by_this_subcategory_conditions = [row[0] for row in cursor.fetchall()]
+                category_id_set = set(category_id_list_by_this_subcategory_conditions)
+                category_id_by_column_conditions_set.intersection_update(category_id_set)
+
+        paper_id_sets_by_category_list.append(category_id_by_column_conditions_set)
+
+    # Return the intersection of all the paper_id sets and set lists previously created
+    for cat_set in paper_id_sets_by_category_list:
+        paper_conditions_id_set.intersection_update(cat_set)
+
+    for author in authors_list:
+        paper_conditions_id_set.intersection_update(id_dict_by_author[author])
+
+    # Include papers that don't have a category but match the input
+    cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE code_name='not-in-selection'")
+    not_in_selection_id_list = [row[0] for row in cursor.fetchall()]
+    paper_conditions_id_set.update(not_in_selection_id_list)
+
+    str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
+
+    if len(str_in) > 2:
+        print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
+        cursor.execute(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
+        result_id_list = [row[0] for row in cursor.fetchall()]
+        return result_id_list
+    else:
+        return paper_conditions_id_list
+
 
 
 def get_paper_properties_and_values_on_table_format(db, paper_id):
@@ -767,8 +911,6 @@ def get_paper_properties_and_values_on_table_format(db, paper_id):
         else:
             dict_result[dictionary['name']] = dictionary['value']
     return dict_result
-
-
 #-------------------------Functions for Search autocomplete--------------------------- 
 
 # Function to fetch autocomplete suggestions from the database
@@ -865,3 +1007,7 @@ def search_paper_by_value(db, value, paper_id):
         if dictionary['value'] == value:
             papers.append(dictionary)
     return papers
+
+
+
+

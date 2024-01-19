@@ -80,12 +80,12 @@ def copy():
             if not prop['type'] == 'category':
                 if prop['name'] == 'authors':
                     field_name = "search-"+(prop['name']).replace(" ","-")
-                    authors_value = request.form.get(field_name)
-                    values[prop['name']] = request.form.get(field_name)
+                    authors_value = request.form.get('query')
+                    values[prop['name']] = request.form.get('query')
                 else:
                     field_name = "search-"+(prop['name']).replace(" ","-")
                     paper_values.append({'id_name':(prop['name']).replace(" ","_"),
-                                         'value':request.form.get(field_name)})
+                                         'value':request.form.get('query')})
                     values[prop['name']] = request.form.get(field_name)
             else:
                 category_values = []
@@ -96,7 +96,7 @@ def copy():
                         continue
                     if c_prop['type'] == 'subcat':
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
-                        value = request.form.get(field_name)
+                        value = request.form.get('query')
                         category_values.append({'subcat_id':c_prop['id'],
                                                 'rel_with_cat':c_prop['rel_with_cat'],
                                                 'name_value':value,
@@ -105,7 +105,7 @@ def copy():
                         values[prop['name']+c_prop['name']] = value
                     else:
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
-                        value = request.form.get(field_name)
+                        value = request.form.get('query')
                         category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
                                                 'value':value,
                                                 'is_subcat':False})
@@ -113,8 +113,8 @@ def copy():
 
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
         # here the search is made and then we render the template again
-        search_input = request.form.get("searchinput")
-        paper_ids = api.search_papers_id(db,paper_values, authors_value, categories_values)
+        # search_input = request.form.get("searchinput")
+        paper_ids = api.search_papers_id2(db,paper_values, authors_value, categories_values)
         headers = ['title']+[str(a) for a in checkbox_values]
         data = []
         for paper_id in paper_ids:
@@ -126,11 +126,6 @@ def copy():
         values = {}
         results = {}
     return render_template('copy.html', dict=values, results=results)
-
-
-
-
-
 
 
 @app.route('/search',  methods=['POST','GET'])
@@ -164,6 +159,7 @@ def search():
                         continue
                     if c_prop['type'] == 'subcat':
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                        print(field_name)
                         value = request.form.get(field_name)
                         category_values.append({'subcat_id':c_prop['id'],
                                                 'rel_with_cat':c_prop['rel_with_cat'],
@@ -173,6 +169,7 @@ def search():
                         values[prop['name']+c_prop['name']] = value
                     else:
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                        print(field_name)
                         value = request.form.get(field_name)
                         category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
                                                 'value':value,
