@@ -459,7 +459,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                         name_from_header_row = (column_headers[k].name).split(" ").join("")
                         body_row.append("td")
                         .attr("id","cell-"+j+"-"+k)
-                        .text(column_data[j][column_headers[k].name])
+                        .text(column_data[j][name_from_header_row])
                     }
                     last_column = body_row.append("td")
                     // add edit-row-button

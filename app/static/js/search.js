@@ -48,7 +48,8 @@ var set_form = function(dict){
         .attr("for","checkboxes")
         .text("Select attributes to show")
         checkbox_container = form_group.append("div")
-                                .attr("class","col-md-8")
+                                .attr("class","col-md-10")
+
         for(k = 0; k < paper_properties_length; k++){
             var name = paper_properties[k].name
             if(name != 'title'){
@@ -65,12 +66,41 @@ var set_form = function(dict){
                 .text(name)
             }
         }
+        // Add "Select All" button
+        checkbox_label = checkbox_container.append("label")
+        .attr("class","checkbox-inline")
+        .attr("id","checkbox-select-all")
+        .attr("for","checkboxes-select-all")
+        .append("button")
+        .attr("type","button")
+        .attr("class","btn btn-primary")
+        .text("Select All")
+        .on("click", function() {
+            var checkboxes = document.getElementsByName("checkboxes");
+            var checked = true;
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checked = false;
+                    break;
+                }
+            }
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = checked;
+            }
+        });
         // set form body
         for(i = 0; i < paper_properties_length; i++){
             type = paper_properties[i].type
             element_id = "search-"+(paper_properties[i].name).replace(" ","-")
             value = get_value(dict,paper_properties[i].name)
             text_label = paper_properties[i].name
+            // Add title
+            if (i === 0) {
+                fieldset.append("legend")
+                    .text("Primary search parameters")
+                    .append("br");
+            }
+
             placeholder = get_placeholder(dict,paper_properties[i].name,text_label)
             if(type == 'varchar'){
                 form_group = fieldset.append("div").attr("class","form-group")
@@ -84,7 +114,16 @@ var set_form = function(dict){
                 form_group = fieldset.append("div").attr("class","form-group")
                 set_number_input(form_group,element_id,text_label,value,placeholder)
             }
+
+            // Add legend for categories
+            if (i === paper_properties_length - 1 && type == 'category') {
+                fieldset.append("legend")
+                    .text("Category search parameters")
+                    .append("br");
+            }
+
             if(type == 'category'){
+                
                 category_id = paper_properties[i].id
                 // set form parameters for category
                 d3.json('/api/request/headers/category/'+category_id,

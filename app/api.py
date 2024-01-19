@@ -402,7 +402,7 @@ def add_column_to_category(db, cat_id, col_name, col_data):
 """Funtion to delete column to category""" 
 def delete_category_column(db, cat_id,column_name):
     cursor = db.connection.cursor()
-    cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id))
+    cursor.execute("SELECT extra FROM categories WHERE id=%s",(cat_id,))
     tupla=cursor.fetchall()
     cadena = tupla[0][0]
     columnas = cadena.split(';')
@@ -419,7 +419,7 @@ def delete_category_column(db, cat_id,column_name):
             extranew+=str(i[0])+"$"+str(i[1])+";"
     # delete column
     cursor.execute("UPDATE categories SET extra=%s WHERE id=%s",(extranew,cat_id)) 
-    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",(cat_id))   #----------------------------------------PROBAR CUANDO AGREGUE CONT
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s",(cat_id,))   #----------------------------------------PROBAR CUANDO AGREGUE CONT
     for cont_id in cursor.fetchall():
         cursor.execute("SELECT extra FROM content WHERE id=%s",(cont_id))
         extra=cursor.fetchall()
@@ -642,7 +642,7 @@ def delete_row_from_category(db, cat_id, row_id):
 def edit_data_row_to_category(db, cat_id, row_id, dict_array):
     cursor = db.connection.cursor()
     cursor = db.connection.cursor()
-    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id,))
     cont_id= cursor.fetchall()[int(row_id)][0]
     prop_str = []
     values_str = "("

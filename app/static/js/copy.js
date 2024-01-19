@@ -45,26 +45,31 @@ var set_form = function(){
              // set checkboxes
             form_group = fieldset.append("div").attr("class","form-group")
             form_group.append("label")
-            .attr("class","col-md-5 control-label")
+            .attr("class","col-md-2 control-label")
             .attr("for","checkboxes")
             .text("Select attributes to show")
             checkbox_container = form_group.append("div")
-                                    .attr("class","col-md-5")
-            // Add "Select All" checkbox
+                                    .attr("class","col-md-10")
+            // Add "Select All" button
             checkbox_label = checkbox_container.append("label")
                 .attr("class","checkbox-inline")
                 .attr("id","checkbox-select-all")
                 .attr("for","checkboxes-select-all")
-                .text("Select All").append("br")
-                .append("input")
-                .attr("type","checkbox")
-                .attr("name","checkboxes")
-                .attr("id","checkboxes-select-all")
-                
-                .on("change", function() {
+                .append("button")
+                .attr("type","button")
+                .attr("class","btn btn-primary")
+                .text("Select All")
+                .on("click", function() {
                     var checkboxes = document.getElementsByName("checkboxes");
+                    var checked = true;
                     for (var i = 0; i < checkboxes.length; i++) {
-                        checkboxes[i].checked = this.checked;
+                        if (checkboxes[i].checked) {
+                            checked = false;
+                            break;
+                        }
+                    }
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        checkboxes[i].checked = checked;
                     }
                 });
                 
