@@ -159,7 +159,6 @@ def search():
                         continue
                     if c_prop['type'] == 'subcat':
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
-                        print(field_name)
                         value = request.form.get(field_name)
                         category_values.append({'subcat_id':c_prop['id'],
                                                 'rel_with_cat':c_prop['rel_with_cat'],
@@ -169,7 +168,6 @@ def search():
                         values[prop['name']+c_prop['name']] = value
                     else:
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
-                        print(field_name)
                         value = request.form.get(field_name)
                         category_values.append({'id_name':(c_prop['name']).replace(" ","_"),
                                                 'value':value,

@@ -41,15 +41,33 @@ var set_form = function(){
             paper_properties_length = paper_properties.length
             paper_title = paper_properties[0].value
             // make form structure
-            fieldset = d3.select("#form-body")
+            fieldset = d3.select("#checkbox")
              // set checkboxes
             form_group = fieldset.append("div").attr("class","form-group")
             form_group.append("label")
-            .attr("class","col-md-2 control-label")
+            .attr("class","col-md-5 control-label")
             .attr("for","checkboxes")
             .text("Select attributes to show")
             checkbox_container = form_group.append("div")
-                                    .attr("class","col-md-8")
+                                    .attr("class","col-md-5")
+            // Add "Select All" checkbox
+            checkbox_label = checkbox_container.append("label")
+                .attr("class","checkbox-inline")
+                .attr("id","checkbox-select-all")
+                .attr("for","checkboxes-select-all")
+                .text("Select All").append("br")
+                .append("input")
+                .attr("type","checkbox")
+                .attr("name","checkboxes")
+                .attr("id","checkboxes-select-all")
+                
+                .on("change", function() {
+                    var checkboxes = document.getElementsByName("checkboxes");
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        checkboxes[i].checked = this.checked;
+                    }
+                });
+                
             for(k = 0; k < paper_properties_length; k++){
                 var name = paper_properties[k].name
                 if(name != 'title'){
@@ -66,31 +84,6 @@ var set_form = function(){
                     .text(name)
                 }
             }
-            // set search bar
-            form_group = fieldset.append("div").attr("class","form-group")
-            form_group.append("label")
-                .attr("class","col-md-2 control-label")
-                .attr("for","search-bar")
-                .text("Search")
-            input_element = form_group.append("div")
-                .attr("class","col-md-8")
-                .append("input")
-                .attr("id","searchinput")
-                .attr("name","query")
-                .attr("type","text")
-                .attr("class","form-control input-md")
-                .attr("placeholder","Search ...")
-            // add buttons
-            form_group = fieldset.append("div")
-                .attr("class","form-group")
-                .attr("id","submit-form-group")
-            // label?
-            form_group.append("label")
-                .attr("class","col-md-5 control-label")
-                .attr("for","accept-modified-data")
-            // buttons
-            div_for_buttons = form_group.append("div").attr("class","col-md-7")
-            put_submit_button(div_for_buttons)
         })
 }
 

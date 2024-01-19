@@ -726,10 +726,10 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     paper_conditions_id_set = set(paper_conditions_id_list)
 
     # Search for all the papers with all authors in authors_value
-    if authors_value is not None:
-        authors_list = set(authors_value.split(','))
-    else:
-        authors_list = set()
+    #if authors_value is not None:
+    authors_list = set(authors_value.split(','))
+    #else:
+        #authors_list = set()
 
     id_dict_by_author = {}
     for author in authors_list:
@@ -797,6 +797,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list
     else:
+        print(paper_conditions_id_list)
         return paper_conditions_id_list
 
 
@@ -895,6 +896,7 @@ def search_papers_id2(db, paper_values, authors_value, categories_values, show_n
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list
     else:
+        print(paper_conditions_id_list)
         return paper_conditions_id_list
 
 
