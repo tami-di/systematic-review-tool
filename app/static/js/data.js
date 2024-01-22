@@ -456,7 +456,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                         if(column_headers[k].name == 'id'){
                             continue
                         }
-                        name_from_header_row = (column_headers[k].name).split(" ").join("")
+                        name_from_header_row = (column_headers[k].name).split(" ").join("-")
                         body_row.append("td")
                         .attr("id","cell-"+j+"-"+k)
                         .text(column_data[j][name_from_header_row])
@@ -492,7 +492,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                             type = subcategories[i].type
                             subcat_id = subcategories[i].id
                             // set parameters for each type of input
-                            name = (column_headers[i].name).split(" ").join("")
+                            name = (column_headers[i].name).split(" ").join("-")
                             value = set_str_as_array(column_data[row][name])
                             placeholder = ""
                             element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id

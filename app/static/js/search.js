@@ -222,7 +222,7 @@ var put_submit_button = function(div_for_buttons){
                     .attr("type","submit")
                     .attr("name","accept-new-data")
                     .attr("class", "btn btn-success")
-                    .text("Accept")
+                    .text("Search")
 
 }
 

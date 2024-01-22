@@ -480,8 +480,8 @@ def get_all_subcategories_id_of_category_as_array(db, cat_id):
 """Funtion to delete content"""
 def delete_subcategory_by_id(db, subcat_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(str(subcat_id)))
-    cursor.execute("DELETE FROM content WHERE id=%s",(str(subcat_id)))
+    cursor.execute("DELETE FROM cat_cont WHERE cont_id=%s",(str(subcat_id),))
+    cursor.execute("DELETE FROM content WHERE id=%s",(str(subcat_id),))
     db.connection.commit()
 
 #-------------------------Functions for Data---------------------------
@@ -530,8 +530,8 @@ def add_author(db, author_name, author_affiliation):
 """Funtion to delete an author"""
 def delete_author(db, author_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s",author_id)
-    cursor.execute("DELETE FROM author WHERE id=%s",author_id)
+    cursor.execute("DELETE FROM paper_has_authors WHERE author_id=%s", (author_id,))
+    cursor.execute("DELETE FROM author WHERE id=%s", (author_id,))
     # Commit changes in the database
     db.connection.commit()
 
@@ -617,19 +617,20 @@ def get_data_from_category_as_headers_and_column_data(db, cat_id):
         for row_data in row:
             row_dict['name'] = row_data[0]
             row_dict['description'] = row_data[1]
-            extras = row_data[2].split(';')  # Separar la columna 'extra' por el carácter ';'
-            for extra,i in enumerate(extras, start=2):
-                if extra<len(headers):
-                    name=headers[extra]['name']
-                    row_dict[name] = i
-            rows.append(row_dict.copy())
-    return {'headers':headers,'rows':rows}
+            extras = row_data[2].replace(" ", "-").split(';')  # Separar la columna 'extra' por el carácter ';'
+            
+            for extra, i in enumerate(extras, start=2):
+                if extra < len(headers):
+                    name = headers[extra]['name'].replace(" ", "-")
+                    row_dict[name] = i.replace(" ", "-")  
+            rows.append(row_dict)
+    return {'headers': headers, 'rows': rows}
 
 #---functions for edit and delete a category---
 """Function to remove a content from a category"""
 def delete_row_from_category(db, cat_id, row_id):
     cursor = db.connection.cursor()
-    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id))
+    cursor.execute("SELECT cont_id FROM cat_cont WHERE cat_id=%s", (cat_id,))
     cont_id= cursor.fetchall()[int(row_id)][0]
 
     cursor.execute("DELETE FROM paper_has_cont WHERE cont_id=%s",(cont_id,))###Update or delete?
@@ -900,6 +901,23 @@ def search_papers_id2(db, paper_values, authors_value, categories_values, show_n
         return paper_conditions_id_list
 
 
+#-------------------------Functions for Search autocomplete--------------------------- 
+
+def get_suggestions(db):
+    cursor = db.connection.cursor()
+    user_input = request.args.get('input')
+    if (user_input): 
+        
+        sql = "SELECT title FROM paper WHERE title LIKE %s LIMIT 10"
+        cursor.execute(sql, (user_input + '%',))
+
+        suggestions = cursor.fetchall()
+        paper_titles = [paper[0] for paper in suggestions]
+        return jsonify({'suggestions': paper_titles})
+         
+    return jsonify({'suggestions': []})
+
+
 
 def get_paper_properties_and_values_on_table_format(db, paper_id):
     dict_array = get_paper_properties_and_values(db, paper_id)
@@ -913,103 +931,4 @@ def get_paper_properties_and_values_on_table_format(db, paper_id):
         else:
             dict_result[dictionary['name']] = dictionary['value']
     return dict_result
-#-------------------------Functions for Search autocomplete--------------------------- 
-
-# Function to fetch autocomplete suggestions from the database
-def get_suggestions(db):
-    cursor = db.connection.cursor()
-    user_input = request.args.get('input')
-    if (user_input): 
-        
-        sql = "SELECT * FROM paper WHERE title LIKE %s OR library LIKE %s OR code_name LIKE %s OR year LIKE %s OR abstract LIKE %s OR summary LIKE %s OR source LIKE %s  LIMIT 10"
-        query = f"{user_input}%"
-        cursor.execute(sql, (query, query, query, query, query, query, query))
-
-        
-        suggestions = cursor.fetchall() 
-        
-        paper_info = [
-                {'title': str(paper[1]), 'library': str(paper[2]), 'code_name': str(paper[3]),
-                 'year': str(paper[4]), 'abstract': str(paper[5]),
-                 'summary': str(paper[6]), 'source': str(paper[7]), 
-                 'author': get_authors_from_paper_id_as_str(db, paper[0])} for paper in suggestions
-            ]
-        
-        json_responses = []  # List to hold individual JSON responses for each element
-        for element in paper_info:
-             for value in element.values():
-                if value != '':
-                    json_responses.append(value) 
-        
-        return jsonify({'suggestions': json_responses})
-        
-    return jsonify({'suggestions': []})
-
-
-def get_paper_year(db):
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT year FROM paper")
-    years = []
-    for row in cursor.fetchall():
-        years.append(row[0])
-    return years
-
-# Function to retrieve property value for the paper by property name
-def get_property_value_for_paper(db, property_name):
-    # Example: Retrieving property value based on the property name (year in this case)
-    if property_name == 'year':
-        for year in get_paper_year(db):
-            return year
-        property_id = get_paper_id_by_value(db, year)  
-        #print(property_id)
-        paper = get_values_from_paper_as_dict(db, property_id)
-        print(paper)
-        return paper
-
-
-def get_all_papers(db):
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT id FROM paper")
-    papers = []
-    for row in cursor.fetchall():
-        papers.append(row[0])
-    return papers
-
-
-"""Function to get the paper ID by value"""
-def get_paper_id_by_value(db, property_value):
-    cursor = db.connection.cursor()
-    query = "SELECT id FROM paper WHERE "
-    
-    # Get all column names from the paper table
-    cursor.execute("SHOW COLUMNS FROM paper")
-    columns = [column[0] for column in cursor.fetchall()]
-    
-    # Create a WHERE clause for each column to search for the value using OR
-    where_clause = " OR ".join([f"{column} LIKE %s" for column in columns])
-    
-    # Combine the WHERE clauses
-    query += where_clause
-    
-    # Adjust the property value to include wildcards for partial matching
-    adjusted_value = f"%{property_value}%"
-    
-    cursor.execute(query, tuple([adjusted_value] * len(columns)))
-    
-    paper_id = cursor.fetchone()
-    return paper_id[0] if paper_id else None
-
-
-#---Search functions by name---            
-"""Function to obtain the properties of a paper""" 
-def search_paper_by_value(db, value, paper_id):
-    papers = []
-    dict_array = get_paper_properties_and_values(db, paper_id)
-    for dictionary in dict_array:
-        if dictionary['value'] == value:
-            papers.append(dictionary)
-    return papers
-
-
-
 

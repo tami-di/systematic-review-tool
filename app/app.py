@@ -27,14 +27,14 @@ def index():
     set_hidden = False
     search_input = request.args.get("searchinput")
     if search_input is not None:
-        paper_id = api.get_paper_id_by_value(db, search_input)
+        paper_id = api.get_paper_id_where_title_exactly(db, search_input)
         set_hidden = True
     else:
         paper_id = ""
     return render_template('index.html',
                            paper=paper_id,
                            set_form=set_hidden)
-
+    
    
 
 @app.route('/getSuggestions', methods=['GET'])
@@ -398,12 +398,13 @@ def edit_data_from_category(cat_id,row_id):
                                'is_subcat':True,
                                'id':prop['id']})
         else:
-            form_field = "sub-"+prop['name']+"-cat-"+cat_id
+            form_field = "sub-"+prop['name'].replace(" ", "-")+"-cat-"+cat_id
             print(form_field)
             print(request.form.get(form_field))
             dict_array.append({'id_name':prop_name,
-                               prop_name: request.form.get(form_field),
+                               prop_name: request.form.get(form_field), 
                                'is_subcat':False})
+            
     api.edit_data_row_to_category(db, cat_id, row_id, dict_array)
     return redirect(request.referrer)
 
