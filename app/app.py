@@ -134,6 +134,7 @@ def search():
         # obtain data
         checkbox_values = request.form.getlist('checkboxes')
         paper_properties = api.get_paper_properties(db)
+
         # values maintains the previous field values on the search form
         values = {}
         paper_values = []
@@ -145,6 +146,7 @@ def search():
                     field_name = "search-"+(prop['name']).replace(" ","-")
                     authors_value = request.form.get(field_name)
                     values[prop['name']] = request.form.get(field_name)
+    
                 else:
                     field_name = "search-"+(prop['name']).replace(" ","-")
                     paper_values.append({'id_name':(prop['name']).replace(" ","_"),
@@ -176,7 +178,11 @@ def search():
 
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
         # here the search is made and then we render the template again
-        paper_ids = api.search_papers_id(db, paper_values, authors_value, categories_values)
+        if not any(paper_values) and not authors_value and not any(categories_values):
+            # If the form is empty, show all papers
+            paper_ids = api.get_all_papers_id(db)
+        else:
+            paper_ids = api.search_papers_id(db, paper_values, authors_value, categories_values)
         headers = ['title']+[str(a) for a in checkbox_values]
         data = []
         for paper_id in paper_ids:

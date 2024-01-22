@@ -161,12 +161,8 @@ var set_form_with_paper = function(paper_id){
                 // buttons
                 div_for_buttons = form_group.append("td")
                     .attr("colspan", "3")
-                div_for_buttons.append("button")
-                    .attr("class", "btn btn-primary")
-                    .text("Back")
-                    .on("click", function() {
-                        window.location.href = "/";
-                    });
+                
+                put_back_button(div_for_buttons)
 
                 // add modify-button
                 div_for_buttons.append("button")
@@ -267,42 +263,6 @@ var set_form_with_paper_modify = function(paper_id){
             })
 }
 
-// Function to generate checkboxes dynamically
-function generateCheckboxes(data) {
-    const paperProperties = data.properties;
-    const fieldset = d3.select("#form-body");
-
-    const formGroup = fieldset.append("div")
-                                .attr("class", "form-group");
-
-    formGroup.append("label")
-                .attr("class", "col-md-2 control-label")
-                .attr("for", "checkboxes")
-                .text("Select attributes to show");
-
-    const checkboxContainer = formGroup.append("div")
-                                        .attr("class", "col-md-8");
-
-    paperProperties.forEach((property, index) => {
-        const name = property.name;
-        if (name !== 'title') {
-            const checkboxLabel = checkboxContainer.append("label")
-                                                    .attr("class", "checkbox-inline")
-                                                    .attr("id", `checkbox-id-${index}`)
-                                                    .attr("for", `checkboxes-${index}`);
-
-            checkboxLabel.append("input")
-                            .attr("type", "checkbox")
-                            .attr("name", "checkboxes")
-                            .attr("id", `checkboxes-${index}`)
-                            .attr("value", name);
-
-            checkboxLabel.append("span")
-                            .text(name);
-        }
-    });
-}
-
 
 
 
@@ -325,6 +285,19 @@ var put_submit_button = function(div_for_buttons){
                     .attr("class", "btn btn-success")
                     .text("Accept")
 
+}
+
+var put_back_button = function(div_for_buttons){
+    div_for_buttons.append("button")
+                    .attr("id","back-to-search")
+                    .attr("type","button")
+                    .attr("name","back-to-search")
+                    .attr("class", "btn btn-primary")
+                    .text("Back to top")
+                    .on("click",function(){
+                        document.body.scrollTop = 0; // For Safari
+                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                    })
 }
 
 

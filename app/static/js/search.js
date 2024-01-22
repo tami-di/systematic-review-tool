@@ -64,30 +64,36 @@ var set_form = function(dict){
                 .attr("value",paper_properties[k].name)
                 checkbox_label.append("span")
                 .text(name)
+                
             }
         }
+
         // Add "Select All" button
         checkbox_label = checkbox_container.append("label")
-        .attr("class","checkbox-inline")
-        .attr("id","checkbox-select-all")
-        .attr("for","checkboxes-select-all")
-        .append("button")
-        .attr("type","button")
-        .attr("class","btn btn-primary")
-        .text("Select All")
-        .on("click", function() {
-            var checkboxes = document.getElementsByName("checkboxes");
-            var checked = true;
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    checked = false;
-                    break;
+            .attr("id","checkbox-select-all")
+            .attr("for","checkboxes-select-all")
+            .style("position", "absolute")
+            .style("top", "40px")
+            .style("right", "40px")
+
+            .append("button")
+            .attr("type","button")
+            .attr("class","btn btn-primary")
+            .text("Select All")
+            .on("click", function() {
+                var checkboxes = document.getElementsByName("checkboxes");
+                var checked = true;
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        checked = false;
+                        break;
+                    }
                 }
-            }
-            for (var i = 0; i < checkboxes.length; i++) {
-                checkboxes[i].checked = checked;
-            }
-        });
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = checked;
+                }
+            })
+    
         // set form body
         for(i = 0; i < paper_properties_length; i++){
             type = paper_properties[i].type
@@ -173,6 +179,9 @@ var set_form = function(dict){
                     // buttons
                     div_for_buttons = form_group.append("div").attr("class","col-md-7")
                     put_submit_button(div_for_buttons)
+                    put_back_button(form_group)
+                    
+                    
                 })
             }
         }
@@ -187,8 +196,9 @@ var set_form = function(dict){
                     // buttons
                     div_for_buttons = form_group.append("div").attr("class","col-md-7")
                     put_submit_button(div_for_buttons)
+                    
     })
-
+    
 }
 
 var get_value = function(dict,name){
@@ -223,7 +233,23 @@ var put_submit_button = function(div_for_buttons){
                     .attr("name","accept-new-data")
                     .attr("class", "btn btn-success")
                     .text("Search")
+                    .on("click",function(){
+                        is_submit_button = true;
+                       // window.scrollTo(0, document.body.scrollHeight);
+                    })                  
+}
 
+var put_back_button = function(div_for_buttons){
+    div_for_buttons.append("button")
+                    .attr("id","back-to-search")
+                    .attr("type","button")
+                    .attr("name","back-to-search")
+                    .attr("class", "btn btn-primary")
+                    .text("Back to top")
+                    .on("click",function(){
+                        is_submit_button = false
+                        window.scrollTo(0, 0);
+                    })
 }
 
 var set_number_input = function(form_group,id,text_label,value,placeholder){
