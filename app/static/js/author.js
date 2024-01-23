@@ -1,5 +1,6 @@
 document.getElementById("myInput").style.display = "none"
 document.getElementById("filter").style.display = "none"
+document.getElementById("see-all-data-of-authors").style.display = "none"
 // what to do if the add-data-to-category button is pressed
 d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
    // get category id
@@ -33,7 +34,8 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
         .attr("class","col-md-4 control-label")
         .attr("for","accept-new-data")
         // buttons
-        div_for_buttons = form_group.append("div").attr("class","col-md-8")
+        div_for_buttons = form_group.append("div")
+            .attr("class", "col-md-6 text-center"); 
         put_submit_button(div_for_buttons)
         put_dismiss_button(div_for_buttons)
         
@@ -95,7 +97,8 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
             .attr("class","col-md-4 control-label")
             .attr("for","accept-new-data")
             // buttons
-            div_for_buttons = form_group.append("div").attr("class","col-md-8")
+            div_for_buttons = form_group.append("div")
+                .attr("class", "col-md-6 text-center"); 
             put_submit_button(div_for_buttons)
             put_dismiss_button(div_for_buttons)
 
@@ -259,7 +262,8 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                     .attr("class","col-md-4 control-label")
                     .attr("for","accept-new-data")
                     // buttons
-                    div_for_buttons = form_group.append("div").attr("class","col-md-8")
+                    div_for_buttons = form_group.append("div")
+                        .attr("class", "col-md-6 text-center"); 
                     put_submit_button(div_for_buttons)
                     put_dismiss_button(div_for_buttons)
 
@@ -370,7 +374,8 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
                         .attr("class","col-md-4 control-label")
                         .attr("for","accept-modified-data")
                         // buttons
-                        div_for_buttons = form_group.append("div").attr("class","col-md-8")
+                        div_for_buttons = form_group.append("div")
+                            .attr("class", "col-md-6 text-center"); 
                         put_submit_button(div_for_buttons)
                         put_dismiss_button(div_for_buttons)
 
@@ -405,6 +410,11 @@ d3.selectAll("#categorias").selectAll(".btn-grey").on("click", function(){
 })
 
 
+
+
+window.onload = function() {
+    d3.selectAll("#categorias").selectAll(".btn-info").dispatch("click");
+}
 
 // what to do if the see-all-data-of-category button is pressed
 d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
@@ -495,7 +505,8 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         .attr("class","col-md-4 control-label")
                         .attr("for","accept-new-data")
                         // buttons
-                        div_for_buttons = form_group.append("div").attr("class","col-md-8")
+                        div_for_buttons = form_group.append("div")
+                            .attr("class", "col-md-6 text-center"); 
                         put_submit_button(div_for_buttons)
                         put_dismiss_button(div_for_buttons)
 
@@ -803,7 +814,7 @@ var set_str_as_array = function(string){
 }
 
 
-function myFunction() {
+function filter() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");

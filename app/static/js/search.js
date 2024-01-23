@@ -13,11 +13,19 @@ var show_results = function(results) {
         .attr("class", "table table-bordered table-striped table-hover table-responsive");
     header_row = table.append("thead").append("tr");
 
+ 
+    table.append("caption")
+            .text("Hover over a header title and click to sort by that column.");
+    table.append("caption")
+            .text("Click again to sort in reverse order.");
+    
+
     for (i = 0; i < headers.length; i++) {
         header_row.append("td")
             .text(headers[i])
             .attr("onclick", "sortTable(" + i + ")")
-            .attr("title", "Tooltip text for header " + headers[i]); 
+            .attr("title", "Click to sort by " + headers[i])
+
     }
 
     tbody = table.append("tbody");

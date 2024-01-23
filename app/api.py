@@ -310,7 +310,7 @@ def update_authors_to_paper(db, paper_id, authors):
 """Function to edit the categories of a paper"""
 def update_categories_data_from_dict_array(db, categories, paper_id):
     cursor = db.connection.cursor()
-    cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s",(paper_id))
+    cursor.execute("DELETE FROM paper_has_cont WHERE paper_id=%s",(paper_id,))
     add_data_to_categories_from_dict_array(db, categories, paper_id)
     
     
@@ -451,7 +451,6 @@ def delete_category_by_id(db, cat_id):
     # delete subcategories attached to this category
     # - get subcategories attached
     subcategories_id_list = get_all_subcategories_id_of_category_as_array(db, cat_id)
-    print(subcategories_id_list)
     # - delete subcategories
     cursor.execute("DELETE FROM paper_has_cont WHERE cat_id=%s",(cat_id,))
     cursor.execute("DELETE FROM cat_cont WHERE cat_id=%s",(cat_id,))
@@ -719,7 +718,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
         values_tuple += (f"%{value['value']}%",)
 
     #print("where clause: "+ where_clause)
-    print("values-tuple: " + str(values_tuple))
+    #print("values-tuple: " + str(values_tuple))
 
     where_clause = where_clause[:-5]
     cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE " + where_clause, values_tuple)
@@ -727,10 +726,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     paper_conditions_id_set = set(paper_conditions_id_list)
 
     # Search for all the papers with all authors in authors_value
-    #if authors_value is not None:
     authors_list = set(authors_value.split(','))
-    #else:
-        #authors_list = set()
 
     id_dict_by_author = {}
     for author in authors_list:
@@ -792,18 +788,13 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
 
     str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
     
-    print("str_in: " + str_in)
-    print(len(str_in))
-    
-   
-
     if len(str_in) > 3 :  
-        print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
+        #print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         cursor.execute(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list
     else:
-        print(paper_conditions_id_list)
+        #print(paper_conditions_id_list)
         return paper_conditions_id_list
 
 

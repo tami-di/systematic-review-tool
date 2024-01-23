@@ -405,8 +405,6 @@ def edit_data_from_category(cat_id,row_id):
                                'id':prop['id']})
         else:
             form_field = "sub-"+prop['name'].replace(" ", "-")+"-cat-"+cat_id
-            print(form_field)
-            print(request.form.get(form_field))
             dict_array.append({'id_name':prop_name,
                                prop_name: request.form.get(form_field), 
                                'is_subcat':False})
