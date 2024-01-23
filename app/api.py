@@ -703,6 +703,24 @@ def get_category_name_from_id(db, cat_id):
         return row[0]
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def search_papers_id(db, paper_values, authors_value, categories_values, show_not_in_selection=False):
     cursor = db.connection.cursor()
 
@@ -717,8 +735,8 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
         where_clause += f"{value['id_name']} LIKE %s AND "
         values_tuple += (f"%{value['value']}%",)
 
-    #print("where clause: "+ where_clause)
-    #print("values-tuple: " + str(values_tuple))
+    print("where clause: "+ where_clause)
+    print("values-tuple: " + str(values_tuple))
 
     where_clause = where_clause[:-5]
     cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE " + where_clause, values_tuple)
@@ -751,8 +769,8 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
 
         category_where_clause = category_where_clause[:-5]
         full_query = f"SELECT DISTINCT paper_id FROM {cat_table_name} WHERE cat_id = {cat_id} AND " + category_where_clause
-        #print(category_values_tuple)
-        #print("Full Query:", full_query)
+        print(category_values_tuple)
+        print("Full Query:", full_query)
         cursor.execute(f"SELECT DISTINCT paper_id FROM {cat_table_name} WHERE cat_id = {cat_id}")
 
         category_id_by_column_conditions_list = [row[0] for row in cursor.fetchall()]
@@ -776,26 +794,24 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
 
     # Return the intersection of all the paper_id sets and set lists previously created
     for cat_set in paper_id_sets_by_category_list:
-        paper_conditions_id_set.intersection_update(cat_set)
+        if cat_set != set():
+            paper_conditions_id_set.intersection_update(cat_set)
+        
 
     for author in authors_list:
         paper_conditions_id_set.intersection_update(id_dict_by_author[author])
 
-    # Include papers that don't have a category but match the input
-    cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE code_name='not-in-selection'")
-    not_in_selection_id_list = [row[0] for row in cursor.fetchall()]
-    paper_conditions_id_set.update(not_in_selection_id_list)
-
     str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
-    
-    if len(str_in) > 3 :  
-        #print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
+
+    if len(str_in) > 2:
+        print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         cursor.execute(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list
     else:
-        #print(paper_conditions_id_list)
-        return paper_conditions_id_list
+        return list(paper_conditions_id_set)
+
+
 
 
 
