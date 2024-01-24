@@ -216,7 +216,8 @@ var set_form = function(dict){
                         console.log(error)
                     }
                     text_label = data.name
-                    element_id = "search-"+(text_label).replace(" ","-")
+                    element_id = "search-"+text_label.replace(/\s/g, "-");
+
                     category_properties = data.headers
                     category_properties_length = category_properties.length
                     for(j = 0; j < category_properties_length; j++){
@@ -230,6 +231,7 @@ var set_form = function(dict){
                         prop_text_label = text_label +" "+ category_properties[j].name
                         prop_placeholder = get_placeholder(dict,text_label+category_properties[j].name, prop_text_label)
                         prop_element_id = element_id +"-"+ (category_properties[j].name).split(" ").join("-")
+    
                         if(prop_type == 'varchar'){
                             set_varchar_input (form_group,prop_element_id,prop_text_label,prop_value,prop_placeholder)
                         }

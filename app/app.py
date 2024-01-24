@@ -144,6 +144,7 @@ def search():
             if not prop['type'] == 'category':
                 if prop['name'] == 'authors':
                     field_name = "search-"+(prop['name']).replace(" ","-")
+                    print("f author", field_name)
                     authors_value = request.form.get(field_name)
                     values[prop['name']] = request.form.get(field_name)
     
@@ -161,6 +162,7 @@ def search():
                         continue
                     if c_prop['type'] == 'subcat':
                         field_name = "search-"+(prop['name']).replace(" ","-")+"-"+ (c_prop['name']).replace(" ","-")
+                        
                         value = request.form.get(field_name)
                         category_values.append({'subcat_id':c_prop['id'],
                                                 'rel_with_cat':c_prop['rel_with_cat'],
@@ -178,11 +180,9 @@ def search():
 
                 categories_values.append({'cat_id':prop['id'],'values':category_values})
         # here the search is made and then we render the template again
-        if not any(paper_values) and not authors_value and not any(categories_values):
-            # If the form is empty, show all papers
-            paper_ids = api.get_all_papers_id(db)
-        else:
-            paper_ids = api.search_papers_id(db, paper_values, authors_value, categories_values)
+
+        paper_ids = api.search_papers_id(db, paper_values, authors_value, categories_values)
+        
         headers = ['title']+[str(a) for a in checkbox_values]
         data = []
         for paper_id in paper_ids:
