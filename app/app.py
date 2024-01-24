@@ -144,7 +144,6 @@ def search():
             if not prop['type'] == 'category':
                 if prop['name'] == 'authors':
                     field_name = "search-"+(prop['name']).replace(" ","-")
-                    print("f author", field_name)
                     authors_value = request.form.get(field_name)
                     values[prop['name']] = request.form.get(field_name)
     

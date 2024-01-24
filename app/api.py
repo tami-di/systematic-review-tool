@@ -706,7 +706,7 @@ def get_category_name_from_id(db, cat_id):
 
 def search_papers_id(db, paper_values, authors_value, categories_values, show_not_in_selection=False):
     cursor = db.connection.cursor()
-    
+
     # Search paper ids with paper_values
     where_clause = ""
     values_tuple = ()
@@ -719,8 +719,6 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
         values_tuple += (f"%{value['value']}%",)
         
     
-
-
     where_clause = where_clause[:-5]
     cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE " + where_clause, values_tuple)
     paper_conditions_id_list = [row[0] for row in cursor.fetchall()]
@@ -739,16 +737,15 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     # Search for all the paper that meet the 'category' specifications
     paper_id_sets_by_category_list = []
 
-    print("Categories:", categories_values)
+
 
     for category in categories_values:
+   
         cat_id = category['cat_id']
         cat_table_name = "papers.paper_has_cont"
         category_where_clause = ""
         category_values_tuple = ()
-        #print(category['values'])
-        
-        #print("Category:", category)
+
 
         for element in category['values']:
             #print(element)
@@ -757,18 +754,15 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
                 category_values_tuple += (f"%{element['value']}%",)
 
         category_where_clause = category_where_clause[:-5]
-
-        #full_query = f"SELECT DISTINCT paper_id FROM {cat_table_name} WHERE cat_id = {cat_id} AND " + category_where_clause
-        #print(full_query)
         
         query = f"SELECT DISTINCT pc.paper_id FROM papers.paper_has_cont pc JOIN papers.content c ON pc.cont_id = c.id WHERE pc.cat_id = 20 AND c.name LIKE %sAND c.description LIKE %s AND c.extra LIKE %s"
 
         cursor.execute(query, category_values_tuple)        
-        
-        
+            
         category_id_by_column_conditions_list = [row[0] for row in cursor.fetchall()]
-        #print("category_id_list: " + str(category_id_by_column_conditions_list))
         category_id_by_column_conditions_set = set(category_id_by_column_conditions_list)
+
+        print(category_values_tuple)
 
         for element in category['values']:
             if element['is_subcat']:
@@ -783,14 +777,16 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
                 category_id_list_by_this_subcategory_conditions = [row[0] for row in cursor.fetchall()]
                 category_id_set = set(category_id_list_by_this_subcategory_conditions)
                 category_id_by_column_conditions_set.intersection_update(category_id_set)
-
-        paper_id_sets_by_category_list.append(category_id_by_column_conditions_set)
+        
+        if all(value == '%%' for value in category_values_tuple):
+            continue
+        else:
+            paper_id_sets_by_category_list.append(category_id_by_column_conditions_set)
 
 
     # Return the intersection of all the paper_id sets and set lists previously created
     for cat_set in paper_id_sets_by_category_list:
-        if cat_set != set():
-            paper_conditions_id_set.intersection_update(cat_set)
+        paper_conditions_id_set.intersection_update(cat_set)
         
         
     for author in authors_list:
@@ -799,12 +795,7 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
 
     str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
     
-    #print("str_in: " + str_in)
-    
-    # Include papers that don't have a category but match the input
-    cursor.execute("SELECT DISTINCT id FROM papers.paper WHERE code_name='not-in-selection'")
-    not_in_selection_id_list = [row[0] for row in cursor.fetchall()]
-    paper_conditions_id_set.update(not_in_selection_id_list)
+
 
     if len(str_in) > 2:
         #print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
@@ -816,41 +807,6 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     
     
     
-def generate_category_query(categories_values):
-    # Base query
-    query = "SELECT DISTINCT pc.cat_id FROM papers.paper_has_cont pc JOIN papers.content c ON pc.cont_id = c.id WHERE "
-
-    # List to store conditions for each category
-    conditions_list = []
-
-    # Loop through each category's search criteria
-    for category in categories_values:
-        cat_id = category['cat_id']
-        category_where_clause = ""
-        category_values_tuple = ()
-
-        for element in category['values']:
-            if not element['is_subcat']:
-                if element['id_name'] != 'name' and element['id_name'] != 'description':
-                    element['id_name'] = 'extra'
-                category_where_clause += f"c.{element['id_name']} LIKE %s AND "
-                category_values_tuple += (f"%{element['value']}%",)
-
-        category_where_clause = category_where_clause[:-5]
-
-        # Add conditions for the category to the list
-        conditions_list.append(f"(pc.cat_id = {cat_id} AND " + category_where_clause + ")")
-
-    # Combine conditions using OR
-    final_query = query + " OR ".join(conditions_list)
-
-    return final_query, category_values_tuple
-
-
-
-
-
-
 
 
 def get_all_papers_id(db):
