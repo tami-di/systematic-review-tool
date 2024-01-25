@@ -180,13 +180,15 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                 var successButtonContainer = d3.select("#subcategorias")
                     .append("div")
                     .attr("class", "content-container")
-                    .attr("id", "subcat-btn-container");
+                    .attr("id", "subcat-btn-container")
+                    .style("left", "0px");
     
                 successButtonContainer.append("div")
                     .attr("class","content-container")
                     .attr("id","subcat-btn-container")
                     // set_success_button(parent-of-button, button-id, button-text)
                     set_success_button("#subcat-btn-container", "add-subcat", "Add metacategory")
+            
                 
                 d3.select("#add-subcat")
                     .attr("href","#")
@@ -268,9 +270,11 @@ var set_active = function(id, object){
 
 // set a success (green) button on parent containig a message
 var set_success_button = function(parent_id, button_id, message){
-    d3.select(parent_id).
-        append("button").
-        attr("class", "btn btn-success btn-ctnr-cat").
-        attr("id", button_id).
-        text(message)
+    d3.select(parent_id)
+        .append("button")
+        .attr("class", "btn btn-success btn-ctnr-cat")
+        .attr("id", button_id)
+        .text(message)
+        .style("position", "relative")
+        .style("left", "69px");
 }

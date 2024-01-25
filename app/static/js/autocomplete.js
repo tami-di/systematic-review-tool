@@ -25,7 +25,9 @@ inputBox.onkeyup = (e) => {
                     let allList = suggBox.querySelectorAll("li");
                     for (let i = 0; i < allList.length; i++) {
                         allList[i].setAttribute("onclick", "select(this)");
+                        
                     }
+
                 } else {
                     searchWrapper.classList.remove("active");
                 }
@@ -42,6 +44,7 @@ function select(element) {
     let selectData = element.textContent;
     inputBox.value = selectData;
     searchWrapper.classList.remove("active");
+
 }
 
 function showSuggestions(list) {
@@ -54,3 +57,16 @@ function showSuggestions(list) {
     }
     suggBox.innerHTML = listData;
 }
+
+
+searchWrapper.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // prevent the default action (form submission)
+        document.getElementById('searchbtn').click(); // trigger the click event on the search button
+        
+    }
+    
+});
+
+
+
