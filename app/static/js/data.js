@@ -60,7 +60,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                     type = subcategories[i].type
                     subcat_id = subcategories[i].id                
                     element_id = "sub-"+subcategories[i].name+"-cat-"+cat_id
-                    text_label = subcategories[i].name
+                    text_label = subcategories[i].name.toLowerCase()
                     value = ""
                     if(type == 'varchar'){
                         placeholder = "Insert "+subcategories[i].name
@@ -445,7 +445,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         continue
                     }
                     header_row.append("td")
-                    .text(column_headers[i].name)
+                    .text(column_headers[i].name).style("text-transform", "lowercase")
                     .style("text-transform", "capitalize")
                     .style("font-weight", "bold")
                 }
@@ -502,7 +502,7 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                             value = set_str_as_array(column_data[row][name])
                             placeholder = ""
                             element_id = "sub-"+(subcategories[i].name).split(" ").join("-")+"-cat-"+cat_id
-                            text_label = subcategories[i].name
+                            text_label = subcategories[i].name.toLowerCase()
                             if(type == 'varchar'){
                                 set_varchar_input(form_group,element_id,text_label,value,placeholder)
                             }

@@ -737,32 +737,35 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
     # Search for all the paper that meet the 'category' specifications
     paper_id_sets_by_category_list = []
 
-
-
     for category in categories_values:
    
         cat_id = category['cat_id']
         cat_table_name = "papers.paper_has_cont"
-        category_where_clause = ""
+        #category_where_clause = ""
         category_values_tuple = ()
+        extra_values = []
+
 
 
         for element in category['values']:
-            #print(element)
             if not element['is_subcat']:
-                category_where_clause += f"{element['id_name']} LIKE %s AND "
+                if element['id_name'] != 'name' and element['id_name'] != 'description':
+                    extra_values.append( f"{element['value']}")
                 category_values_tuple += (f"%{element['value']}%",)
 
-        category_where_clause = category_where_clause[:-5]
-        
-        query = f"SELECT DISTINCT pc.paper_id FROM papers.paper_has_cont pc JOIN papers.content c ON pc.cont_id = c.id WHERE pc.cat_id = 20 AND c.name LIKE %sAND c.description LIKE %s AND c.extra LIKE %s"
+        #category_where_clause = category_where_clause[:-5]
+        extra_condition = ' AND '.join(f"c.extra LIKE %s" for _ in extra_values)
+    
+        query = f"SELECT pc.paper_id FROM {cat_table_name} pc JOIN papers.content c ON pc.cont_id = c.id WHERE pc.cat_id = {cat_id} AND c.name LIKE %s AND c.description LIKE %s AND ({extra_condition})"
 
-        cursor.execute(query, category_values_tuple)        
-            
+        cursor.execute(query, category_values_tuple)  
+                    
         category_id_by_column_conditions_list = [row[0] for row in cursor.fetchall()]
+        
+        print(category_id_by_column_conditions_list)
         category_id_by_column_conditions_set = set(category_id_by_column_conditions_list)
 
-        print(category_values_tuple)
+   
 
         for element in category['values']:
             if element['is_subcat']:
@@ -778,9 +781,8 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
                 category_id_set = set(category_id_list_by_this_subcategory_conditions)
                 category_id_by_column_conditions_set.intersection_update(category_id_set)
         
-        if all(value == '%%' for value in category_values_tuple):
-            continue
-        else:
+        
+        if any(value != '%%' for value in category_values_tuple):
             paper_id_sets_by_category_list.append(category_id_by_column_conditions_set)
 
 
@@ -795,10 +797,9 @@ def search_papers_id(db, paper_values, authors_value, categories_values, show_no
 
     str_in = "(" + ",".join(map(str, paper_conditions_id_set)) + ")"
     
-
-
+    print(str_in)
+    
     if len(str_in) > 2:
-        #print(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         cursor.execute(f"SELECT id FROM papers.paper WHERE id IN {str_in} ORDER BY year")
         result_id_list = [row[0] for row in cursor.fetchall()]
         return result_id_list

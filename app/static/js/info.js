@@ -73,7 +73,7 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                             .text("Name")
                             .style("font-weight", "bold");
                         cell = row.append("td")
-                            .text(subcategories[i].name);
+                            .text(subcategories[i].name.toLowerCase());
 
                         row.append("td")
                             .text("Type")
@@ -81,6 +81,8 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                         row.append("td")
                             .text(subcategories[i].type);
                     }
+
+
                 
     
                     var isRowAdded = false;
@@ -95,46 +97,55 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                                 d3.select(this).style("background-color", "initial");
                             });
                         
-    
-    
+
                         cell.on("click", function () {
-                            if(!isRowAdded){
-                                var newRow = tbody.append("tr").attr("class", "delete-row");
-                                newRow.append("td").attr("colspan", "4")
-                                .append("button")
-                                    .attr("class", "btn btn-danger btn-ctnr")
-                                    .text("Delete")
-                                    .style("width","100%")
-                                    .attr("href", "#")
-                                    .attr("data-toggle", "modal")
-                                    .attr("value", i-1 + "")
-                                    .attr("data-target", "#delete-element-modal")
-                                    .on("click", function () {
-                                        var index = parseInt(d3.select(this).attr("value"));
-                                        d3.select("#delete-element-message")
-                                            .text("Do you really want to delete \"" + subcategories[index].name + "\"?");
-                                        if(subcategories[index].is_subcat){
-                                            // in case of deleting a subcategory
-                                            subcat_id = subcategories[index].id;
-                                            d3.select("#delete-form")
-                                                .attr("action","/api/delete/subcategory/"+subcat_id+"/category/"+cat_id);
-                                        }else{
-                                            // in case of deleting a column of a category
-                                            column_name = subcategories[index].name;
-                                            d3.select("#delete-form")
-                                                .attr("action",'/api/delete/column/'+column_name+'/category/'+cat_id);
-                                        }
-                                        d3.select("#deleted-element")
-                                            .attr("value",cat_id + "." +subcategories[index].name);
-                                
-                                    })
-                                isRowAdded = true;
+                            var clickedButton = d3.select(this);
+                            var clickedIndex = parseInt(clickedButton.attr("value"));
+                            for (var j = 0; j < subcategories.length; j++) {
+                                if (subcategories[j].name.toLowerCase() == clickedButton.text()) {
+
+                                    clickedIndex = j;
+                                    break;
                                 }
-                            else {
-                                d3.select("tr.delete-row").remove();
-                                isRowAdded = false;
-                            }     
-    
+                            }
+                            console.log(clickedIndex);
+                            if ((clickedButton.text() != "description") && (clickedButton.text() != "name")) {
+                                if (!isRowAdded) {
+                                    var newRow = tbody.append("tr").attr("class", "delete-row");
+                                    newRow.append("td").attr("colspan", "4")
+                                        .append("button")
+                                        .attr("class", "btn btn-danger btn-ctnr")
+                                        .text("Delete")
+                                        .style("width", "100%")
+                                        .attr("href", "#")
+                                        .attr("data-toggle", "modal")
+                                        .attr("value", clickedIndex + "")
+                                        .attr("data-target", "#delete-element-modal")
+                                        .on("click", function () {
+                                            var index = parseInt(d3.select(this).attr("value"));
+                                            d3.select("#delete-element-message")
+                                                .text("Do you really want to delete \"" + subcategories[index].name + "\"?");
+                                            if (subcategories[index].is_subcat) {
+                                                // in case of deleting a subcategory
+                                                subcat_id = subcategories[index].id;
+                                                d3.select("#delete-form")
+                                                    .attr("action", "/api/delete/subcategory/" + subcat_id + "/category/" + cat_id);
+                                            } else {
+                                                // in case of deleting a column of a category
+                                                column_name = subcategories[index].name;
+                                                d3.select("#delete-form")
+                                                    .attr("action", '/api/delete/column/' + column_name + '/category/' + cat_id);
+                                            }
+                                            d3.select("#deleted-element")
+                                                .attr("value", cat_id + "." + subcategories[index].name);
+
+                                        });
+                                    isRowAdded = true;
+                                }else{
+                                    d3.select("tr.delete-row").remove();
+                                    isRowAdded = false;
+                                }
+                            }
                         });
                     }
     
@@ -223,8 +234,6 @@ d3.selectAll("#categorias").selectAll(".btn-warning").on("click", function() {
                         d3.select("#add-column-form")
                             .attr("action",action_url)
                     })
-    
-                
                     
         });
     
