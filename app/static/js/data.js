@@ -354,7 +354,7 @@ d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
                                 value = column_data[row][column_headers[i].name]
                                 placeholder = ""
                                 element_id = "sub-"+subcat_id+"-cat-"+cat_id+"-"+name
-                                text_label = subcategories[i].name
+                                text_label = subcategories[i].name.toLowerCase()
     
                                 if(type == 'varchar'){
                                     set_varchar_input(form_group,element_id,text_label,value,placeholder)
@@ -445,7 +445,8 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         continue
                     }
                     header_row.append("td")
-                    .text(column_headers[i].name).style("text-transform", "lowercase")
+                    .text(column_headers[i].name.toLowerCase())
+                    
                     .style("text-transform", "capitalize")
                     .style("font-weight", "bold")
                 }
@@ -541,8 +542,10 @@ d3.selectAll("#categorias").selectAll(".btn-info").on("click", function(){
                         .on("click",function(){
                             // set modal form parameter to delete row
                             row = d3.select(this).attr("value");
+                            d3.select("#delete-element-message")
+                                .text("Do you really want to delete this row?");
                             d3.select("#delete-form")
-                                .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+d3.select(this).attr("value"));
+                                .attr("action",'/api/delete/data/category/'+cat_id+'/row/'+row);
                         })
                         .append("i")
                         .attr("class","fa fa-trash fa-lg")
