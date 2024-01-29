@@ -226,13 +226,7 @@ var set_form = function(dict){
                     .text(text_label)
                         .style("text-transform","capitalize")
                     txt.append("br")
-                    
-
-                    
-                   
-
-
-
+                      
 
                     for(j = 0; j < category_properties_length; j++){
                         

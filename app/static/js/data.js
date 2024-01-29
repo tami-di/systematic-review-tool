@@ -1,40 +1,5 @@
 // what to do if the add-data-to-category button is pressed
 d3.selectAll("#categorias").selectAll(".btn-success").on("click", function(){
-    // get category id
-     cat_name = d3.select(this).attr("value")
-     // if authors do sth different
-     if(cat_name == 'authors'){
-         title_message = d3.select("#add-data-message")
-         title_message.text("Add new author")
-         form_body = d3.select("#add-data-body")
-         // set action to form
-         form = d3.select(form_body.node().parentNode)
-         form.attr("action","/api/add/author/")
-         // remove last elements of the form
-         d3.select("#add-data-body").selectAll(".form-group").remove()
-         form_group = form_body.append("div").attr("class","form-group")
-         element_id_name = "author-name"
-         element_id_affiliation = "author-affiliation"
-         text_label_name = "name"
-         text_label_affiliation = "affiliation"
-         value = ""
-         placeholder_name = "Insert author name"
-         placeholder_affiliation = "Insert author affiliation"
-         set_varchar_input (form_group,element_id_name,text_label_name,value,placeholder_name)
-         form_group = form_body.append("div").attr("class","form-group")
-         set_text_input(form_group,element_id_affiliation,text_label_affiliation,value,placeholder_affiliation)
-         // add buttons
-         form_group = form_body.append("div").attr("class","form-group")
-         // label?
-         form_group.append("label")
-         .attr("class","col-md-4 control-label")
-         .attr("for","accept-new-data")
-         // buttons
-         div_for_buttons = form_group.append("div").attr("class","col-md-8")
-         put_submit_button(div_for_buttons)
-         put_dismiss_button(div_for_buttons)
-         return
-     }
      parent = this.parentNode
      cat_id = d3.select(parent).select(".btn-grey").attr("value")
      d3.json("/api/request/headers+subcategories/"+ cat_id,

@@ -59,14 +59,6 @@ function showSuggestions(list) {
 }
 
 
-searchWrapper.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault(); // prevent the default action (form submission)
-        document.getElementById('searchbtn').click(); // trigger the click event on the search button
-        
-    }
-    
-});
 
 
 
